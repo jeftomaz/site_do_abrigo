@@ -48,7 +48,7 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 - **Decisões:** estilo/cores placeholder (🟡 rascunho) até tokens de design; idade derivada de `birth_year` (`ano atual − birth_year`).
 - **Arquivos:** `src/features/dogs/format.ts`, `src/features/dogs/components/DogCard.tsx`, `src/pages/public/AdocaoPage.tsx`, `ROADMAP.md`, `DESIGN_SYSTEM.md`.
 - **Docs:** `ROADMAP.md` marcado; `DESIGN_SYSTEM.md` Card (cão) → 🟡; `PROGRESS.md` atualizado.
-- **Nota:** build passa com a F3-05; `src/app/InviteHandler.tsx` tem um diagnóstico temporário não commitado que quebra o `tsc` (`clearAuthHash` não usado) — pendente de remoção fora do escopo desta tarefa.
+- **Nota:** durante a tarefa, o diagnóstico do `InviteHandler` revelou a causa real da falha de convite — `VITE_SUPABASE_URL` no `.env` local estava com sufixo `/rest/v1/`, fazendo o `setSession` retornar `"Invalid path specified in request URL"`. Corrigido o `.env` para a URL base do projeto (sem sufixo, conforme decisão da F0-02); diagnóstico revertido; build limpo.
 
 ### 2026-06-29 — `CT-01` Corrigir callback de convite admin
 - **Feito:** callback de convite passa a preservar o hash `type=invite`, criar sessão com `access_token`/`refresh_token` e redirecionar para `/admin/definir-senha`; fallback do GitHub Pages preserva o hash em rotas profundas.
