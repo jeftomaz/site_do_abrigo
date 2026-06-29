@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 3 — Adoção (cães)
-- **Próxima tarefa:** F3-02
+- **Próxima tarefa:** F3-05
 - **Fase concluída:** Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -41,6 +41,24 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `F3-04` `features/dogs/{api,hooks,types}`
+- **Feito:** criado domínio `features/dogs` com tipos derivados de `shared/types/db.ts`, API `listAvailableDogs` e hook `useAvailableDogs` via TanStack Query.
+- **Decisões:** corrigida dívida técnica de base: `src/shared/types/db.ts` e script `npm run gen:types` adicionados; `ROADMAP.md › Dívidas` limpo para manter só a dúvida ainda aberta do sorteio da rifa.
+- **Arquivos:** `src/features/dogs/api.ts`, `src/features/dogs/hooks.ts`, `src/features/dogs/types.ts`, `src/shared/types/db.ts`, `src/shared/lib/supabase.ts`, `package.json`, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F3-03` Bucket Storage `dogs` + policy
+- **Feito:** criada migration para bucket público `dogs` e policy de upload autenticado em `storage.objects`.
+- **Decisões:** leitura pública fica pelo bucket público/URL pública; sem policy pública de `SELECT` em `storage.objects` para não liberar listagem do bucket.
+- **Arquivos:** `supabase/migrations/20260629000003_dogs_storage.sql`, `DATA_MODEL.md`.
+- **Docs:** `ROADMAP.md` marcado; `DATA_MODEL.md` atualizado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F3-02` RLS `dogs`
+- **Feito:** criada migration com policies de leitura pública só para cães `available`, leitura completa para autenticados, e INSERT/UPDATE apenas autenticados.
+- **Decisões:** sem policy de DELETE para manter a convenção de não apagar fisicamente dados de domínio.
+- **Arquivos:** `supabase/migrations/20260629000002_dogs_rls.sql`, `DATA_MODEL.md`.
+- **Docs:** `ROADMAP.md` marcado; `DATA_MODEL.md` detalhado; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F3-01` Migration `dogs` + enum `dog_status`
 - **Feito:** criado `supabase/migrations/20260629000001_create_dogs.sql` com enum `dog_status`, tabela `dogs` (id, name, size, birth_year, description, photos, status, timestamps), trigger `trg_dogs_updated_at` e RLS habilitada.

@@ -76,7 +76,11 @@ Cães do catálogo de adoção.
 | updated_at | timestamptz | não | now() | atualizado via trigger `trg_dogs_updated_at` |
 
 **Migration:** `supabase/migrations/20260629000001_create_dogs.sql`
-**RLS:** habilitada; policies em F3-02.
+**RLS:** policies em `supabase/migrations/20260629000002_dogs_rls.sql`.
+- SELECT: público (`anon`) apenas quando `status = 'available'`; autenticado vê todos os status.
+- INSERT: apenas autenticado.
+- UPDATE: apenas autenticado.
+- DELETE: ninguém; sem delete físico para dados de domínio.
 
 ### `stories` · ⬜ (Fase 4)
 
@@ -150,14 +154,19 @@ Reserva de um produto ou número, aguardando comprovante.
 
 ---
 
-## Storage (buckets) · ⬜
+## Storage (buckets) · 🟡
 
-| Bucket | Conteúdo | Acesso |
-|---|---|---|
-| `dogs` | fotos de cães | leitura pública; upload autenticado |
-| `stories` | fotos de histórias | leitura pública; upload autenticado |
-| `events` | imagens de produtos | leitura pública; upload autenticado |
-<!-- confirmar policies por bucket -->
+| Bucket | Conteúdo | Acesso | Status |
+|---|---|---|---|
+| `dogs` | fotos de cães | bucket público; upload autenticado via policy `storage.objects` | 🟢 |
+| `stories` | fotos de histórias | leitura pública; upload autenticado | ⬜ |
+| `events` | imagens de produtos | leitura pública; upload autenticado | ⬜ |
+
+**Migration `dogs`:** `supabase/migrations/20260629000003_dogs_storage.sql`
+**Policies `dogs`:**
+- SELECT/download público: via bucket público, usando URL pública; sem policy pública de `SELECT` em `storage.objects` para não liberar listagem.
+- INSERT/upload: apenas autenticado, com `bucket_id = 'dogs'`.
+<!-- confirmar policies dos próximos buckets -->
 
 ---
 

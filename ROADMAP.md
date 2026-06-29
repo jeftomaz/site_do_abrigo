@@ -42,9 +42,9 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 ## Fase 3 — Adoção (cães)
 
 - [x] **F3-01** Migration `dogs` + enum `dog_status`. · Pronto: tabela criada. · Toca: supabase/migrations + DATA_MODEL
-- [ ] **F3-02** RLS `dogs` (SELECT público só available; escrita autenticada). · Pronto: escrita anônima falha. · Toca: migrations + DATA_MODEL
-- [ ] **F3-03** Bucket Storage `dogs` + policy. · Pronto: upload autenticado, leitura pública. · Toca: Supabase + DATA_MODEL
-- [ ] **F3-04** `features/dogs/{api,hooks,types}`. · Pronto: listar cães available. · Toca: features/dogs
+- [x] **F3-02** RLS `dogs` (SELECT público só available; escrita autenticada). · Pronto: escrita anônima falha. · Toca: migrations + DATA_MODEL
+- [x] **F3-03** Bucket Storage `dogs` + policy. · Pronto: upload autenticado, leitura pública. · Toca: Supabase + DATA_MODEL
+- [x] **F3-04** `features/dogs/{api,hooks,types}`. · Pronto: listar cães available. · Toca: features/dogs
 - [ ] **F3-05** Card do cão (público). · Pronto: grid de cards. · Toca: features/dogs/components
 - [ ] **F3-06** Modal de detalhes + botão → Google Forms. · Pronto: expande e linka. · Toca: features/dogs/components
 - [ ] **F3-07** Ordenação (porte/idade…). · Pronto: reordena no cliente. · Toca: pages/public/adocao
@@ -91,6 +91,4 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 ## Dívidas / decisões em aberto
 (decisões fixadas vão para `PROGRESS.md › Decisões fixadas`)
 
-- Representação de `age` (data de nascimento vs faixa).
-- `item_ref` da reserva: FK polimórfica vs duas colunas nuláveis.
-- Imagens: Supabase Storage vs URLs externas.
+- Sorteio da rifa: como escolher/divulgar ganhador?
