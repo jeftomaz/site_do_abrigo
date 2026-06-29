@@ -108,10 +108,20 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** variantes com classes `dark:` para cada estado — cores placeholder até tokens serem definidos.
 - **Imagens de referência:** nenhuma ainda — cores são placeholders Tailwind.
 
+### Card (cão) · 🟡 rascunho
+
+**Componente:** DogCard · **Status:** 🟡 rascunho
+- **Anatomia:** imagem de capa (aspect 4/3, `object-cover`; fallback 🐾 quando sem foto) + nome + linha meta (`porte · idade`).
+- **Variantes:** estático (público, F3-05) · clicável (recebe `onClick` → abre detalhe na F3-06, com `role/tabIndex`, hover de sombra e foco visível).
+- **Estados:** default · hover (sombra) · focus-visible (ring) quando clicável.
+- **Responsivo:** card fluido; grid da página é 1 col (mobile) → 2 (sm) → 3 (lg).
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Componentes previstos (preencher progressivamente)
 
 - [x] Button · 🟡
-- [ ] Card (cão) · ⬜
+- [x] Card (cão) · 🟡
 - [ ] Modal / detalhe do cão · ⬜
 - [ ] Field / input · ⬜
 - [ ] Skeleton / loading · ⬜

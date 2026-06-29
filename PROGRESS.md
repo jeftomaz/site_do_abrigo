@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 3 — Adoção (cães)
-- **Próxima tarefa:** F3-05
+- **Próxima tarefa:** F3-06
 - **Fase concluída:** Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -42,6 +42,13 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `F3-05` Card do cão (público)
+- **Feito:** `DogCard` (foto de capa via Storage público, nome, porte · idade, fallback 🐾 sem foto, suporte opcional a clique/teclado p/ F3-06) e helpers `dogPhotoUrl`/`dogCoverUrl`/`dogAgeLabel` em `features/dogs/format.ts`. `AdocaoPage` agora consome `useAvailableDogs` e renderiza grid responsivo (1/2/3 col) com loading (SkeletonCard), erro e empty state.
+- **Decisões:** estilo/cores placeholder (🟡 rascunho) até tokens de design; idade derivada de `birth_year` (`ano atual − birth_year`).
+- **Arquivos:** `src/features/dogs/format.ts`, `src/features/dogs/components/DogCard.tsx`, `src/pages/public/AdocaoPage.tsx`, `ROADMAP.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` marcado; `DESIGN_SYSTEM.md` Card (cão) → 🟡; `PROGRESS.md` atualizado.
+- **Nota:** build passa com a F3-05; `src/app/InviteHandler.tsx` tem um diagnóstico temporário não commitado que quebra o `tsc` (`clearAuthHash` não usado) — pendente de remoção fora do escopo desta tarefa.
 
 ### 2026-06-29 — `CT-01` Corrigir callback de convite admin
 - **Feito:** callback de convite passa a preservar o hash `type=invite`, criar sessão com `access_token`/`refresh_token` e redirecionar para `/admin/definir-senha`; fallback do GitHub Pages preserva o hash em rotas profundas.
