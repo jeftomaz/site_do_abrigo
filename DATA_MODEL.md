@@ -16,14 +16,13 @@ A implementação real vive em `supabase/migrations/`. Aqui descrevemos schema, 
 - **Sem delete físico** em dados de domínio: usar coluna `status`. Some da visão pública via RLS/filtro, mas o histórico permanece.
 - Nomes de tabela no plural, colunas em `snake_case`.
 
-## Enums (rascunho) · ⬜
+## Enums
 
-| Enum | Valores | Uso |
-|---|---|---|
-| `dog_status` | available · adopted · deceased | tabela `dogs` |
-| `event_type` | product · raffle | tabela `events` |
-| `reservation_status` | pending · paid · cancelled | tabela `reservations` |
-<!-- confirmar ao implementar cada fase -->
+| Enum | Valores | Status | Uso |
+|---|---|---|---|
+| `dog_status` | available · adopted · deceased | 🟢 | tabela `dogs` |
+| `event_type` | product · raffle | ⬜ | tabela `events` |
+| `reservation_status` | pending · paid · cancelled | ⬜ | tabela `reservations` |
 
 ## Admin & Auth · ⬜
 
@@ -60,7 +59,7 @@ Modelo a copiar por tabela:
 
 ---
 
-### `dogs` · ⬜ (Fase 3)
+### `dogs` · 🟢 (Fase 3)
 
 Cães do catálogo de adoção.
 
@@ -68,14 +67,16 @@ Cães do catálogo de adoção.
 |---|---|---|---|---|
 | id | uuid | não | gen_random_uuid() | PK |
 | name | text | não | — | nome |
-| size | text/enum | — | — | porte |
+| size | text | sim | — | porte livre (ex.: "pequeno", "médio", "grande") |
 | birth_year | smallint | sim | — | ano de nascimento; UI calcula idade (ano→idade e idade→ano estimado) |
 | description | text | sim | — | descrição |
 | photos | text[] | sim | — | paths do Supabase Storage (bucket `dogs`) |
 | status | `dog_status` | não | available | available/adopted/deceased |
-| created_at / updated_at | timestamptz | não | now() | — |
+| created_at | timestamptz | não | now() | — |
+| updated_at | timestamptz | não | now() | atualizado via trigger `trg_dogs_updated_at` |
 
-**RLS:** SELECT público só onde `status = 'available'`; INSERT/UPDATE/DELETE só autenticado.
+**Migration:** `supabase/migrations/20260629000001_create_dogs.sql`
+**RLS:** habilitada; policies em F3-02.
 
 ### `stories` · ⬜ (Fase 4)
 

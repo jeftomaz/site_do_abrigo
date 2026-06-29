@@ -41,7 +41,7 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 
 ## Fase 3 — Adoção (cães)
 
-- [ ] **F3-01** Migration `dogs` + enum `dog_status`. · Pronto: tabela criada. · Toca: supabase/migrations + DATA_MODEL
+- [x] **F3-01** Migration `dogs` + enum `dog_status`. · Pronto: tabela criada. · Toca: supabase/migrations + DATA_MODEL
 - [ ] **F3-02** RLS `dogs` (SELECT público só available; escrita autenticada). · Pronto: escrita anônima falha. · Toca: migrations + DATA_MODEL
 - [ ] **F3-03** Bucket Storage `dogs` + policy. · Pronto: upload autenticado, leitura pública. · Toca: Supabase + DATA_MODEL
 - [ ] **F3-04** `features/dogs/{api,hooks,types}`. · Pronto: listar cães available. · Toca: features/dogs

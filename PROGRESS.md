@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 3 — Adoção (cães)
-- **Próxima tarefa:** F3-01
+- **Próxima tarefa:** F3-02
 - **Fase concluída:** Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -25,6 +25,7 @@ Decisões já tomadas, para não reabrir. Quando uma "dívida" do ROADMAP é res
 | 2026-06-29 | Estratégia de imagens | Supabase Storage; upload feito pelo painel admin do site. |
 | 2026-06-29 | Geração do PIX | Seção informativa: chave PIX estática (`abrigodamarcia@gmail.com`) exibida com botão copiar. Sem QR Code nem geração dinâmica. |
 | 2026-06-29 | Escopo da Doação | Só informativo — texto + chave PIX copiável. |
+| 2026-06-29 | Campo `size` de cão | `text` livre (sem enum); validação de valores aceitos fica na UI. |
 | — | Sorteio da rifa | _pendente — como escolher/divulgar ganhador?_ |
 
 ## Log
@@ -40,6 +41,12 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `F3-01` Migration `dogs` + enum `dog_status`
+- **Feito:** criado `supabase/migrations/20260629000001_create_dogs.sql` com enum `dog_status`, tabela `dogs` (id, name, size, birth_year, description, photos, status, timestamps), trigger `trg_dogs_updated_at` e RLS habilitada.
+- **Decisões:** `size` como `text` livre (sem enum); validação de valores na UI.
+- **Arquivos:** `supabase/migrations/20260629000001_create_dogs.sql`, `DATA_MODEL.md`.
+- **Docs:** `ROADMAP.md` marcado; `DATA_MODEL.md` dogs → 🟢; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F2-05` Seção Eventos (teaser)
 - **Feito:** `EventosSection` com título "Recãopensa", texto teaser e botão `<Link to="/eventos">`. Criado `EventosPage` placeholder e rota `/eventos` no router. Fase 2 concluída.
