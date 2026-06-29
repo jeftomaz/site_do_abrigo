@@ -111,6 +111,11 @@ public/
 - `public/404.html` redirecionando p/ `index.html` (rotas client-side).
 - Deploy via GitHub Actions.
 
+## Commits
+
+- **Sem coautoria.** Nunca incluir `Co-Authored-By:` nem créditos de IA nas mensagens de commit.
+- Mensagem no formato `tipo: Fase X — descrição (ID-a a ID-b)`.
+
 ## Comandos
 
 ```bash

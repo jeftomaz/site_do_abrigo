@@ -69,9 +69,9 @@ Cães do catálogo de adoção.
 | id | uuid | não | gen_random_uuid() | PK |
 | name | text | não | — | nome |
 | size | text/enum | — | — | porte |
-| age | — | — | — | idade (definir representação) |
+| birth_year | smallint | sim | — | ano de nascimento; UI calcula idade (ano→idade e idade→ano estimado) |
 | description | text | sim | — | descrição |
-| photos | text[] | sim | — | URLs (Storage) |
+| photos | text[] | sim | — | paths do Supabase Storage (bucket `dogs`) |
 | status | `dog_status` | não | available | available/adopted/deceased |
 | created_at / updated_at | timestamptz | não | now() | — |
 
@@ -125,11 +125,14 @@ Reserva de um produto ou número, aguardando comprovante.
 |---|---|---|---|---|
 | id | uuid | não | gen_random_uuid() | PK |
 | event_id | uuid | não | — | FK → events |
-| item_ref | — | — | — | aponta p/ product ou raffle_number (definir) |
+| product_id | uuid | sim | — | FK → products (nulo se rifa) |
+| raffle_number_id | uuid | sim | — | FK → raffle_numbers (nulo se produto) |
 | contact | text | — | — | WhatsApp/Instagram do usuário |
 | status | `reservation_status` | não | pending | pending/paid/cancelled |
 | expires_at | timestamptz | não | — | prazo do comprovante |
 | created_at | timestamptz | não | now() | — |
+
+**Constraint:** `CHECK ((product_id IS NOT NULL) != (raffle_number_id IS NOT NULL))` — exatamente uma das duas preenchida.
 
 **RLS:** INSERT público (usuário reserva); SELECT/UPDATE (marcar paga/cancelar) só autenticado. <!-- revisar: público pode precisar ler a própria reserva -->
 

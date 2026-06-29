@@ -97,9 +97,20 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 > - **Tema:** diferenças light × dark.
 > - **Imagens de referência:** IDs do Registro abaixo.
 
+### Button · 🟡 rascunho
+
+**Componente:** Button · **Status:** 🟡 rascunho
+- **Anatomia:** elemento `<button>` nativo com spinner opcional à esquerda.
+- **Variantes:** `primary` · `secondary` · `ghost` · `danger`
+- **Tamanhos:** `sm` · `md` (default) · `lg`
+- **Estados:** default · hover · active · `disabled` (opacidade 50%) · `isLoading` (spinner + desabilitado)
+- **Responsivo:** sem diferença mobile × desktop por enquanto.
+- **Tema:** variantes com classes `dark:` para cada estado — cores placeholder até tokens serem definidos.
+- **Imagens de referência:** nenhuma ainda — cores são placeholders Tailwind.
+
 ### Componentes previstos (preencher progressivamente)
 
-- [ ] Button · ⬜
+- [x] Button · 🟡
 - [ ] Card (cão) · ⬜
 - [ ] Modal / detalhe do cão · ⬜
 - [ ] Field / input · ⬜

@@ -16,20 +16,20 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 
 ## Fase 1 — Esqueleto compartilhado
 
-- [ ] **F1-01** `app/router.tsx` rota `/`. · Pronto: home renderiza. · Toca: app/router.tsx
-- [ ] **F1-02** Rota `/admin` lazy. · Pronto: admin só baixa ao acessar. · Toca: app/router.tsx
-- [ ] **F1-03** `app/providers.tsx` com QueryClient. · Pronto: useQuery funciona. · Toca: app/providers.tsx
-- [ ] **F1-04** Auth: login admin + **signup público DESABILITADO** (admin só por convite). · Pronto: não-convidado não cria conta; convidado loga. · Toca: features/auth + config Supabase
-- [ ] **F1-05** MFA/2FA: enrolar TOTP (app autenticador); confirmar suporte a código por e-mail. · Pronto: login exige 2º fator. · Toca: features/auth + config Supabase + DATA_MODEL
-- [ ] **F1-06** Sessão longa + re-auth por inatividade (config refresh token/JWT; **confirmar viabilidade no free tier**). · Pronto: sessão persiste; pede 2º fator só após X dias sem acesso. · Toca: config Supabase + features/auth
-- [ ] **F1-07** Guard da rota `/admin`. · Pronto: sem sessão válida → redireciona. · Toca: app/router.tsx
-- [ ] **F1-08** Theme provider (light/dark). · Pronto: alterna tema. · Toca: app/providers.tsx
-- [ ] **F1-09** `shared/ui/Button`. · Pronto: variantes básicas renderizam. · Toca: shared/ui
-- [ ] **F1-10** `shared/ui/Card`. · Pronto: usado em 1 tela. · Toca: shared/ui
-- [ ] **F1-11** `shared/ui/Modal`. · Pronto: abre/fecha. · Toca: shared/ui
-- [ ] **F1-12** `shared/ui/Field`. · Pronto: integra react-hook-form. · Toca: shared/ui
-- [ ] **F1-13** `shared/ui/Skeleton`. · Pronto: placeholder de loading. · Toca: shared/ui
-- [ ] **F1-14** Header (âncoras landing + links de página). · Pronto: navegação completa. · Toca: shared/ui ou app
+- [x] **F1-01** `app/router.tsx` rota `/`. · Pronto: home renderiza. · Toca: app/router.tsx
+- [x] **F1-02** Rota `/admin` lazy. · Pronto: admin só baixa ao acessar. · Toca: app/router.tsx
+- [x] **F1-03** `app/providers.tsx` com QueryClient. · Pronto: useQuery funciona. · Toca: app/providers.tsx
+- [x] **F1-04** Auth: login admin + **signup público DESABILITADO** (admin só por convite). · Pronto: não-convidado não cria conta; convidado loga. · Toca: features/auth + config Supabase
+- [x] **F1-05** MFA/2FA: enrolar TOTP (app autenticador); confirmar suporte a código por e-mail. · Pronto: login exige 2º fator. · Toca: features/auth + config Supabase + DATA_MODEL
+- [x] **F1-06** Sessão longa + re-auth por inatividade (config refresh token/JWT; **confirmar viabilidade no free tier**). · Pronto: sessão persiste; pede 2º fator só após X dias sem acesso. · Toca: config Supabase + features/auth
+- [x] **F1-07** Guard da rota `/admin`. · Pronto: sem sessão válida → redireciona. · Toca: app/router.tsx
+- [x] **F1-08** Theme provider (light/dark). · Pronto: alterna tema. · Toca: app/providers.tsx
+- [x] **F1-09** `shared/ui/Button`. · Pronto: variantes básicas renderizam. · Toca: shared/ui
+- [x] **F1-10** `shared/ui/Card`. · Pronto: usado em 1 tela. · Toca: shared/ui
+- [x] **F1-11** `shared/ui/Modal`. · Pronto: abre/fecha. · Toca: shared/ui
+- [x] **F1-12** `shared/ui/Field`. · Pronto: integra react-hook-form. · Toca: shared/ui
+- [x] **F1-13** `shared/ui/Skeleton`. · Pronto: placeholder de loading. · Toca: shared/ui
+- [x] **F1-14** Header (âncoras landing + links de página). · Pronto: navegação completa. · Toca: shared/ui ou app
 
 ## Fase 2 — Landing page (público)
 

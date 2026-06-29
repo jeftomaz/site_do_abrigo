@@ -5,9 +5,9 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 
 ## Atual
 
-- **Fase:** 0 — Fundação
-- **Próxima tarefa:** F1-01
-- **Fase concluída:** Fase 0 — Fundação ✓
+- **Fase:** 2 — Landing page (público)
+- **Próxima tarefa:** F2-01
+- **Fase concluída:** Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
 ## Decisões fixadas
@@ -20,12 +20,12 @@ Decisões já tomadas, para não reabrir. Quando uma "dívida" do ROADMAP é res
 | 2026-06-28 | Docs de orientação | Versionados no repo. Só segredos ficam fora (`.env` gitignored; commitar `.env.example`). |
 | 2026-06-28 | Infra existente | Repo e projeto Supabase **já criados**; banco **vazio**. F0 não recria — só configura e popula. |
 | 2026-06-28 | CSS framework | Usar **Tailwind CSS** como framework de estilos do app. |
+| 2026-06-29 | Representação de `age` | Campo `birth_year` (smallint, nullable); UI calcula idade nos dois sentidos (ano→idade e idade→ano estimado). |
+| 2026-06-29 | `item_ref` da reserva | Duas colunas nuláveis: `product_id` e `raffle_number_id`; CHECK constraint garante exatamente uma preenchida. |
+| 2026-06-29 | Estratégia de imagens | Supabase Storage; upload feito pelo painel admin do site. |
 | — | Geração do PIX (sem servidor) | _pendente — chave estática? BR Code por valor?_ |
 | — | Escopo da Doação | _pendente — só informativo ou fluxo próprio?_ |
 | — | Sorteio da rifa | _pendente — como escolher/divulgar ganhador?_ |
-| — | Representação de `age` | _pendente_ |
-| — | `item_ref` da reserva | _pendente_ |
-| — | Estratégia de imagens | _pendente_ |
 
 ## Log
 
@@ -40,6 +40,36 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `F1-11 a F1-14` Componentes compartilhados + Header
+- **Feito:** `Modal` (portal, Esc/backdrop, aria-dialog, title+footer opcionais); `Field` (forwardRef, input+textarea, hint, error, dark mode; compatível com react-hook-form `register`); `Skeleton` / `SkeletonText` / `SkeletonCard` (animate-pulse); `Header` (sticky, blur, toggle de tema, menu mobile hamburger, âncoras da landing com scroll suave). `react-hook-form` instalado. `LandingPage` atualizada com o Header.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/shared/ui/Modal.tsx`, `src/shared/ui/Field.tsx`, `src/shared/ui/Skeleton.tsx`, `src/shared/ui/Header.tsx`, `src/pages/public/LandingPage.tsx`, `package.json`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F1-10` shared/ui/Card
+- **Feito:** `Card` com prop `padding` (none/sm/md/lg), mais `CardHeader` e `CardFooter`; dark mode em todas as partes; usado no `AdminPage`.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/shared/ui/Card.tsx`, `src/pages/admin/AdminPage.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-28 — `F1-09` shared/ui/Button
+- **Feito:** `Button` com variantes `primary/secondary/ghost/danger`, tamanhos `sm/md/lg`, estado `isLoading` (spinner animado), `disabled`, dark mode em todas as variantes. Cores em rascunho — substituir quando tokens chegarem.
+- **Decisões:** marcar como 🟡 rascunho no DESIGN_SYSTEM até tokens de design serem definidos.
+- **Arquivos:** `src/shared/ui/Button.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado; `DESIGN_SYSTEM.md` com bloco Button.
+
+### 2026-06-28 — `F1-08` Theme provider (light/dark)
+- **Feito:** `darkMode: 'class'` no Tailwind config; `ThemeProvider` em `src/app/theme.tsx` — lê preferência do sistema como default, persiste em `localStorage`, aplica/remove classe `.dark` no `<html>`; `useTheme()` exportado; `Providers` envolve com `ThemeProvider`.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `tailwind.config.ts`, `src/app/theme.tsx`, `src/app/providers.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F1-01 a F1-07` Esqueleto de rotas e auth
+- **Feito:** router com `/` e `/admin` (lazy); QueryClient provider; fluxo completo de auth — login, enroll TOTP, verify TOTP; AdminGuard checando assuranceLevel (aal1→enroll/verify, aal2→acesso); signup público bloqueado por convite no painel Supabase.
+- **Decisões:** F1-06 viável no free tier — sessão persiste via refresh token (padrão Supabase); re-auth TOTP após inatividade configurável no painel (Authentication → MFA).
+- **Arquivos:** `src/app/router.tsx`, `src/app/providers.tsx`, `src/app/AdminGuard.tsx`, `src/features/auth/api.ts`, `src/features/auth/hooks.ts`, `src/pages/auth/LoginPage.tsx`, `src/pages/auth/EnrollTOTPPage.tsx`, `src/pages/auth/VerifyTOTPPage.tsx`, `src/pages/admin/AdminPage.tsx`, `src/pages/public/LandingPage.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F0-05/06/07` Vite base, 404.html e GitHub Action
 - **Feito:** `vite.config.ts` com `base: '/site_do_abrigo/'`; `public/404.html` + script em `index.html` para fallback SPA no Pages; workflow `deploy.yml` publicando `dist/` via Actions.
