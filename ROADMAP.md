@@ -33,11 +33,11 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 
 ## Fase 2 — Landing page (público)
 
-- [ ] **F2-01** Layout da landing (container de seções horizontais). · Pronto: scaffold visível. · Toca: pages/public/landing
-- [ ] **F2-02** Seção Doação. · Pronto: âncora + conteúdo. · Toca: landing/sections
-- [ ] **F2-03** Seção Adoção (teaser → /adocao). · Pronto: link funciona. · Toca: landing/sections
-- [ ] **F2-04** Seção Histórias (teaser). · Pronto: idem. · Toca: landing/sections
-- [ ] **F2-05** Seção Eventos (teaser). · Pronto: idem. · Toca: landing/sections
+- [x] **F2-01** Layout da landing (container de seções horizontais). · Pronto: scaffold visível. · Toca: pages/public/landing
+- [x] **F2-02** Seção Doação. · Pronto: âncora + conteúdo. · Toca: landing/sections
+- [x] **F2-03** Seção Adoção (teaser → /adocao). · Pronto: link funciona. · Toca: landing/sections
+- [x] **F2-04** Seção Histórias (teaser). · Pronto: idem. · Toca: landing/sections
+- [x] **F2-05** Seção Eventos (teaser). · Pronto: idem. · Toca: landing/sections
 
 ## Fase 3 — Adoção (cães)
 

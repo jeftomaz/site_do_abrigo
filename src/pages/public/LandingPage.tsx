@@ -1,11 +1,18 @@
 import Header from '../../shared/ui/Header'
+import DoacaoSection from './landing/sections/DoacaoSection'
+import AdocaoSection from './landing/sections/AdocaoSection'
+import HistoriasSection from './landing/sections/HistoriasSection'
+import EventosSection from './landing/sections/EventosSection'
 
 export default function LandingPage() {
   return (
     <>
       <Header />
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        {/* seções da landing serão adicionadas na Fase 2 */}
+      <main>
+        <DoacaoSection />
+        <AdocaoSection />
+        <HistoriasSection />
+        <EventosSection />
       </main>
     </>
   )

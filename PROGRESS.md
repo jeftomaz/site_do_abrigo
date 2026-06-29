@@ -5,9 +5,9 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 
 ## Atual
 
-- **Fase:** 2 — Landing page (público)
-- **Próxima tarefa:** F2-01
-- **Fase concluída:** Fase 1 — Esqueleto compartilhado ✓
+- **Fase:** 3 — Adoção (cães)
+- **Próxima tarefa:** F3-01
+- **Fase concluída:** Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
 ## Decisões fixadas
@@ -23,8 +23,8 @@ Decisões já tomadas, para não reabrir. Quando uma "dívida" do ROADMAP é res
 | 2026-06-29 | Representação de `age` | Campo `birth_year` (smallint, nullable); UI calcula idade nos dois sentidos (ano→idade e idade→ano estimado). |
 | 2026-06-29 | `item_ref` da reserva | Duas colunas nuláveis: `product_id` e `raffle_number_id`; CHECK constraint garante exatamente uma preenchida. |
 | 2026-06-29 | Estratégia de imagens | Supabase Storage; upload feito pelo painel admin do site. |
-| — | Geração do PIX (sem servidor) | _pendente — chave estática? BR Code por valor?_ |
-| — | Escopo da Doação | _pendente — só informativo ou fluxo próprio?_ |
+| 2026-06-29 | Geração do PIX | Seção informativa: chave PIX estática (`abrigodamarcia@gmail.com`) exibida com botão copiar. Sem QR Code nem geração dinâmica. |
+| 2026-06-29 | Escopo da Doação | Só informativo — texto + chave PIX copiável. |
 | — | Sorteio da rifa | _pendente — como escolher/divulgar ganhador?_ |
 
 ## Log
@@ -40,6 +40,36 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `F2-05` Seção Eventos (teaser)
+- **Feito:** `EventosSection` com título "Recãopensa", texto teaser e botão `<Link to="/eventos">`. Criado `EventosPage` placeholder e rota `/eventos` no router. Fase 2 concluída.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/pages/public/landing/sections/EventosSection.tsx`, `src/pages/public/EventosPage.tsx`, `src/app/router.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F2-04` Seção Histórias (teaser)
+- **Feito:** `HistoriasSection` com título, texto teaser e botão `<Link to="/historias">`. Criado `HistoriasPage` placeholder e rota `/historias` no router.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/pages/public/landing/sections/HistoriasSection.tsx`, `src/pages/public/HistoriasPage.tsx`, `src/app/router.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F2-03` Seção Adoção (teaser)
+- **Feito:** `AdocaoSection` com título, texto teaser e botão `<Link to="/adocao">` usando o `Button` existente. Criado `AdocaoPage` placeholder e rota `/adocao` no router para o link funcionar.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/pages/public/landing/sections/AdocaoSection.tsx`, `src/pages/public/AdocaoPage.tsx`, `src/app/router.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F2-02` Seção Doação
+- **Feito:** `DoacaoSection` com título, texto explicativo, chave PIX `abrigodamarcia@gmail.com` exibida em fonte mono com `select-all`, e botão "Copiar chave" com feedback "Copiado!" por 2 s via `navigator.clipboard`.
+- **Decisões:** seção informativa (sem QR Code / geração dinâmica); chave PIX = `abrigodamarcia@gmail.com` (e-mail).
+- **Arquivos:** `src/pages/public/landing/sections/DoacaoSection.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado; decisões de PIX/Doação fechadas.
+
+### 2026-06-29 — `F2-01` Layout da landing
+- **Feito:** Criado `src/pages/public/landing/sections/` com quatro stubs visíveis (`DoacaoSection`, `AdocaoSection`, `HistoriasSection`, `EventosSection`). `LandingPage.tsx` compõe as quatro seções em `<main>`; cada stub tem o `id` de âncora correto (doacao, historias, eventos) e fundo alternado para tornar as seções visíveis no scroll.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/pages/public/LandingPage.tsx`, `src/pages/public/landing/sections/DoacaoSection.tsx`, `AdocaoSection.tsx`, `HistoriasSection.tsx`, `EventosSection.tsx`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F1-11 a F1-14` Componentes compartilhados + Header
 - **Feito:** `Modal` (portal, Esc/backdrop, aria-dialog, title+footer opcionais); `Field` (forwardRef, input+textarea, hint, error, dark mode; compatível com react-hook-form `register`); `Skeleton` / `SkeletonText` / `SkeletonCard` (animate-pulse); `Header` (sticky, blur, toggle de tema, menu mobile hamburger, âncoras da landing com scroll suave). `react-hook-form` instalado. `LandingPage` atualizada com o Header.
