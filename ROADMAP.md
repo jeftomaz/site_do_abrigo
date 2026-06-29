@@ -9,10 +9,10 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 - [x] **F0-01** Criar projeto Vite (React+TS) + Tailwind. · Pronto: `npm run dev` abre página em branco. · Toca: raiz, vite.config.ts
 - [x] **F0-02** Criar projeto Supabase; pegar URL + publishable key (`sb_publishable_…`). · Pronto: credenciais em mãos. · Toca: —
 - [x] **F0-03** `.env.example` + `.env` com `VITE_SUPABASE_URL/PUBLISHABLE_KEY`. · Pronto: vars carregam. · Toca: .env*
-- [ ] **F0-04** `shared/lib/supabase.ts` (client único). · Pronto: client importável sem erro. · Toca: shared/lib/supabase.ts
-- [ ] **F0-05** `vite.config.ts` `base:'/<repo>/'`. · Pronto: build referencia base certa. · Toca: vite.config.ts
-- [ ] **F0-06** `public/404.html` (fallback SPA). · Pronto: rota direta não dá 404 no Pages. · Toca: public/404.html
-- [ ] **F0-07** GitHub Action de deploy. · Pronto: push publica no Pages. · Toca: .github/workflows
+- [x] **F0-04** `shared/lib/supabase.ts` (client único). · Pronto: client importável sem erro. · Toca: shared/lib/supabase.ts
+- [x] **F0-05** `vite.config.ts` `base:'/<repo>/'`. · Pronto: build referencia base certa. · Toca: vite.config.ts
+- [x] **F0-06** `public/404.html` (fallback SPA). · Pronto: rota direta não dá 404 no Pages. · Toca: public/404.html
+- [x] **F0-07** GitHub Action de deploy. · Pronto: push publica no Pages. · Toca: .github/workflows
 
 ## Fase 1 — Esqueleto compartilhado
 

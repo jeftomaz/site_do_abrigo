@@ -6,7 +6,8 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 0 — Fundação
-- **Próxima tarefa:** F0-04
+- **Próxima tarefa:** F1-01
+- **Fase concluída:** Fase 0 — Fundação ✓
 - **Bloqueios:** nenhum.
 
 ## Decisões fixadas
@@ -39,6 +40,18 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `F0-05/06/07` Vite base, 404.html e GitHub Action
+- **Feito:** `vite.config.ts` com `base: '/site_do_abrigo/'`; `public/404.html` + script em `index.html` para fallback SPA no Pages; workflow `deploy.yml` publicando `dist/` via Actions.
+- **Decisões:** GitHub Actions ao invés de branch `gh-pages` — sem build manual.
+- **Arquivos:** `vite.config.ts`, `index.html`, `public/404.html`, `.github/workflows/deploy.yml`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F0-04` Client único do Supabase
+- **Feito:** instalado `@supabase/supabase-js`; criado `src/shared/lib/supabase.ts` exportando client único via variáveis de ambiente; `tsc --noEmit` sem erros.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/shared/lib/supabase.ts`, `package.json`, `package-lock.json`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F0-03` .env.example + .env com credenciais Supabase
 - **Feito:** criados `.env.example` (com placeholders) e `.env` (com URL base e publishable key reais); variáveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` carregam corretamente.
