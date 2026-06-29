@@ -26,6 +26,7 @@ Decisões já tomadas, para não reabrir. Quando uma "dívida" do ROADMAP é res
 | 2026-06-29 | Geração do PIX | Seção informativa: chave PIX estática (`abrigodamarcia@gmail.com`) exibida com botão copiar. Sem QR Code nem geração dinâmica. |
 | 2026-06-29 | Escopo da Doação | Só informativo — texto + chave PIX copiável. |
 | 2026-06-29 | Campo `size` de cão | `text` livre (sem enum); validação de valores aceitos fica na UI. |
+| 2026-06-29 | Convite admin | Callback `type=invite` é tratado manualmente pelo app: o client não consome o hash automaticamente; `InviteHandler` cria a sessão e manda para `/admin/definir-senha`. |
 | — | Sorteio da rifa | _pendente — como escolher/divulgar ganhador?_ |
 
 ## Log
@@ -41,6 +42,12 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `CT-01` Corrigir callback de convite admin
+- **Feito:** callback de convite passa a preservar o hash `type=invite`, criar sessão com `access_token`/`refresh_token` e redirecionar para `/admin/definir-senha`; fallback do GitHub Pages preserva o hash em rotas profundas.
+- **Decisões:** callbacks de convite são tratados manualmente para evitar corrida com `detectSessionInUrl` do `supabase-js`.
+- **Arquivos:** `src/shared/lib/supabase.ts`, `src/app/InviteHandler.tsx`, `index.html`, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` registrou o débito técnico/correção; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F3-04` `features/dogs/{api,hooks,types}`
 - **Feito:** criado domínio `features/dogs` com tipos derivados de `shared/types/db.ts`, API `listAvailableDogs` e hook `useAvailableDogs` via TanStack Query.

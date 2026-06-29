@@ -7,7 +7,7 @@
     <script>
       // Restaura rota após redirect do 404.html do GitHub Pages
       const p = new URLSearchParams(window.location.search).get('p')
-      if (p) window.history.replaceState(null, '', '/site_do_abrigo' + p)
+      if (p) window.history.replaceState(null, '', '/site_do_abrigo' + p + window.location.hash)
     </script>
   </head>
   <body>

@@ -86,6 +86,10 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 - [ ] **F6-05** Acessibilidade (alt, foco, contraste). · Pronto: navegável por teclado.
 - [ ] **F6-06** Auditoria final de RLS. · Pronto: escrita anônima falha em tudo.
 
+## Débitos técnicos / correções
+
+- [x] **CT-01** Corrigir callback de convite admin. · Pronto: link de convite cria sessão e redireciona para `/admin/definir-senha`. · Toca: app/auth
+
 ---
 
 ## Dívidas / decisões em aberto
