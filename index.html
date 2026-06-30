@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Site do Abrigo</title>
+    <script>
+      // Restaura rota após redirect do 404.html do GitHub Pages
+      const p = new URLSearchParams(window.location.search).get('p')
+      if (p) window.history.replaceState(null, '', '/site_do_abrigo' + p + window.location.hash)
+    </script>
   </head>
   <body>
     <div id="root"></div>

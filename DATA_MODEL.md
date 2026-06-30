@@ -16,14 +16,13 @@ A implementação real vive em `supabase/migrations/`. Aqui descrevemos schema, 
 - **Sem delete físico** em dados de domínio: usar coluna `status`. Some da visão pública via RLS/filtro, mas o histórico permanece.
 - Nomes de tabela no plural, colunas em `snake_case`.
 
-## Enums (rascunho) · ⬜
+## Enums
 
-| Enum | Valores | Uso |
-|---|---|---|
-| `dog_status` | available · adopted · deceased | tabela `dogs` |
-| `event_type` | product · raffle | tabela `events` |
-| `reservation_status` | pending · paid · cancelled | tabela `reservations` |
-<!-- confirmar ao implementar cada fase -->
+| Enum | Valores | Status | Uso |
+|---|---|---|---|
+| `dog_status` | available · adopted · deceased | 🟢 | tabela `dogs` |
+| `event_type` | product · raffle | ⬜ | tabela `events` |
+| `reservation_status` | pending · paid · cancelled | ⬜ | tabela `reservations` |
 
 ## Admin & Auth · ⬜
 
@@ -60,7 +59,7 @@ Modelo a copiar por tabela:
 
 ---
 
-### `dogs` · ⬜ (Fase 3)
+### `dogs` · 🟢 (Fase 3)
 
 Cães do catálogo de adoção.
 
@@ -68,14 +67,20 @@ Cães do catálogo de adoção.
 |---|---|---|---|---|
 | id | uuid | não | gen_random_uuid() | PK |
 | name | text | não | — | nome |
-| size | text/enum | — | — | porte |
-| age | — | — | — | idade (definir representação) |
+| size | text | sim | — | porte livre (ex.: "pequeno", "médio", "grande") |
+| birth_year | smallint | sim | — | ano de nascimento; UI calcula idade (ano→idade e idade→ano estimado) |
 | description | text | sim | — | descrição |
-| photos | text[] | sim | — | URLs (Storage) |
+| photos | text[] | sim | — | paths do Supabase Storage (bucket `dogs`) |
 | status | `dog_status` | não | available | available/adopted/deceased |
-| created_at / updated_at | timestamptz | não | now() | — |
+| created_at | timestamptz | não | now() | — |
+| updated_at | timestamptz | não | now() | atualizado via trigger `trg_dogs_updated_at` |
 
-**RLS:** SELECT público só onde `status = 'available'`; INSERT/UPDATE/DELETE só autenticado.
+**Migration:** `supabase/migrations/20260629000001_create_dogs.sql`
+**RLS:** policies em `supabase/migrations/20260629000002_dogs_rls.sql`.
+- SELECT: público (`anon`) apenas quando `status = 'available'`; autenticado vê todos os status.
+- INSERT: apenas autenticado.
+- UPDATE: apenas autenticado.
+- DELETE: ninguém; sem delete físico para dados de domínio.
 
 ### `stories` · ⬜ (Fase 4)
 
@@ -125,11 +130,14 @@ Reserva de um produto ou número, aguardando comprovante.
 |---|---|---|---|---|
 | id | uuid | não | gen_random_uuid() | PK |
 | event_id | uuid | não | — | FK → events |
-| item_ref | — | — | — | aponta p/ product ou raffle_number (definir) |
+| product_id | uuid | sim | — | FK → products (nulo se rifa) |
+| raffle_number_id | uuid | sim | — | FK → raffle_numbers (nulo se produto) |
 | contact | text | — | — | WhatsApp/Instagram do usuário |
 | status | `reservation_status` | não | pending | pending/paid/cancelled |
 | expires_at | timestamptz | não | — | prazo do comprovante |
 | created_at | timestamptz | não | now() | — |
+
+**Constraint:** `CHECK ((product_id IS NOT NULL) != (raffle_number_id IS NOT NULL))` — exatamente uma das duas preenchida.
 
 **RLS:** INSERT público (usuário reserva); SELECT/UPDATE (marcar paga/cancelar) só autenticado. <!-- revisar: público pode precisar ler a própria reserva -->
 
@@ -146,14 +154,19 @@ Reserva de um produto ou número, aguardando comprovante.
 
 ---
 
-## Storage (buckets) · ⬜
+## Storage (buckets) · 🟡
 
-| Bucket | Conteúdo | Acesso |
-|---|---|---|
-| `dogs` | fotos de cães | leitura pública; upload autenticado |
-| `stories` | fotos de histórias | leitura pública; upload autenticado |
-| `events` | imagens de produtos | leitura pública; upload autenticado |
-<!-- confirmar policies por bucket -->
+| Bucket | Conteúdo | Acesso | Status |
+|---|---|---|---|
+| `dogs` | fotos de cães | bucket público; upload autenticado via policy `storage.objects` | 🟢 |
+| `stories` | fotos de histórias | leitura pública; upload autenticado | ⬜ |
+| `events` | imagens de produtos | leitura pública; upload autenticado | ⬜ |
+
+**Migration `dogs`:** `supabase/migrations/20260629000003_dogs_storage.sql`
+**Policies `dogs`:**
+- SELECT/download público: via bucket público, usando URL pública; sem policy pública de `SELECT` em `storage.objects` para não liberar listagem.
+- INSERT/upload: apenas autenticado, com `bucket_id = 'dogs'`.
+<!-- confirmar policies dos próximos buckets -->
 
 ---
 

@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      // GitHub Pages SPA fallback — redireciona para index.html preservando o caminho
+      const repo = '/site_do_abrigo'
+      const path = window.location.pathname.replace(repo, '') || '/'
+      const search = window.location.search
+      const hash = window.location.hash
+      window.location.replace(repo + '/?p=' + encodeURIComponent(path + search) + hash)
+    </script>
+  </head>
+  <body></body>
+</html>

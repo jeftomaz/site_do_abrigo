@@ -97,18 +97,70 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 > - **Tema:** diferenças light × dark.
 > - **Imagens de referência:** IDs do Registro abaixo.
 
+### Button · 🟡 rascunho
+
+**Componente:** Button · **Status:** 🟡 rascunho
+- **Anatomia:** elemento `<button>` nativo com spinner opcional à esquerda.
+- **Variantes:** `primary` · `secondary` · `ghost` · `danger`
+- **Tamanhos:** `sm` · `md` (default) · `lg`
+- **Estados:** default · hover · active · `disabled` (opacidade 50%) · `isLoading` (spinner + desabilitado)
+- **Responsivo:** sem diferença mobile × desktop por enquanto.
+- **Tema:** variantes com classes `dark:` para cada estado — cores placeholder até tokens serem definidos.
+- **Imagens de referência:** nenhuma ainda — cores são placeholders Tailwind.
+
+### Card (cão) · 🟡 rascunho
+
+**Componente:** DogCard · **Status:** 🟡 rascunho
+- **Anatomia:** imagem de capa (aspect 4/3, `object-cover`; fallback 🐾 quando sem foto) + nome + linha meta (`porte · idade`).
+- **Variantes:** estático (público, F3-05) · clicável (recebe `onClick` → abre detalhe na F3-06, com `role/tabIndex`, hover de sombra e foco visível).
+- **Estados:** default · hover (sombra) · focus-visible (ring) quando clicável.
+- **Responsivo:** card fluido; grid da página é 1 col (mobile) → 2 (sm) → 3 (lg).
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Modal / detalhe do cão · 🟡 rascunho
+
+**Componente:** DogDetailsModal · **Status:** 🟡 rascunho
+- **Anatomia:** `Modal` compartilhado com título do cão, imagem principal/fallback, linha meta (`porte · idade`), descrição e CTA para formulário de adoção.
+- **Variantes:** com URL `VITE_ADOPTION_FORM_URL` (CTA abre Google Forms em nova aba) · sem URL (CTA desabilitado).
+- **Estados:** aberto · fechado; fechamento por Esc, backdrop e botão do `Modal`.
+- **Responsivo:** conteúdo em coluna única; CTA ocupa largura total no mobile e largura automática em telas maiores.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Formulário admin de cão · 🟡 rascunho
+
+**Componente:** DogCreateForm / DogEditModal / DogFormFields / DogPhotoUpload / StatusSelect · **Status:** 🟡 rascunho
+- **Anatomia:** campos nome, porte, idade aproximada e descrição; seção de fotos com miniaturas, input de arquivo e botão de upload; badge + select de status na tabela; botão `Button` com loading; mensagens de erro/sucesso.
+- **Variantes:** criação em bloco fixo na página admin · edição em `Modal` compartilhado aberto pela tabela; upload de fotos apenas na edição; status editável direto na tabela.
+- **Estados:** default · validação de campo · erro de submit · sucesso no cadastro · upload loading/erro · loading no botão.
+- **Responsivo:** campos em grid 1 coluna no mobile → 2 colunas no desktop quando houver espaço; miniaturas em grid compacto; modal mantém largura compacta.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Badge / controle de status · 🟡 rascunho
+
+**Componente:** StatusBadge / StatusSelect · **Status:** 🟡 rascunho
+- **Anatomia:** badge textual colorido para leitura rápida + select de status para admin.
+- **Variantes:** `available` (Disponível) · `adopted` (Adotado) · `deceased` (Falecido).
+- **Estados:** default · loading/disabled ao salvar · erro inline quando a mudança falha.
+- **Responsivo:** usado dentro da tabela admin; largura mínima para evitar quebra do select.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Componentes previstos (preencher progressivamente)
 
-- [ ] Button · ⬜
-- [ ] Card (cão) · ⬜
-- [ ] Modal / detalhe do cão · ⬜
+- [x] Button · 🟡
+- [x] Card (cão) · 🟡
+- [x] Modal / detalhe do cão · 🟡
+- [x] Formulário admin de cão · 🟡
 - [ ] Field / input · ⬜
 - [ ] Skeleton / loading · ⬜
 - [ ] Header (âncoras + links) · ⬜
 - [ ] Seção da landing · ⬜
 - [ ] Card de história · ⬜
 - [ ] Card de produto / número de rifa · ⬜
-- [ ] Badge de status (disponível/adotado/reservado/pago) · ⬜
+- [x] Badge de status (disponível/adotado/falecido) · 🟡
 <!-- adicionar outros conforme surgirem -->
 
 ---
