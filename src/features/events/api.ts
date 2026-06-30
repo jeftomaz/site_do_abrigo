@@ -4,11 +4,19 @@ import type {
   EventInsert,
   EventUpdate,
   Product,
+  ProductInsert,
+  ProductUpdate,
   RaffleNumber,
+  RaffleNumberInsert,
+  RaffleNumberUpdate,
 } from './types'
 
 const eventColumns =
   'id,title,description,type,is_active,starts_at,ends_at,rules,created_at,updated_at' as const
+const productColumns =
+  'id,event_id,name,description,price_cents,image_path,sort_order,created_at,updated_at' as const
+const raffleNumberColumns =
+  'id,event_id,number,label,sort_order,created_at,updated_at' as const
 
 export async function getActiveEvent(): Promise<Event | null> {
   const { data, error } = await supabase
@@ -68,6 +76,92 @@ export async function updateEvent({
     .update(input)
     .eq('id', id)
     .select(eventColumns)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function listProducts(eventId: Event['id']): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from('products')
+    .select(productColumns)
+    .eq('event_id', eventId)
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true })
+
+  if (error) throw error
+  return data ?? []
+}
+
+export async function createProduct(input: ProductInsert): Promise<Product> {
+  const { data, error } = await supabase
+    .from('products')
+    .insert(input)
+    .select(productColumns)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function updateProduct({
+  id,
+  input,
+}: {
+  id: Product['id']
+  input: ProductUpdate
+}): Promise<Product> {
+  const { data, error } = await supabase
+    .from('products')
+    .update(input)
+    .eq('id', id)
+    .select(productColumns)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function listRaffleNumbers(
+  eventId: Event['id'],
+): Promise<RaffleNumber[]> {
+  const { data, error } = await supabase
+    .from('raffle_numbers')
+    .select(raffleNumberColumns)
+    .eq('event_id', eventId)
+    .order('sort_order', { ascending: true })
+    .order('number', { ascending: true })
+
+  if (error) throw error
+  return data ?? []
+}
+
+export async function createRaffleNumber(
+  input: RaffleNumberInsert,
+): Promise<RaffleNumber> {
+  const { data, error } = await supabase
+    .from('raffle_numbers')
+    .insert(input)
+    .select(raffleNumberColumns)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function updateRaffleNumber({
+  id,
+  input,
+}: {
+  id: RaffleNumber['id']
+  input: RaffleNumberUpdate
+}): Promise<RaffleNumber> {
+  const { data, error } = await supabase
+    .from('raffle_numbers')
+    .update(input)
+    .eq('id', id)
+    .select(raffleNumberColumns)
     .single()
 
   if (error) throw error

@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 5 — Eventos / Recãopensa
-- **Próxima tarefa:** F5-10 (Fase 5 — Eventos)
+- **Próxima tarefa:** F5-11 (Fase 5 — Eventos)
 - **Fase concluída:** Fase T — Testes ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -43,6 +43,14 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F5-10` Admin: gerenciar produtos/números
+
+- **Feito:** `/admin/events` ganhou ação `Itens` por evento, com painel para listar/criar/editar produtos em eventos de produtos e números em eventos de rifa; API/hooks centralizados passaram a cobrir `products` e `raffle_numbers`.
+- **Decisões:** não foi adicionada exclusão física de itens, seguindo a regra já existente de domínio sem policy de `DELETE`; a gestão cobre leitura, criação e edição.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/itemForms.ts`, `src/features/events/itemForms.test.ts`, `src/features/events/api.test.ts`, `src/features/events/components/EventItemsPanel.tsx`, `src/features/events/components/ProductCreateForm.tsx`, `src/features/events/components/ProductEditModal.tsx`, `src/features/events/components/ProductFormFields.tsx`, `src/features/events/components/RaffleNumberCreateForm.tsx`, `src/features/events/components/RaffleNumberEditModal.tsx`, `src/features/events/components/RaffleNumberFormFields.tsx`, `src/features/events/components/EventCreateForm.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/pages/admin/events/AdminEventsPage.test.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F5-10 marcado; `DESIGN_SYSTEM.md` registrou painel admin de itens; `TESTING.md` registrou cobertura de helpers/API/página admin de itens.
+- **Verificação:** `npm test` passou (161 testes); `npm run build` passou.
 
 ### 2026-06-30 — `F5-09` Admin: criar/editar evento
 

@@ -2,7 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
-import type { Event } from '../../../features/events/types'
+import type { Event, Product, RaffleNumber } from '../../../features/events/types'
 import { server } from '../../../test/msw/server'
 import { renderWithProviders } from '../../../test/render'
 import AdminEventsPage from './AdminEventsPage'
@@ -20,6 +20,37 @@ const activeEvent: Event = {
   rules: { reservation_expires_in_hours: 6, raffle_price_cents: 1500 },
   created_at: '2026-06-01T00:00:00Z',
   updated_at: '2026-06-01T00:00:00Z',
+}
+
+const productEvent: Event = {
+  ...activeEvent,
+  id: '00000000-0000-0000-0000-000000000b02',
+  title: 'Bazar de Julho 2026',
+  type: 'product',
+  is_active: false,
+  ends_at: '2026-07-31T23:59:59Z',
+}
+
+const product: Product = {
+  id: '00000000-0000-0000-0000-000000000c01',
+  event_id: productEvent.id,
+  name: 'Camiseta solidária',
+  description: 'Tamanho M',
+  price_cents: 2500,
+  image_path: null,
+  sort_order: 1,
+  created_at: '2026-06-30T00:00:00Z',
+  updated_at: '2026-06-30T00:00:00Z',
+}
+
+const raffleNumber: RaffleNumber = {
+  id: '00000000-0000-0000-0000-000000000d01',
+  event_id: activeEvent.id,
+  number: 21,
+  label: null,
+  sort_order: 1,
+  created_at: '2026-06-30T00:00:00Z',
+  updated_at: '2026-06-30T00:00:00Z',
 }
 
 function mockEventList(events: Event[]) {
@@ -125,6 +156,134 @@ describe('AdminEventsPage', () => {
         reservation_expires_in_hours: 10,
         raffle_price_cents: 1500,
       },
+    })
+  })
+
+  it('gerencia produtos do evento selecionado', async () => {
+    const user = userEvent.setup()
+    const createdBodies: unknown[] = []
+    const updatedBodies: unknown[] = []
+    mockEventList([productEvent])
+    server.use(
+      http.get(`${REST}/products`, () => {
+        return HttpResponse.json([product])
+      }),
+      http.post(`${REST}/products`, async ({ request }) => {
+        createdBodies.push(await request.json())
+        return HttpResponse.json({ ...product, name: 'Caneca solidária' })
+      }),
+      http.patch(`${REST}/products`, async ({ request }) => {
+        updatedBodies.push(await request.json())
+        return HttpResponse.json({ ...product, name: 'Camiseta editada' })
+      }),
+    )
+
+    renderWithProviders(<AdminEventsPage />)
+
+    const eventRow = await screen.findByRole('row', { name: /Bazar de Julho 2026/ })
+    await user.click(within(eventRow).getByRole('button', { name: 'Itens' }))
+
+    expect(
+      await screen.findByRole('heading', { name: 'Produtos' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Camiseta solidária')).toBeInTheDocument()
+    expect(screen.getByText(/25,00/)).toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('Nome'), 'Caneca solidária')
+    await user.type(screen.getByLabelText('Preço (R$)'), '30,50')
+    await user.click(screen.getByRole('button', { name: 'Cadastrar produto' }))
+
+    await waitFor(() => {
+      expect(screen.getByText('"Caneca solidária" foi cadastrado.')).toBeInTheDocument()
+    })
+
+    expect(createdBodies[0]).toMatchObject({
+      event_id: productEvent.id,
+      name: 'Caneca solidária',
+      price_cents: 3050,
+      sort_order: 0,
+    })
+
+    const productRow = screen.getByRole('row', { name: /Camiseta solidária/ })
+    await user.click(within(productRow).getByRole('button', { name: 'Editar' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'Editar produto' })
+    await user.clear(within(dialog).getByLabelText('Nome'))
+    await user.type(within(dialog).getByLabelText('Nome'), 'Camiseta editada')
+    await user.clear(within(dialog).getByLabelText('Preço (R$)'))
+    await user.type(within(dialog).getByLabelText('Preço (R$)'), '35')
+    await user.click(within(dialog).getByRole('button', { name: 'Salvar alterações' }))
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'Editar produto' })).not.toBeInTheDocument()
+    })
+
+    expect(updatedBodies[0]).toMatchObject({
+      event_id: productEvent.id,
+      name: 'Camiseta editada',
+      price_cents: 3500,
+    })
+  })
+
+  it('gerencia números de rifa do evento selecionado', async () => {
+    const user = userEvent.setup()
+    const createdBodies: unknown[] = []
+    const updatedBodies: unknown[] = []
+    mockEventList([activeEvent])
+    server.use(
+      http.get(`${REST}/raffle_numbers`, () => {
+        return HttpResponse.json([raffleNumber])
+      }),
+      http.post(`${REST}/raffle_numbers`, async ({ request }) => {
+        createdBodies.push(await request.json())
+        return HttpResponse.json({ ...raffleNumber, number: 22 })
+      }),
+      http.patch(`${REST}/raffle_numbers`, async ({ request }) => {
+        updatedBodies.push(await request.json())
+        return HttpResponse.json({ ...raffleNumber, label: 'Número da sorte' })
+      }),
+    )
+
+    renderWithProviders(<AdminEventsPage />)
+
+    const eventRow = await screen.findByRole('row', { name: /Recãopensa Junho 2026/ })
+    await user.click(within(eventRow).getByRole('button', { name: 'Itens' }))
+
+    expect(
+      await screen.findByRole('heading', { name: 'Números da rifa' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('row', { name: /21/ })).toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('Número'), '22')
+    await user.type(screen.getByLabelText('Rótulo'), 'Número da sorte')
+    await user.click(screen.getByRole('button', { name: 'Cadastrar número' }))
+
+    await waitFor(() => {
+      expect(screen.getByText('Número 22 foi cadastrado.')).toBeInTheDocument()
+    })
+
+    expect(createdBodies[0]).toMatchObject({
+      event_id: activeEvent.id,
+      number: 22,
+      label: 'Número da sorte',
+      sort_order: 0,
+    })
+
+    const raffleRow = screen.getByRole('row', { name: /21/ })
+    await user.click(within(raffleRow).getByRole('button', { name: 'Editar' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'Editar número' })
+    await user.type(within(dialog).getByLabelText('Rótulo'), 'Número da sorte')
+    await user.click(within(dialog).getByRole('button', { name: 'Salvar alterações' }))
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'Editar número' })).not.toBeInTheDocument()
+    })
+
+    expect(updatedBodies[0]).toMatchObject({
+      event_id: activeEvent.id,
+      number: 21,
+      label: 'Número da sorte',
     })
   })
 })

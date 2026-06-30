@@ -94,9 +94,10 @@ src/
     events/
       api.test.ts                    # Camada 3 — RPCs de disponibilidade F5-04
       form.test.ts                   # Camada 1 — formulário admin de eventos F5-09
+      itemForms.test.ts              # Camada 1 — formulários de produtos/números F5-10
   pages/
     admin/
-      events/AdminEventsPage.test.tsx # Camada 3 — CRUD admin de eventos F5-09
+      events/AdminEventsPage.test.tsx # Camada 3 — CRUD admin de eventos/itens F5-09/F5-10
     public/
       EventosPage.test.tsx           # Camada 3 — página pública F5-07/F5-08
   shared/
@@ -212,7 +213,7 @@ Atualizado a cada tarefa. Marque `🟢` ao cobrir, `🟡` se parcial.
 | `features/auth` — AdminGuard | — | 🟢 | — | — | — | T-04 (módulos mockados) |
 | `features/auth` — E2E admin/TOTP | — | — | — | — | 🟢 | T-07: login+2FA+/admin |
 | `pages/public/landing` — DoacaoSection | — | 🟢 | — | — | — | T-04 |
-| `features/events` / `reservations` | 🟢 | 🟡 | 🟢 | 🟢 | ⬜ | F5-01/F5-05: banco/RLS/disponibilidade/pg_cron; F5-06: api com MSW; F5-07: página pública `/eventos`; F5-08: helpers de prazo/preço, API de reserva, fluxo público reserva→PIX e RPC segura pgTAP; F5-09: helpers/form admin, API create/update/listAll e página admin com MSW |
+| `features/events` / `reservations` | 🟢 | 🟡 | 🟢 | 🟢 | ⬜ | F5-01/F5-05: banco/RLS/disponibilidade/pg_cron; F5-06: api com MSW; F5-07: página pública `/eventos`; F5-08: helpers de prazo/preço, API de reserva, fluxo público reserva→PIX e RPC segura pgTAP; F5-09: helpers/form admin, API create/update/listAll e página admin com MSW; F5-10: helpers/API/painel admin de produtos e números |
 
 ### Infra de teste
 

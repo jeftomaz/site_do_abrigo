@@ -51,7 +51,7 @@ export function EventCreateForm() {
           Cadastrar evento
         </h2>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Produtos e números serão gerenciados no próximo passo.
+          Depois de cadastrar, use a ação Itens para gerenciar produtos ou números.
         </p>
       </div>
 

@@ -74,7 +74,7 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 - [x] **F5-07** Público: ver evento ativo + passados. · Pronto: lista renderiza. · Toca: pages/public/eventos
 - [x] **F5-08** Público: reservar item/número → gerar PIX + instrução comprovante. · Pronto: reserva criada. · Toca: pages/public/eventos
 - [x] **F5-09** Admin: criar/editar evento. · Pronto: evento gerenciável. · Toca: pages/admin/events
-- [ ] **F5-10** Admin: gerenciar produtos/números. · Pronto: itens CRUD. · Toca: pages/admin/events
+- [x] **F5-10** Admin: gerenciar produtos/números. · Pronto: itens CRUD. · Toca: pages/admin/events
 - [ ] **F5-11** Admin: marcar reserva paga / definir prazo. · Pronto: status muda. · Toca: pages/admin/events
 
 ## Fase 6 — Acabamento

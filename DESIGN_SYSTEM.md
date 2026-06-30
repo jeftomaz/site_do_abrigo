@@ -178,6 +178,16 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
+### Painel admin de itens de evento · 🟡 rascunho
+
+**Componente:** EventItemsPanel / ProductCreateForm / ProductEditModal / RaffleNumberCreateForm / RaffleNumberEditModal · **Status:** 🟡 rascunho
+- **Anatomia:** ação `Itens` na tabela de eventos; painel contextual com título do evento, formulário de criação, tabela de itens e modais de edição.
+- **Variantes:** produtos com nome, preço, descrição e ordem · números de rifa com número, rótulo e ordem.
+- **Estados:** loading com skeleton, erro inline, vazio, sucesso no cadastro, validação de campos e loading no botão.
+- **Responsivo:** painel full-width abaixo da tabela; tabelas com overflow horizontal; formulários em 1 coluna no mobile e 2 colunas para campos curtos em telas maiores.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Componentes previstos (preencher progressivamente)
 
 - [x] Button · 🟡
@@ -192,6 +202,7 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - [x] Card de evento · 🟡
 - [x] Painel de reserva de evento · 🟡
 - [x] Formulário admin de evento · 🟡
+- [x] Painel admin de itens de evento · 🟡
 - [x] Card de produto / número de rifa · 🟡
 - [x] Badge de status (disponível/adotado/falecido) · 🟡
 <!-- adicionar outros conforme surgirem -->

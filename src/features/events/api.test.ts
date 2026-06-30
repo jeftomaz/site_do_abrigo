@@ -3,13 +3,19 @@ import { describe, expect, it } from 'vitest'
 import { server } from '../../test/msw/server'
 import {
   createEvent,
+  createProduct,
+  createRaffleNumber,
   createReservation,
   getActiveEvent,
   listAllEvents,
   listAvailableProducts,
   listAvailableRaffleNumbers,
   listPastEvents,
+  listProducts,
+  listRaffleNumbers,
   updateEvent,
+  updateProduct,
+  updateRaffleNumber,
 } from './api'
 import type { Event, Product, RaffleNumber } from './types'
 
@@ -215,6 +221,126 @@ describe('events api — admin event CRUD', () => {
         is_active: true,
       }),
     ).rejects.toThrow('duplicate key value')
+  })
+})
+
+describe('events api — admin product CRUD', () => {
+  it('lista produtos de um evento', async () => {
+    server.use(
+      http.get(`${REST}/products`, () => {
+        return HttpResponse.json([productFixture])
+      }),
+    )
+
+    await expect(listProducts(eventId)).resolves.toEqual([productFixture])
+  })
+
+  it('cria produto autenticado', async () => {
+    let receivedBody: unknown
+
+    server.use(
+      http.post(`${REST}/products`, async ({ request }) => {
+        receivedBody = await request.json()
+        return HttpResponse.json(productFixture)
+      }),
+    )
+
+    await expect(
+      createProduct({
+        event_id: eventId,
+        name: 'Produto livre',
+        price_cents: 2500,
+      }),
+    ).resolves.toEqual(productFixture)
+
+    expect(receivedBody).toEqual({
+      event_id: eventId,
+      name: 'Produto livre',
+      price_cents: 2500,
+    })
+  })
+
+  it('edita produto autenticado', async () => {
+    let receivedBody: unknown
+
+    server.use(
+      http.patch(`${REST}/products`, async ({ request }) => {
+        receivedBody = await request.json()
+        return HttpResponse.json({ ...productFixture, name: 'Produto editado' })
+      }),
+    )
+
+    await expect(
+      updateProduct({
+        id: productFixture.id,
+        input: { name: 'Produto editado', price_cents: 3000 },
+      }),
+    ).resolves.toMatchObject({ name: 'Produto editado' })
+
+    expect(receivedBody).toEqual({
+      name: 'Produto editado',
+      price_cents: 3000,
+    })
+  })
+})
+
+describe('events api — admin raffle number CRUD', () => {
+  it('lista números de rifa de um evento', async () => {
+    server.use(
+      http.get(`${REST}/raffle_numbers`, () => {
+        return HttpResponse.json([raffleNumberFixture])
+      }),
+    )
+
+    await expect(listRaffleNumbers(eventId)).resolves.toEqual([
+      raffleNumberFixture,
+    ])
+  })
+
+  it('cria número de rifa autenticado', async () => {
+    let receivedBody: unknown
+
+    server.use(
+      http.post(`${REST}/raffle_numbers`, async ({ request }) => {
+        receivedBody = await request.json()
+        return HttpResponse.json(raffleNumberFixture)
+      }),
+    )
+
+    await expect(
+      createRaffleNumber({
+        event_id: eventId,
+        number: 21,
+      }),
+    ).resolves.toEqual(raffleNumberFixture)
+
+    expect(receivedBody).toEqual({
+      event_id: eventId,
+      number: 21,
+    })
+  })
+
+  it('edita número de rifa autenticado', async () => {
+    let receivedBody: unknown
+
+    server.use(
+      http.patch(`${REST}/raffle_numbers`, async ({ request }) => {
+        receivedBody = await request.json()
+        return HttpResponse.json({ ...raffleNumberFixture, label: 'Sorte' })
+      }),
+    )
+
+    await expect(
+      updateRaffleNumber({
+        id: raffleNumberFixture.id,
+        input: { label: 'Sorte', sort_order: 2 },
+      }),
+    ).resolves.toMatchObject({ label: 'Sorte' })
+
+    expect(receivedBody).toEqual({
+      label: 'Sorte',
+      sort_order: 2,
+    })
   })
 })
 

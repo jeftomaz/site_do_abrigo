@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { EventCreateForm } from '../../../features/events/components/EventCreateForm'
 import { EventEditModal } from '../../../features/events/components/EventEditModal'
+import { EventItemsPanel } from '../../../features/events/components/EventItemsPanel'
 import { reservationExpiresInHours } from '../../../features/events/format'
 import { useAllEvents } from '../../../features/events/hooks'
 import type { Event } from '../../../features/events/types'
@@ -60,6 +61,7 @@ function formatDate(value: string | null) {
 export default function AdminEventsPage() {
   const { data: events, isLoading, isError } = useAllEvents()
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
+  const [itemsEvent, setItemsEvent] = useState<Event | null>(null)
 
   return (
     <main className="mx-auto max-w-6xl p-6">
@@ -134,14 +136,24 @@ export default function AdminEventsPage() {
                     {reservationExpiresInHours(event)}h
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setEditingEvent(event)}
-                    >
-                      Editar
-                    </Button>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setItemsEvent(event)}
+                      >
+                        Itens
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setEditingEvent(event)}
+                      >
+                        Editar
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -154,6 +166,8 @@ export default function AdminEventsPage() {
         event={editingEvent}
         onClose={() => setEditingEvent(null)}
       />
+
+      {itemsEvent && <EventItemsPanel event={itemsEvent} />}
     </main>
   )
 }
