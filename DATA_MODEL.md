@@ -224,11 +224,11 @@ Reserva de um produto ou número, aguardando comprovante.
   - `list_available_raffle_numbers(p_event_id uuid)` retorna apenas números livres de eventos públicos (ativos ou encerrados).
 - A API do front usa `features/events/api.ts` para chamar essas RPCs; componentes não leem `reservations` diretamente.
 - **pg_cron** roda periodicamente só p/ marcar `pending` expiradas como `cancelled` (limpeza/consistência), nunca como fonte da verdade.
+- Função interna `cancel_expired_reservations()` cancela apenas reservas `pending` com `expires_at <= now()` e retorna a quantidade de linhas alteradas. Execução pública foi revogada; `anon` e `authenticated` não executam essa função.
+- Job `cancel-expired-reservations` roda a cada 5 minutos (`*/5 * * * *`) chamando `select public.cancel_expired_reservations();`.
 
-**Migration:** `supabase/migrations/20260630000008_event_availability.sql`
-**Testes:** `supabase/tests/events_availability.test.sql` cobre produtos/números livres, bloqueio por `paid`, bloqueio por `pending` válido, liberação de `pending` expirado e ausência de leitura pública direta de reservas.
-
-<!-- escrever o job na Fase 5 -->
+**Migrations:** `supabase/migrations/20260630000008_event_availability.sql`, `supabase/migrations/20260630000009_cancel_expired_reservations.sql`
+**Testes:** `supabase/tests/events_availability.test.sql` cobre produtos/números livres, bloqueio por `paid`, bloqueio por `pending` válido, liberação de `pending` expirado e ausência de leitura pública direta de reservas. `supabase/tests/events_cron.test.sql` cobre cancelamento de expiradas, idempotência, job agendado e restrição de execução para clientes.
 
 ---
 

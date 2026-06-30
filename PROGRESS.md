@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 5 — Eventos / Recãopensa
-- **Próxima tarefa:** F5-05 (Fase 5 — Eventos)
+- **Próxima tarefa:** F5-06 (Fase 5 — Eventos)
 - **Fase concluída:** Fase T — Testes ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -42,6 +42,14 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F5-05` pg_cron para reservas expiradas
+
+- **Feito:** criada migration `20260630000009_cancel_expired_reservations.sql` com função `cancel_expired_reservations()` e job `pg_cron` `cancel-expired-reservations` a cada 5 minutos para marcar reservas `pending` vencidas como `cancelled`.
+- **Decisões:** o cron é só limpeza/consistência; disponibilidade continua calculada pela regra de F5-04. A função não fica executável por `anon`/`authenticated`; apenas `service_role` e o dono do job podem executar.
+- **Arquivos:** `supabase/migrations/20260630000009_cancel_expired_reservations.sql`, `supabase/tests/events_cron.test.sql`, `src/shared/types/db.ts`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-05 marcado; `DATA_MODEL.md` registrou função/job `pg_cron`; `TESTING.md` registrou cobertura pgTAP do cron.
+- **Verificação:** `npx supabase db reset` passou; `npx supabase test db supabase/tests` passou (8 arquivos, 79 asserts).
 
 ### 2026-06-30 — `F5-04` Query de disponibilidade
 

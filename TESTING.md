@@ -107,6 +107,7 @@ supabase/
     events_active.test.sql           # Camada 4 — regra de evento ativo F5-02
     events_rls.test.sql              # Camada 4 — RLS de eventos/reservas F5-03
     events_availability.test.sql     # Camada 4 — disponibilidade F5-04
+    events_cron.test.sql             # Camada 4 — pg_cron/cancelamento F5-05
     storage_rls.test.sql             # Camada 4
 e2e/
   global-setup.ts                    # seed cão + criar usuário admin + enroll TOTP
@@ -204,7 +205,7 @@ Atualizado a cada tarefa. Marque `🟢` ao cobrir, `🟡` se parcial.
 | `features/auth` — AdminGuard | — | 🟢 | — | — | — | T-04 (módulos mockados) |
 | `features/auth` — E2E admin/TOTP | — | — | — | — | 🟢 | T-07: login+2FA+/admin |
 | `pages/public/landing` — DoacaoSection | — | 🟢 | — | — | — | T-04 |
-| `features/events` / `reservations` | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | F5-01/F5-04: schema, constraints, regra de ativo, RLS e disponibilidade cobertos; pg_cron pendente F5-05 |
+| `features/events` / `reservations` | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | F5-01/F5-05: schema, constraints, regra de ativo, RLS, disponibilidade e pg_cron cobertos |
 
 ### Infra de teste
 

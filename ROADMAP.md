@@ -69,7 +69,7 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 - [x] **F5-02** Garantir 1 evento ativo (índice/regra `is_active`). · Pronto: 2º ativo falha. · Toca: migrations + DATA_MODEL
 - [x] **F5-03** RLS de todas (INSERT reserva público; resto autenticado). · Pronto: políticas testadas. · Toca: migrations + DATA_MODEL
 - [x] **F5-04** Query de disponibilidade (livre se sem paid/pending válida). · Pronto: item reservado some. · Toca: features/events/api + DATA_MODEL
-- [ ] **F5-05** pg_cron p/ cancelar pending expiradas. · Pronto: job cancela após prazo. · Toca: Supabase + DATA_MODEL
+- [x] **F5-05** pg_cron p/ cancelar pending expiradas. · Pronto: job cancela após prazo. · Toca: Supabase + DATA_MODEL
 - [ ] **F5-06** `features/events/{api,hooks,types}`. · Pronto: ler evento ativo + passados. · Toca: features/events
 - [ ] **F5-07** Público: ver evento ativo + passados. · Pronto: lista renderiza. · Toca: pages/public/eventos
 - [ ] **F5-08** Público: reservar item/número → gerar PIX + instrução comprovante. · Pronto: reserva criada. · Toca: pages/public/eventos
