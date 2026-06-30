@@ -4,17 +4,10 @@ import { SkeletonCard } from '../../shared/ui/Skeleton'
 import { useAvailableDogs } from '../../features/dogs/hooks'
 import { DogCard } from '../../features/dogs/components/DogCard'
 import { DogDetailsModal } from '../../features/dogs/components/DogDetailsModal'
+import { DOG_SIZE_ORDER } from '../../features/dogs/constants'
 import type { Dog } from '../../features/dogs/types'
 
 type SortKey = 'name' | 'age_desc' | 'age_asc' | 'size'
-
-const SIZE_ORDER: Record<string, number> = {
-  filhote: 0,
-  pequeno: 1,
-  médio: 2,
-  grande: 3,
-  gigante: 4,
-}
 
 function sortDogs(dogs: Dog[], key: SortKey): Dog[] {
   return [...dogs].sort((a, b) => {
@@ -34,8 +27,8 @@ function sortDogs(dogs: Dog[], key: SortKey): Dog[] {
         return a.birth_year - b.birth_year
       }
       case 'size': {
-        const aOrd = SIZE_ORDER[a.size?.toLowerCase() ?? ''] ?? 99
-        const bOrd = SIZE_ORDER[b.size?.toLowerCase() ?? ''] ?? 99
+        const aOrd = DOG_SIZE_ORDER[a.size?.toLowerCase() ?? ''] ?? 99
+        const bOrd = DOG_SIZE_ORDER[b.size?.toLowerCase() ?? ''] ?? 99
         return aOrd - bOrd
       }
     }

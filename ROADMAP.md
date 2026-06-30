@@ -49,10 +49,10 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 - [x] **F3-06** Modal de detalhes + botão → Google Forms. · Pronto: expande e linka. · Toca: features/dogs/components
 - [x] **F3-07** Ordenação (porte/idade…). · Pronto: reordena no cliente. · Toca: pages/public/adocao
 - [x] **F3-08** Admin: listar cães (todos os status). · Pronto: tabela/lista admin. · Toca: pages/admin/dogs
-- [ ] **F3-09** Admin: criar cão. · Pronto: novo cão aparece. · Toca: pages/admin/dogs
-- [ ] **F3-10** Admin: editar cão. · Pronto: edição persiste. · Toca: pages/admin/dogs
-- [ ] **F3-11** Admin: upload de fotos. · Pronto: fotos salvam no bucket. · Toca: pages/admin/dogs
-- [ ] **F3-12** Admin: marcar adotado/falecido. · Pronto: some do público. · Toca: pages/admin/dogs
+- [x] **F3-09** Admin: criar cão. · Pronto: novo cão aparece. · Toca: pages/admin/dogs
+- [x] **F3-10** Admin: editar cão. · Pronto: edição persiste. · Toca: pages/admin/dogs
+- [x] **F3-11** Admin: upload de fotos. · Pronto: fotos salvam no bucket. · Toca: pages/admin/dogs
+- [x] **F3-12** Admin: marcar adotado/falecido. · Pronto: some do público. · Toca: pages/admin/dogs
 
 ## Fase 4 — Histórias
 

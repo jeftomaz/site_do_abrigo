@@ -5,9 +5,9 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 
 ## Atual
 
-- **Fase:** 3 — Adoção (cães)
-- **Próxima tarefa:** F3-09
-- **Fase concluída:** Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
+- **Fase:** 4 — Histórias
+- **Próxima tarefa:** F4-01
+- **Fase concluída:** Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
 ## Decisões fixadas
@@ -42,6 +42,30 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F3-12` Admin: marcar adotado/falecido
+- **Feito:** tabela admin ganhou controle de status por cão (`available`, `adopted`, `deceased`) com persistência via `useUpdateDog`; ao sair de `available`, o cão some da listagem pública por filtro/RLS.
+- **Decisões:** status é alterado diretamente na tabela admin; sem delete físico, mantendo histórico do cão.
+- **Arquivos:** `src/pages/admin/dogs/AdminDogsPage.tsx`, `ROADMAP.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` marcado; `DESIGN_SYSTEM.md` registrou badge/controle de status como 🟡; `PROGRESS.md` atualizado e Fase 3 concluída.
+
+### 2026-06-30 — `F3-11` Admin: upload de fotos
+- **Feito:** upload autenticado para o bucket `dogs`, paths salvos em `dogs.photos`, componente `DogPhotoUpload` no modal de edição com miniaturas e feedback de erro/loading; capa pública passa a usar a primeira foto enviada.
+- **Decisões:** fotos são salvas em paths `dogs/<dog-id>/<timestamp>-<nome-seguro>`; remoção/reordenação não entra nesta tarefa.
+- **Arquivos:** `src/features/dogs/api.ts`, `src/features/dogs/hooks.ts`, `src/features/dogs/constants.ts`, `src/features/dogs/format.ts`, `src/features/dogs/components/DogPhotoUpload.tsx`, `src/features/dogs/components/DogEditModal.tsx`, `src/pages/admin/dogs/AdminDogsPage.tsx`, `ROADMAP.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` marcado; `DESIGN_SYSTEM.md` atualizou o formulário admin de cão com upload de fotos; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `F3-10` Admin: editar cão
+- **Feito:** criado `updateDog` na API, `useUpdateDog` com invalidação das listas, campos/helpers compartilhados para formulário de cão e modal de edição aberto pela tabela admin.
+- **Decisões:** edição desta tarefa cobre nome, porte, idade aproximada e descrição; status permanece para F3-12 e fotos para F3-11.
+- **Arquivos:** `src/features/dogs/api.ts`, `src/features/dogs/hooks.ts`, `src/features/dogs/form.ts`, `src/features/dogs/components/DogFormFields.tsx`, `src/features/dogs/components/DogCreateForm.tsx`, `src/features/dogs/components/DogEditModal.tsx`, `src/pages/admin/dogs/AdminDogsPage.tsx`, `ROADMAP.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` marcado; `DESIGN_SYSTEM.md` registrou edição/admin de cão como 🟡; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `F3-09` Admin: criar cão
+- **Feito:** criado `createDog` na API, `useCreateDog` com invalidação das listas, formulário admin para nome, porte, idade aproximada e descrição; cadastro grava `status = available`, reseta após sucesso e o novo cão aparece na tabela.
+- **Decisões:** fotos continuam fora do cadastro inicial e ficam para F3-11; idade aproximada do formulário é convertida para `birth_year`.
+- **Arquivos:** `src/features/dogs/api.ts`, `src/features/dogs/hooks.ts`, `src/features/dogs/constants.ts`, `src/features/dogs/components/DogCreateForm.tsx`, `src/pages/admin/dogs/AdminDogsPage.tsx`, `src/pages/public/AdocaoPage.tsx`, `ROADMAP.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` marcado; `DESIGN_SYSTEM.md` registrou `DogCreateForm` como 🟡; `PROGRESS.md` atualizado.
 
 ### 2026-06-30 — `F3-08` Admin: listar cães
 - **Feito:** `listAllDogs` na API (sem filtro de status), `useAllDogs` hook; `AdminDogsPage` com tabela responsiva (nome, porte, idade, badge de status colorido, data de cadastro), loading skeleton, empty state e erro; rota `/admin/dogs` protegida por `AdminGuard`; card "Adoção" do `AdminPage` vira link clicável para a lista.

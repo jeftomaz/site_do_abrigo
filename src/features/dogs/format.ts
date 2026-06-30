@@ -1,6 +1,5 @@
 import { supabase } from '../../shared/lib/supabase'
-
-const DOGS_BUCKET = 'dogs'
+import { DOGS_BUCKET } from './constants'
 
 /** Resolve um path do Storage (bucket `dogs`) para URL pública. */
 export function dogPhotoUrl(path: string): string {

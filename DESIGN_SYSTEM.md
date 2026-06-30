@@ -118,18 +118,49 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
+### Modal / detalhe do cão · 🟡 rascunho
+
+**Componente:** DogDetailsModal · **Status:** 🟡 rascunho
+- **Anatomia:** `Modal` compartilhado com título do cão, imagem principal/fallback, linha meta (`porte · idade`), descrição e CTA para formulário de adoção.
+- **Variantes:** com URL `VITE_ADOPTION_FORM_URL` (CTA abre Google Forms em nova aba) · sem URL (CTA desabilitado).
+- **Estados:** aberto · fechado; fechamento por Esc, backdrop e botão do `Modal`.
+- **Responsivo:** conteúdo em coluna única; CTA ocupa largura total no mobile e largura automática em telas maiores.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Formulário admin de cão · 🟡 rascunho
+
+**Componente:** DogCreateForm / DogEditModal / DogFormFields / DogPhotoUpload / StatusSelect · **Status:** 🟡 rascunho
+- **Anatomia:** campos nome, porte, idade aproximada e descrição; seção de fotos com miniaturas, input de arquivo e botão de upload; badge + select de status na tabela; botão `Button` com loading; mensagens de erro/sucesso.
+- **Variantes:** criação em bloco fixo na página admin · edição em `Modal` compartilhado aberto pela tabela; upload de fotos apenas na edição; status editável direto na tabela.
+- **Estados:** default · validação de campo · erro de submit · sucesso no cadastro · upload loading/erro · loading no botão.
+- **Responsivo:** campos em grid 1 coluna no mobile → 2 colunas no desktop quando houver espaço; miniaturas em grid compacto; modal mantém largura compacta.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Badge / controle de status · 🟡 rascunho
+
+**Componente:** StatusBadge / StatusSelect · **Status:** 🟡 rascunho
+- **Anatomia:** badge textual colorido para leitura rápida + select de status para admin.
+- **Variantes:** `available` (Disponível) · `adopted` (Adotado) · `deceased` (Falecido).
+- **Estados:** default · loading/disabled ao salvar · erro inline quando a mudança falha.
+- **Responsivo:** usado dentro da tabela admin; largura mínima para evitar quebra do select.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Componentes previstos (preencher progressivamente)
 
 - [x] Button · 🟡
 - [x] Card (cão) · 🟡
-- [ ] Modal / detalhe do cão · ⬜
+- [x] Modal / detalhe do cão · 🟡
+- [x] Formulário admin de cão · 🟡
 - [ ] Field / input · ⬜
 - [ ] Skeleton / loading · ⬜
 - [ ] Header (âncoras + links) · ⬜
 - [ ] Seção da landing · ⬜
 - [ ] Card de história · ⬜
 - [ ] Card de produto / número de rifa · ⬜
-- [ ] Badge de status (disponível/adotado/reservado/pago) · ⬜
+- [x] Badge de status (disponível/adotado/falecido) · 🟡
 <!-- adicionar outros conforme surgirem -->
 
 ---

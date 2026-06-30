@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useAllDogs } from '../../../features/dogs/hooks'
+import { useAllDogs, useUpdateDog } from '../../../features/dogs/hooks'
 import { dogAgeLabel } from '../../../features/dogs/format'
-import type { DogStatus } from '../../../features/dogs/types'
+import { DogCreateForm } from '../../../features/dogs/components/DogCreateForm'
+import { DogEditModal } from '../../../features/dogs/components/DogEditModal'
+import type { Dog, DogStatus } from '../../../features/dogs/types'
+import { Button } from '../../../shared/ui/Button'
 import { Skeleton } from '../../../shared/ui/Skeleton'
 
 const STATUS_LABEL: Record<DogStatus, string> = {
@@ -29,8 +33,45 @@ function StatusBadge({ status }: { status: DogStatus }) {
   )
 }
 
+function StatusSelect({ dog }: { dog: Dog }) {
+  const updateDog = useUpdateDog()
+
+  const handleStatusChange = async (status: DogStatus) => {
+    try {
+      await updateDog.mutateAsync({
+        id: dog.id,
+        input: { status },
+      })
+    } catch {
+      // A mensagem de erro vem do estado da mutation.
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-1">
+      <select
+        aria-label={`Status de ${dog.name}`}
+        value={dog.status}
+        onChange={(event) => handleStatusChange(event.target.value as DogStatus)}
+        disabled={updateDog.isPending}
+        className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-black disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-white"
+      >
+        {(Object.keys(STATUS_LABEL) as DogStatus[]).map((status) => (
+          <option key={status} value={status}>
+            {STATUS_LABEL[status]}
+          </option>
+        ))}
+      </select>
+      {updateDog.isError && (
+        <span className="text-xs text-red-600 dark:text-red-400">Falha ao salvar.</span>
+      )}
+    </div>
+  )
+}
+
 export default function AdminDogsPage() {
   const { data: dogs, isLoading, isError } = useAllDogs()
+  const [editingDog, setEditingDog] = useState<Dog | null>(null)
 
   return (
     <main className="mx-auto max-w-5xl p-6">
@@ -45,6 +86,8 @@ export default function AdminDogsPage() {
           <h1 className="mt-1 text-2xl font-bold text-gray-900 dark:text-gray-100">Cães</h1>
         </div>
       </div>
+
+      <DogCreateForm />
 
       {isError && (
         <p className="text-center text-gray-500 dark:text-gray-400">
@@ -76,6 +119,7 @@ export default function AdminDogsPage() {
                 <th className="px-4 py-3 font-medium">Idade</th>
                 <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 font-medium">Cadastrado em</th>
+                <th className="px-4 py-3 text-right font-medium">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 bg-white dark:divide-gray-800 dark:bg-gray-900">
@@ -96,10 +140,23 @@ export default function AdminDogsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={dog.status} />
+                    <div className="flex min-w-36 flex-col gap-2">
+                      <StatusBadge status={dog.status} />
+                      <StatusSelect dog={dog} />
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-gray-500 dark:text-gray-500">
                     {new Date(dog.created_at).toLocaleDateString('pt-BR')}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setEditingDog(dog)}
+                    >
+                      Editar
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -107,6 +164,12 @@ export default function AdminDogsPage() {
           </table>
         </div>
       )}
+
+      <DogEditModal
+        dog={editingDog}
+        onDogChange={setEditingDog}
+        onClose={() => setEditingDog(null)}
+      />
     </main>
   )
 }
