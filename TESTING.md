@@ -91,6 +91,8 @@ src/
       format.test.ts                 # Camada 1
       components/
         *.test.tsx                   # Camada 2
+    events/
+      api.test.ts                    # Camada 3 — RPCs de disponibilidade F5-04
   shared/
     ui/
       Button.test.tsx                # Camada 2
@@ -101,6 +103,10 @@ supabase/
     README.md                        # como rodar testes RLS locais
     dogs_rls.test.sql                # Camada 4
     stories_rls.test.sql             # Camada 4
+    events_schema.test.sql           # Camada 4 — schema/constraints F5-01
+    events_active.test.sql           # Camada 4 — regra de evento ativo F5-02
+    events_rls.test.sql              # Camada 4 — RLS de eventos/reservas F5-03
+    events_availability.test.sql     # Camada 4 — disponibilidade F5-04
     storage_rls.test.sql             # Camada 4
 e2e/
   global-setup.ts                    # seed cão + criar usuário admin + enroll TOTP
@@ -198,7 +204,7 @@ Atualizado a cada tarefa. Marque `🟢` ao cobrir, `🟡` se parcial.
 | `features/auth` — AdminGuard | — | 🟢 | — | — | — | T-04 (módulos mockados) |
 | `features/auth` — E2E admin/TOTP | — | — | — | — | 🟢 | T-07: login+2FA+/admin |
 | `pages/public/landing` — DoacaoSection | — | 🟢 | — | — | — | T-04 |
-| `features/events` / `reservations` | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | escrever junto c/ Fase 5 |
+| `features/events` / `reservations` | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | F5-01/F5-04: schema, constraints, regra de ativo, RLS e disponibilidade cobertos; pg_cron pendente F5-05 |
 
 ### Infra de teste
 

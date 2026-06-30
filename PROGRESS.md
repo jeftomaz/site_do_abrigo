@@ -5,8 +5,8 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 
 ## Atual
 
-- **Fase:** T — Testes ✓ (concluída)
-- **Próxima tarefa:** F5-01 (Fase 5 — Eventos)
+- **Fase:** 5 — Eventos / Recãopensa
+- **Próxima tarefa:** F5-05 (Fase 5 — Eventos)
 - **Fase concluída:** Fase T — Testes ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -42,6 +42,38 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F5-04` Query de disponibilidade
+
+- **Feito:** criada migration `20260630000008_event_availability.sql` com RPCs `list_available_products` e `list_available_raffle_numbers`, calculando disponibilidade no banco sem expor dados de reservas. Criado `features/events` inicial com `api.ts`/`types.ts`, teste MSW para as RPCs e teste pgTAP cobrindo produtos/números livres vs. reservas `paid`/`pending` válidas.
+- **Decisões:** disponibilidade pública usa funções `security definer` estreitas porque `reservations` não tem leitura pública; as funções só retornam itens de eventos públicos (ativos ou encerrados) e não retornam nome/contato de reserva.
+- **Arquivos:** `supabase/migrations/20260630000008_event_availability.sql`, `supabase/tests/events_availability.test.sql`, `src/features/events/api.ts`, `src/features/events/types.ts`, `src/features/events/api.test.ts`, `src/shared/types/db.ts`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-04 marcado; `DATA_MODEL.md` confirmou a consulta de disponibilidade; `TESTING.md` registrou cobertura MSW/RLS de disponibilidade.
+- **Verificação:** `npm test` passou (107 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npx supabase test db supabase/tests` passou (7 arquivos, 71 asserts).
+
+### 2026-06-30 — `F5-03` RLS de eventos/produtos/rifas/reservas
+
+- **Feito:** criada migration `20260630000007_events_rls.sql` com grants e policies para `events`, `products`, `raffle_numbers` e `reservations`: público lê eventos ativos/encerrados e seus itens/números; público cria apenas reserva `pending` em evento ativo; autenticado lê/cria/atualiza; sem DELETE físico. Adicionado teste pgTAP `events_rls.test.sql` cobrindo leitura pública/admin, reserva pública permitida, bloqueios públicos e DELETE negado.
+- **Decisões:** reservas não têm leitura pública nesta fase porque armazenam nome/contato; evento público é `is_active` ou encerrado (`ends_at <= now()`), mantendo drafts/futuros fora do visitante.
+- **Arquivos:** `supabase/migrations/20260630000007_events_rls.sql`, `supabase/tests/events_rls.test.sql`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-03 marcado; `DATA_MODEL.md` confirmou RLS das quatro tabelas; `TESTING.md` registrou o novo teste RLS.
+- **Verificação:** `npm test` passou (104 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npm run test:rls` passou (6 arquivos, 64 asserts).
+
+### 2026-06-30 — `F5-02` Um evento ativo por vez
+
+- **Feito:** criada migration `20260630000006_one_active_event.sql` com índice único parcial `idx_events_one_active` em `events(is_active) where is_active`, permitindo vários eventos inativos e bloqueando o segundo ativo. Adicionado teste pgTAP `events_active.test.sql` cobrindo insert/update que tentam criar dois ativos.
+- **Decisões:** regra implementada como índice único parcial, sem trigger, para deixar a garantia no banco simples e atômica.
+- **Arquivos:** `supabase/migrations/20260630000006_one_active_event.sql`, `supabase/tests/events_active.test.sql`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-02 marcado; `DATA_MODEL.md` registrou o índice; `TESTING.md` registrou o teste de regra de ativo.
+- **Verificação:** `npm test` passou (104 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npm run test:rls` passou (5 arquivos, 43 asserts).
+
+### 2026-06-30 — `F5-01` Migrations de eventos/produtos/rifas/reservas
+
+- **Feito:** criada migration `20260630000005_create_events.sql` com enums `event_type` e `reservation_status`, tabelas `events`, `products`, `raffle_numbers` e `reservations`, triggers de `updated_at`, índices básicos, RLS habilitada e constraints de integridade (datas válidas, preço não negativo, número positivo, número único por evento, reserva apontando exatamente para produto ou número e item pertencente ao mesmo evento). Adicionado teste pgTAP `events_schema.test.sql` para schema/constraints.
+- **Decisões:** `price_cents` usa centavos inteiros; `expires_at` é obrigatório, sem default de prazo para não inventar regra de negócio; `rules jsonb` começa como `{}` para acomodar regras futuras sem fixar comportamento nesta tarefa.
+- **Arquivos:** `supabase/migrations/20260630000005_create_events.sql`, `supabase/tests/events_schema.test.sql`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-01 marcado; `DATA_MODEL.md` registrou schema Fase 5 como 🟡 (RLS policies ainda pendentes); `TESTING.md` registrou cobertura parcial de banco para eventos/reservas.
+- **Verificação:** `npm test` passou (104 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npm run test:rls` passou (4 arquivos, 39 asserts).
 
 ### 2026-06-30 — `CI` GitHub Actions — workflow de testes e deploy guardado
 
