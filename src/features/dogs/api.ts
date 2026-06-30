@@ -11,9 +11,16 @@ export async function listAvailableDogs(): Promise<Dog[]> {
     .eq('status', 'available')
     .order('created_at', { ascending: false })
 
-  if (error) {
-    throw error
-  }
+  if (error) throw error
+  return data ?? []
+}
 
+export async function listAllDogs(): Promise<Dog[]> {
+  const { data, error } = await supabase
+    .from('dogs')
+    .select(dogColumns)
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
   return data ?? []
 }

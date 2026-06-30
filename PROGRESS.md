@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 3 — Adoção (cães)
-- **Próxima tarefa:** F3-08
+- **Próxima tarefa:** F3-09
 - **Fase concluída:** Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -42,6 +42,12 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F3-08` Admin: listar cães
+- **Feito:** `listAllDogs` na API (sem filtro de status), `useAllDogs` hook; `AdminDogsPage` com tabela responsiva (nome, porte, idade, badge de status colorido, data de cadastro), loading skeleton, empty state e erro; rota `/admin/dogs` protegida por `AdminGuard`; card "Adoção" do `AdminPage` vira link clicável para a lista.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/features/dogs/api.ts`, `src/features/dogs/hooks.ts`, `src/pages/admin/dogs/AdminDogsPage.tsx`, `src/app/router.tsx`, `src/pages/admin/AdminPage.tsx`, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F3-07` Ordenação de cães no cliente
 - **Feito:** adicionada ordenação por nome (A–Z), mais novo (birth_year desc), mais velho (birth_year asc) e porte (ordem semântica: filhote→pequeno→médio→grande→gigante); nulls vão para o final em todos os critérios de idade; contador "N cães disponíveis" exibido junto ao controle.
