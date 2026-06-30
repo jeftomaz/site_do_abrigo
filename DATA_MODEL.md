@@ -37,6 +37,8 @@ Para a maioria das tabelas vale o par:
 - **Leitura pública** do que é público (ex.: `dogs` com `status = 'available'`).
 - **Escrita só autenticado** (admin logado via Supabase Auth).
 
+As roles de API (`anon`, `authenticated`) recebem privilégios SQL nas tabelas/buckets necessários para que a decisão real aconteça nas RLS policies. Migration: `supabase/migrations/20260630000003_api_role_grants.sql`.
+
 Descrever sempre as 4 operações por tabela: `SELECT` · `INSERT` · `UPDATE` · `DELETE`.
 
 ---
@@ -81,6 +83,7 @@ Cães do catálogo de adoção.
 - INSERT: apenas autenticado.
 - UPDATE: apenas autenticado.
 - DELETE: ninguém; sem delete físico para dados de domínio.
+**Testes:** `supabase/tests/dogs_rls.test.sql` cobre SELECT anon/auth, INSERT/UPDATE anon negados, INSERT/UPDATE autenticados permitidos e DELETE negado para `anon`/`authenticated`.
 
 ### `stories` · 🟢 (Fase 4)
 
@@ -104,6 +107,7 @@ Histórias de cães adotados. Podem estar vinculadas a um cão cadastrado, mas o
 - INSERT: apenas autenticado.
 - UPDATE: apenas autenticado.
 - DELETE: ninguém; sem delete físico para dados de domínio.
+**Testes:** `supabase/tests/stories_rls.test.sql` cobre leitura pública, escrita apenas autenticada, DELETE negado e FK `dog_id on delete set null`.
 
 ### `events` · ⬜ (Fase 5)
 
@@ -174,11 +178,13 @@ Reserva de um produto ou número, aguardando comprovante.
 **Policies `dogs`:**
 - SELECT/download público: via bucket público, usando URL pública; sem policy pública de `SELECT` em `storage.objects` para não liberar listagem.
 - INSERT/upload: apenas autenticado, com `bucket_id = 'dogs'`.
+**Testes `dogs`:** `supabase/tests/storage_rls.test.sql` cobre upload anônimo negado e upload autenticado permitido.
 
 **Migration `stories`:** `supabase/migrations/20260630000002_stories_storage.sql`
 **Policies `stories`:**
 - SELECT/download público: via bucket público, usando URL pública; sem policy pública de `SELECT` em `storage.objects` para não liberar listagem.
 - INSERT/upload: apenas autenticado, com `bucket_id = 'stories'`.
+**Testes `stories`:** `supabase/tests/storage_rls.test.sql` cobre upload anônimo negado e upload autenticado permitido.
 <!-- confirmar policies dos próximos buckets -->
 
 ---
