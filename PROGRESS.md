@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 3 — Adoção (cães)
-- **Próxima tarefa:** F3-06
+- **Próxima tarefa:** F3-08
 - **Fase concluída:** Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -42,6 +42,18 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-29 — `F3-07` Ordenação de cães no cliente
+- **Feito:** adicionada ordenação por nome (A–Z), mais novo (birth_year desc), mais velho (birth_year asc) e porte (ordem semântica: filhote→pequeno→médio→grande→gigante); nulls vão para o final em todos os critérios de idade; contador "N cães disponíveis" exibido junto ao controle.
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/pages/public/AdocaoPage.tsx`, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-29 — `F3-06` Modal de detalhes + botão → Google Forms
+- **Feito:** criado `DogDetailsModal` com foto, meta, descrição e CTA para formulário; cards da página de adoção agora abrem o modal por clique/teclado.
+- **Decisões:** URL do Google Forms fica em `VITE_ADOPTION_FORM_URL`; sem a variável, o CTA aparece desabilitado para evitar link inventado.
+- **Arquivos:** `src/features/dogs/components/DogDetailsModal.tsx`, `src/pages/public/AdocaoPage.tsx`, `.env.example`, `ROADMAP.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` marcado; `DESIGN_SYSTEM.md` Modal / detalhe do cão → 🟡; `PROGRESS.md` atualizado.
 
 ### 2026-06-29 — `F3-05` Card do cão (público)
 - **Feito:** `DogCard` (foto de capa via Storage público, nome, porte · idade, fallback 🐾 sem foto, suporte opcional a clique/teclado p/ F3-06) e helpers `dogPhotoUrl`/`dogCoverUrl`/`dogAgeLabel` em `features/dogs/format.ts`. `AdocaoPage` agora consome `useAvailableDogs` e renderiza grid responsivo (1/2/3 col) com loading (SkeletonCard), erro e empty state.

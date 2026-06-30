@@ -46,8 +46,8 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 - [x] **F3-03** Bucket Storage `dogs` + policy. · Pronto: upload autenticado, leitura pública. · Toca: Supabase + DATA_MODEL
 - [x] **F3-04** `features/dogs/{api,hooks,types}`. · Pronto: listar cães available. · Toca: features/dogs
 - [x] **F3-05** Card do cão (público). · Pronto: grid de cards. · Toca: features/dogs/components
-- [ ] **F3-06** Modal de detalhes + botão → Google Forms. · Pronto: expande e linka. · Toca: features/dogs/components
-- [ ] **F3-07** Ordenação (porte/idade…). · Pronto: reordena no cliente. · Toca: pages/public/adocao
+- [x] **F3-06** Modal de detalhes + botão → Google Forms. · Pronto: expande e linka. · Toca: features/dogs/components
+- [x] **F3-07** Ordenação (porte/idade…). · Pronto: reordena no cliente. · Toca: pages/public/adocao
 - [ ] **F3-08** Admin: listar cães (todos os status). · Pronto: tabela/lista admin. · Toca: pages/admin/dogs
 - [ ] **F3-09** Admin: criar cão. · Pronto: novo cão aparece. · Toca: pages/admin/dogs
 - [ ] **F3-10** Admin: editar cão. · Pronto: edição persiste. · Toca: pages/admin/dogs
