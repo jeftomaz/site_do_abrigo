@@ -129,6 +129,9 @@ Eventos de arrecadação. Apenas **um** ativo por vez.
 **Migration:** `supabase/migrations/20260630000005_create_events.sql`
 **Constraint:** `events_valid_dates` impede `ends_at < starts_at` quando ambos existem.
 **Índice:** `idx_events_one_active` (`supabase/migrations/20260630000006_one_active_event.sql`) é único parcial e permite no máximo um evento com `is_active = true`; eventos inativos continuam múltiplos.
+**Rules usadas pelo front público:**
+- `reservation_expires_in_hours` (number): prazo de expiração da reserva `pending`; padrão 6 horas quando ausente/inválido.
+- `raffle_price_cents` (integer >= 0): valor de cada número de rifa em centavos; quando ausente, a UI cria a reserva e mostra apenas a chave PIX, sem valor fechado.
 **RLS:** policies em `supabase/migrations/20260630000007_events_rls.sql`.
 - SELECT: público (`anon`) lê eventos ativos ou já encerrados (`ends_at <= now()`); autenticado lê todos.
 - INSERT: apenas autenticado.
@@ -207,10 +210,19 @@ Reserva de um produto ou número, aguardando comprovante.
 **Migration:** `supabase/migrations/20260630000005_create_events.sql`
 **RLS:** policies em `supabase/migrations/20260630000007_events_rls.sql`.
 - SELECT: apenas autenticado, porque contém nome e contato.
-- INSERT: público (`anon`) pode criar reserva `pending` para evento ativo; autenticado pode inserir.
+- INSERT: apenas autenticado diretamente; público (`anon`) cria reserva pela RPC `create_public_reservation`.
 - UPDATE: apenas autenticado.
 - DELETE: ninguém; sem delete físico para dados de domínio.
-**Testes:** `supabase/tests/events_schema.test.sql` cobre reserva de produto, reserva de número, XOR obrigatório e FK de item no mesmo evento; `supabase/tests/events_rls.test.sql` cobre reserva pública `pending`, bloqueio de reserva pública `paid`/inativa, leitura/admin e DELETE negado.
+**Testes:** `supabase/tests/events_schema.test.sql` cobre reserva de produto, reserva de número, XOR obrigatório e FK de item no mesmo evento; `supabase/tests/events_rls.test.sql` cobre bloqueio de escrita pública direta, leitura/admin e DELETE negado; `supabase/tests/events_public_reservations.test.sql` cobre a RPC pública de reserva.
+
+**Criação pública:** `create_public_reservation(p_event_id, p_product_id, p_raffle_number_id, p_customer_name, p_contact)` é `security definer`, disponível para `anon` e `authenticated`, e faz a criação pública segura:
+- exige evento ativo;
+- exige exatamente um item;
+- valida nome/contato não vazios;
+- trava a linha do produto/número com `for update`;
+- recusa item que já tenha reserva `paid` ou `pending` ainda válida;
+- calcula `expires_at` no banco usando `events.rules.reservation_expires_in_hours` ou 6 horas como padrão;
+- retorna o `expires_at` criado para a UI exibir a instrução de comprovante.
 
 ---
 
@@ -222,13 +234,13 @@ Reserva de um produto ou número, aguardando comprovante.
 - Como `reservations` não tem leitura pública, o cálculo público vive no banco em funções `security definer` estreitas:
   - `list_available_products(p_event_id uuid)` retorna apenas produtos livres de eventos públicos (ativos ou encerrados).
   - `list_available_raffle_numbers(p_event_id uuid)` retorna apenas números livres de eventos públicos (ativos ou encerrados).
-- A API do front usa `features/events/api.ts` para chamar essas RPCs; componentes não leem `reservations` diretamente.
+- A API do front usa `features/events/api.ts` para chamar essas RPCs e `create_public_reservation`; componentes não leem/escrevem `reservations` diretamente.
 - **pg_cron** roda periodicamente só p/ marcar `pending` expiradas como `cancelled` (limpeza/consistência), nunca como fonte da verdade.
 - Função interna `cancel_expired_reservations()` cancela apenas reservas `pending` com `expires_at <= now()` e retorna a quantidade de linhas alteradas. Execução pública foi revogada; `anon` e `authenticated` não executam essa função.
 - Job `cancel-expired-reservations` roda a cada 5 minutos (`*/5 * * * *`) chamando `select public.cancel_expired_reservations();`.
 
-**Migrations:** `supabase/migrations/20260630000008_event_availability.sql`, `supabase/migrations/20260630000009_cancel_expired_reservations.sql`
-**Testes:** `supabase/tests/events_availability.test.sql` cobre produtos/números livres, bloqueio por `paid`, bloqueio por `pending` válido, liberação de `pending` expirado e ausência de leitura pública direta de reservas. `supabase/tests/events_cron.test.sql` cobre cancelamento de expiradas, idempotência, job agendado e restrição de execução para clientes.
+**Migrations:** `supabase/migrations/20260630000008_event_availability.sql`, `supabase/migrations/20260630000009_cancel_expired_reservations.sql`, `supabase/migrations/20260630000010_public_reservations.sql`
+**Testes:** `supabase/tests/events_availability.test.sql` cobre produtos/números livres, bloqueio por `paid`, bloqueio por `pending` válido, liberação de `pending` expirado e ausência de leitura pública direta de reservas. `supabase/tests/events_cron.test.sql` cobre cancelamento de expiradas, idempotência, job agendado e restrição de execução para clientes. `supabase/tests/events_public_reservations.test.sql` cobre criação pública segura por RPC.
 
 ---
 

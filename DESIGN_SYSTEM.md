@@ -148,6 +148,36 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
+### Card de evento · 🟡 rascunho
+
+**Componente:** EventCard · **Status:** 🟡 rascunho
+- **Anatomia:** selos de status/tipo, título do evento, período formatado e descrição opcional.
+- **Variantes:** ativo (`Evento ativo`) · passado (`Encerrado`); tipo `Rifa` ou `Produtos`.
+- **Estados:** default; loading/erro/vazio são tratados pela página pública `/eventos` com `SkeletonCard` e mensagens inline.
+- **Responsivo:** card fluido; lista de passados usa 1 coluna no mobile e 2 colunas em telas médias.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Painel de reserva de evento · 🟡 rascunho
+
+**Componente:** EventReservationPanel · **Status:** 🟡 rascunho
+- **Anatomia:** título, aviso de prazo, lista de produtos ou números livres, campos Nome/Contato, botão Reservar, confirmação com chave PIX e prazo do comprovante.
+- **Variantes:** evento de produtos (cards com nome/preço/descrição) · evento de rifa (grade compacta de números).
+- **Estados:** loading com `SkeletonCard`; erro inline; vazio para itens/números indisponíveis; item selecionado; submitting; sucesso com botão de copiar PIX.
+- **Responsivo:** produtos em 1 coluna no mobile e 2 em telas maiores; números em grid compacto progressivo.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Formulário admin de evento · 🟡 rascunho
+
+**Componente:** EventCreateForm / EventEditModal / EventFormFields · **Status:** 🟡 rascunho
+- **Anatomia:** campos título, tipo, prazo da reserva em horas, início, encerramento, descrição e checkbox de evento ativo; tabela admin com badge de status, tipo, período, prazo e ação de edição.
+- **Variantes:** criação em bloco fixo na página admin · edição em `Modal` compartilhado aberto pela tabela.
+- **Estados:** default · validação de campo/data · erro de submit · sucesso no cadastro · loading no botão.
+- **Responsivo:** formulário em 1 coluna no mobile, pares de campos em 2 colunas em telas maiores; tabela com overflow horizontal.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Componentes previstos (preencher progressivamente)
 
 - [x] Button · 🟡
@@ -159,7 +189,10 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - [ ] Header (âncoras + links) · ⬜
 - [ ] Seção da landing · ⬜
 - [ ] Card de história · ⬜
-- [ ] Card de produto / número de rifa · ⬜
+- [x] Card de evento · 🟡
+- [x] Painel de reserva de evento · 🟡
+- [x] Formulário admin de evento · 🟡
+- [x] Card de produto / número de rifa · 🟡
 - [x] Badge de status (disponível/adotado/falecido) · 🟡
 <!-- adicionar outros conforme surgirem -->
 

@@ -77,7 +77,7 @@ src/
     vitest.d.ts                      # triple-slash reference para vitest/globals
     msw/
       server.ts                      # MSW node server (Vitest)
-      handlers.ts                    # handlers base: /rest/v1/dogs e /rest/v1/stories
+      handlers.ts                    # handlers base: /rest/v1/events, /dogs e /stories
     factories/                       # fábricas de objetos de teste (pendente T-03+)
       dog.ts
       story.ts
@@ -93,6 +93,12 @@ src/
         *.test.tsx                   # Camada 2
     events/
       api.test.ts                    # Camada 3 — RPCs de disponibilidade F5-04
+      form.test.ts                   # Camada 1 — formulário admin de eventos F5-09
+  pages/
+    admin/
+      events/AdminEventsPage.test.tsx # Camada 3 — CRUD admin de eventos F5-09
+    public/
+      EventosPage.test.tsx           # Camada 3 — página pública F5-07/F5-08
   shared/
     ui/
       Button.test.tsx                # Camada 2
@@ -108,6 +114,7 @@ supabase/
     events_rls.test.sql              # Camada 4 — RLS de eventos/reservas F5-03
     events_availability.test.sql     # Camada 4 — disponibilidade F5-04
     events_cron.test.sql             # Camada 4 — pg_cron/cancelamento F5-05
+    events_public_reservations.test.sql # Camada 4 — RPC reserva pública F5-08
     storage_rls.test.sql             # Camada 4
 e2e/
   global-setup.ts                    # seed cão + criar usuário admin + enroll TOTP
@@ -205,13 +212,13 @@ Atualizado a cada tarefa. Marque `🟢` ao cobrir, `🟡` se parcial.
 | `features/auth` — AdminGuard | — | 🟢 | — | — | — | T-04 (módulos mockados) |
 | `features/auth` — E2E admin/TOTP | — | — | — | — | 🟢 | T-07: login+2FA+/admin |
 | `pages/public/landing` — DoacaoSection | — | 🟢 | — | — | — | T-04 |
-| `features/events` / `reservations` | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | F5-01/F5-05: schema, constraints, regra de ativo, RLS, disponibilidade e pg_cron cobertos |
+| `features/events` / `reservations` | 🟢 | 🟡 | 🟢 | 🟢 | ⬜ | F5-01/F5-05: banco/RLS/disponibilidade/pg_cron; F5-06: api com MSW; F5-07: página pública `/eventos`; F5-08: helpers de prazo/preço, API de reserva, fluxo público reserva→PIX e RPC segura pgTAP; F5-09: helpers/form admin, API create/update/listAll e página admin com MSW |
 
 ### Infra de teste
 
 | Utilitário | Status | Nota |
 |---|---|---|
 | `src/test/render.tsx` — `renderWithProviders` | 🟢 | QueryClient/MemoryRouter/ThemeProvider; novo por teste |
-| MSW server + handlers base (dogs, stories) | 🟢 | `src/test/msw/server.ts`, `handlers.ts` |
+| MSW server + handlers base (events, dogs, stories) | 🟢 | `src/test/msw/server.ts`, `handlers.ts` |
 | Setup global (jest-dom, MSW lifecycle, matchMedia mock) | 🟢 | `src/test/setup.ts` |
 | pgTAP RLS harness | 🟢 | `supabase/tests/*.test.sql`; roda com `npm run test:rls` |

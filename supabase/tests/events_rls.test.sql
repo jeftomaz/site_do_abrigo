@@ -78,17 +78,19 @@ select extensions.throws_ok(
   'anon INSERT on raffle_numbers is denied'
 );
 
-select extensions.lives_ok(
+select extensions.throws_ok(
   $$insert into public.reservations (id, event_id, product_id, customer_name, contact, expires_at) values ('00000000-0000-0000-0000-000000000733', '00000000-0000-0000-0000-000000000701', '00000000-0000-0000-0000-000000000711', 'T05 Public Buyer', '@public', '2099-01-01 00:00:00+00')$$,
-  'anon INSERT can create a pending reservation for the active event'
+  '42501',
+  'new row violates row-level security policy for table "reservations"',
+  'anon direct INSERT on reservations is denied'
 );
 
 reset role;
 
 select extensions.is(
   (select count(*)::integer from public.reservations where id = '00000000-0000-0000-0000-000000000733'),
-  1,
-  'anon INSERT creates the reservation row'
+  0,
+  'anon direct INSERT does not create a reservation row'
 );
 
 set local role anon;
@@ -119,13 +121,13 @@ select extensions.is(
 
 update public.reservations
 set customer_name = 'T05 Anon Updated Buyer'
-where id = '00000000-0000-0000-0000-000000000733';
+where id = '00000000-0000-0000-0000-000000000731';
 
 reset role;
 
 select extensions.is(
-  (select customer_name from public.reservations where id = '00000000-0000-0000-0000-000000000733'),
-  'T05 Public Buyer',
+  (select customer_name from public.reservations where id = '00000000-0000-0000-0000-000000000731'),
+  'T05 Seed Buyer',
   'anon UPDATE on reservations does not change rows'
 );
 
@@ -139,7 +141,7 @@ select extensions.results_eq(
 
 select extensions.is(
   (select count(*)::integer from public.reservations),
-  3,
+  2,
   'authenticated SELECT reads reservations'
 );
 
@@ -159,7 +161,7 @@ select extensions.lives_ok(
 );
 
 select extensions.lives_ok(
-  $$update public.reservations set status = 'paid' where id = '00000000-0000-0000-0000-000000000733'$$,
+  $$update public.reservations set status = 'paid' where id = '00000000-0000-0000-0000-000000000731'$$,
   'authenticated UPDATE on reservations is allowed'
 );
 
@@ -173,10 +175,10 @@ select extensions.is(
 );
 
 delete from public.reservations
-where id = '00000000-0000-0000-0000-000000000733';
+where id = '00000000-0000-0000-0000-000000000731';
 
 select extensions.is(
-  (select count(*)::integer from public.reservations where id = '00000000-0000-0000-0000-000000000733'),
+  (select count(*)::integer from public.reservations where id = '00000000-0000-0000-0000-000000000731'),
   1,
   'authenticated DELETE on reservations is denied'
 );

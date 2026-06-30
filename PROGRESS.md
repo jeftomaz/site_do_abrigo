@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 5 — Eventos / Recãopensa
-- **Próxima tarefa:** F5-06 (Fase 5 — Eventos)
+- **Próxima tarefa:** F5-10 (Fase 5 — Eventos)
 - **Fase concluída:** Fase T — Testes ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -27,6 +27,7 @@ Decisões já tomadas, para não reabrir. Quando uma "dívida" do ROADMAP é res
 | 2026-06-29 | Escopo da Doação | Só informativo — texto + chave PIX copiável. |
 | 2026-06-29 | Campo `size` de cão | `text` livre (sem enum); validação de valores aceitos fica na UI. |
 | 2026-06-29 | Convite admin | Callback `type=invite` é tratado manualmente pelo app: o client não consome o hash automaticamente; `InviteHandler` cria a sessão e manda para `/admin/definir-senha`. |
+| 2026-06-30 | Prazo de reserva | Reserva pública fica `pending` por 6 horas por padrão; admin deve poder configurar via `events.rules.reservation_expires_in_hours`. |
 | — | Sorteio da rifa | _pendente — como escolher/divulgar ganhador?_ |
 
 ## Log
@@ -42,6 +43,37 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F5-09` Admin: criar/editar evento
+
+- **Feito:** admin ganhou rota lazy `/admin/events`, card no painel, listagem de eventos e formulário/modal para criar e editar `events` com título, tipo, datas, ativo e prazo de reserva em `events.rules.reservation_expires_in_hours`.
+- **Decisões:** produtos/números e reservas continuam fora desta tarefa e ficam para F5-10/F5-11; o formulário preserva outras chaves de `rules` ao editar, como `raffle_price_cents`.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/form.ts`, `src/features/events/form.test.ts`, `src/features/events/api.test.ts`, `src/features/events/components/EventFormFields.tsx`, `src/features/events/components/EventCreateForm.tsx`, `src/features/events/components/EventEditModal.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/pages/admin/events/AdminEventsPage.test.tsx`, `src/app/router.tsx`, `src/pages/admin/AdminPage.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F5-09 marcado; `DESIGN_SYSTEM.md` registrou formulário admin de evento; `TESTING.md` registrou cobertura unitária/MSW da tarefa.
+- **Verificação:** `npm test` passou (142 testes); `npm run build` passou.
+
+### 2026-06-30 — `F5-08` Público: reserva + PIX
+
+- **Feito:** página pública `/eventos` ganhou painel de reserva para produtos ou números disponíveis, formulário de nome/contato, RPC `create_public_reservation` para criar reserva `pending` com regra no banco e confirmação com chave PIX + instrução de envio de comprovante.
+- **Decisões:** prazo padrão de reserva é 6 horas; o valor pode ser configurado em `events.rules.reservation_expires_in_hours` e é calculado pelo banco. Preço de rifa é lido de `events.rules.raffle_price_cents` quando existir; produtos usam `products.price_cents`. A chave PIX segue estática (`abrigodamarcia@gmail.com`), sem QR dinâmico.
+- **Arquivos:** `AGENTS.md`, `supabase/migrations/20260630000010_public_reservations.sql`, `supabase/tests/events_public_reservations.test.sql`, `supabase/tests/events_rls.test.sql`, `src/shared/types/db.ts`, `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/format.ts`, `src/features/events/format.test.ts`, `src/features/events/api.test.ts`, `src/features/events/components/EventReservationPanel.tsx`, `src/pages/public/EventosPage.tsx`, `src/pages/public/EventosPage.test.tsx`, `DATA_MODEL.md`, `DESIGN_SYSTEM.md`, `TESTING.md`, `ROADMAP.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-08 marcado; `DATA_MODEL.md` documentou chaves de `events.rules`; `DESIGN_SYSTEM.md` registrou `EventReservationPanel`; `TESTING.md` registrou cobertura de reserva pública; `AGENTS.md` reforçou perguntar antes de implementar regra operacional ambígua.
+- **Verificação:** `npm test` passou (126 testes); `npm run build` passou; `npx supabase db reset` passou; `npm run test:rls` passou (9 arquivos, 87 asserts).
+
+### 2026-06-30 — `F5-07` Público: evento ativo + passados
+
+- **Feito:** página pública `/eventos` passou a listar evento ativo e eventos anteriores usando `useActiveEvent`/`usePastEvents`, com loading, erro e empty states. Criado `EventCard` para resumo de evento com status, tipo, período e descrição; adicionados testes MSW para sucesso, vazio e erro da página.
+- **Decisões:** a tela mostra apenas catálogo/resumo de eventos nesta tarefa; reserva, PIX e instrução de comprovante ficam para F5-08.
+- **Arquivos:** `src/pages/public/EventosPage.tsx`, `src/pages/public/EventosPage.test.tsx`, `src/features/events/components/EventCard.tsx`, `ROADMAP.md`, `PROGRESS.md`, `TESTING.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` F5-07 marcado; `TESTING.md` registrou teste da página de eventos; `DESIGN_SYSTEM.md` registrou `EventCard` como rascunho.
+- **Verificação:** `npm test` passou (116 testes); `npm run build` passou.
+
+### 2026-06-30 — `F5-06` `features/events/{api,hooks,types}`
+
+- **Feito:** adicionadas funções `getActiveEvent()` (`.maybeSingle()`, retorna `Event | null`) e `listPastEvents()` (filtra `is_active=false`, `ends_at <= now()`, ordena por `ends_at desc`) em `api.ts`; criado `hooks.ts` com `eventsQueryKeys`, `useActiveEvent`, `usePastEvents`, `useAvailableProducts` e `useAvailableRaffleNumbers`; `api.test.ts` ampliado com 9 casos MSW cobrindo evento ativo encontrado, PGRST116/null, erro, lista passada, lista vazia, erro de listagem e os 3 casos de disponibilidade preexistentes; `eventFixture` e handler base `GET /events` adicionados a `handlers.ts`.
+- **Decisões:** `listPastEvents` replica o critério de visibilidade pública da RLS (`is_active = false AND ends_at IS NOT NULL AND ends_at <= now()`), garantindo consistência entre o que o banco expõe e o que a UI exibe; hooks de disponibilidade ficam em `hooks.ts` (antes ausentes) para fechar o domínio events antes de F5-07.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/api.test.ts`, `src/test/msw/handlers.ts`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-06 marcado; `TESTING.md` cobertura MSW de events atualizada para 🟢; handler base de events adicionado.
 
 ### 2026-06-30 — `F5-05` pg_cron para reservas expiradas
 

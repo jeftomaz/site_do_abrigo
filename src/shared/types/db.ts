@@ -299,6 +299,16 @@ export type Database = {
     }
     Functions: {
       cancel_expired_reservations: { Args: never; Returns: number }
+      create_public_reservation: {
+        Args: {
+          p_contact: string
+          p_customer_name: string
+          p_event_id: string
+          p_product_id: string | null
+          p_raffle_number_id: string | null
+        }
+        Returns: string
+      }
       list_available_products: {
         Args: { p_event_id: string }
         Returns: {
@@ -478,4 +488,3 @@ export const Constants = {
     },
   },
 } as const
-

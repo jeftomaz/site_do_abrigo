@@ -22,12 +22,14 @@ export default function AdminPage() {
             <p className="text-sm text-gray-500 dark:text-gray-400">Gerencie histórias de adoção.</p>
           </Card>
         </Link>
-        <Card>
-          <CardHeader>
-            <h2 className="font-semibold text-gray-800 dark:text-gray-200">Eventos</h2>
-          </CardHeader>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Gerencie rifas e produtos.</p>
-        </Card>
+        <Link to="/admin/events" className="block">
+          <Card className="h-full transition-shadow hover:shadow-md">
+            <CardHeader>
+              <h2 className="font-semibold text-gray-800 dark:text-gray-200">Eventos</h2>
+            </CardHeader>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Gerencie rifas e produtos.</p>
+          </Card>
+        </Link>
       </div>
     </main>
   )
