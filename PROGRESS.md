@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 4 — Histórias
-- **Próxima tarefa:** F4-01
+- **Próxima tarefa:** F4-04
 - **Fase concluída:** Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -42,6 +42,24 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F4-03` `features/stories/{api,hooks,types}`
+- **Feito:** criado domínio `features/stories` com tipos derivados de `shared/types/db.ts`, API `listStories` e hook `useStories` via TanStack Query.
+- **Decisões:** listagem ordena por `published_at` desc e, em empate, `created_at` desc; `shared/types/db.ts` foi atualizado para refletir a tabela `stories` das migrations.
+- **Arquivos:** `src/shared/types/db.ts`, `src/features/stories/types.ts`, `src/features/stories/api.ts`, `src/features/stories/hooks.ts`, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `F4-02` Bucket `stories` + policy
+- **Feito:** criado bucket público `stories` via migration, com upload permitido apenas para usuários autenticados.
+- **Decisões:** mesmo padrão de `dogs`: download público via URL pública do bucket; sem policy pública de `SELECT` em `storage.objects` para evitar listagem.
+- **Arquivos:** `supabase/migrations/20260630000002_stories_storage.sql`, `DATA_MODEL.md`, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `DATA_MODEL.md` confirmou Storage de `stories`; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `F4-01` Migration `stories` + RLS
+- **Feito:** criada tabela `stories` com vínculo opcional para `dogs`, título, corpo, fotos, data de publicação, timestamps e trigger de `updated_at`; RLS permite leitura pública e escrita apenas autenticada.
+- **Decisões:** `dog_id` é opcional (`on delete set null`); fotos são paths do futuro bucket `stories`; sem policy de DELETE para manter histórico.
+- **Arquivos:** `supabase/migrations/20260630000001_create_stories.sql`, `DATA_MODEL.md`, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `DATA_MODEL.md` confirmou o schema/RLS de `stories`; `PROGRESS.md` atualizado.
 
 ### 2026-06-30 — `F3-12` Admin: marcar adotado/falecido
 - **Feito:** tabela admin ganhou controle de status por cão (`available`, `adopted`, `deceased`) com persistência via `useUpdateDog`; ao sair de `available`, o cão some da listagem pública por filtro/RLS.

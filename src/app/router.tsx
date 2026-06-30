@@ -13,6 +13,7 @@ import InviteHandler from './InviteHandler'
 
 const AdminPage = lazy(() => import('../pages/admin/AdminPage'))
 const AdminDogsPage = lazy(() => import('../pages/admin/dogs/AdminDogsPage'))
+const AdminStoriesPage = lazy(() => import('../pages/admin/stories/AdminStoriesPage'))
 
 function RootLayout() {
   return (
@@ -52,6 +53,16 @@ const router = createBrowserRouter(
             <AdminGuard>
               <Suspense fallback={null}>
                 <AdminDogsPage />
+              </Suspense>
+            </AdminGuard>
+          ),
+        },
+        {
+          path: '/admin/stories',
+          element: (
+            <AdminGuard>
+              <Suspense fallback={null}>
+                <AdminStoriesPage />
               </Suspense>
             </AdminGuard>
           ),
