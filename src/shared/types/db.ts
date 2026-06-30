@@ -45,6 +45,47 @@ export type Database = {
         }
         Relationships: []
       }
+      stories: {
+        Row: {
+          id: string
+          dog_id: string | null
+          title: string
+          body: string
+          photos: string[] | null
+          published_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          dog_id?: string | null
+          title: string
+          body: string
+          photos?: string[] | null
+          published_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          dog_id?: string | null
+          title?: string
+          body?: string
+          photos?: string[] | null
+          published_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'stories_dog_id_fkey'
+            columns: ['dog_id']
+            isOneToOne: false
+            referencedRelation: 'dogs'
+            referencedColumns: ['id']
+          },
+        ]
+      }
     }
     Views: Record<never, never>
     Functions: Record<never, never>

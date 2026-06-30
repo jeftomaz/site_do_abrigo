@@ -56,9 +56,9 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 
 ## Fase 4 — Histórias
 
-- [ ] **F4-01** Migration `stories` + RLS. · Pronto: tabela + leitura pública. · Toca: migrations + DATA_MODEL
-- [ ] **F4-02** Bucket `stories` + policy. · Pronto: idem dogs. · Toca: Supabase + DATA_MODEL
-- [ ] **F4-03** `features/stories/{api,hooks,types}`. · Pronto: listar histórias. · Toca: features/stories
+- [x] **F4-01** Migration `stories` + RLS. · Pronto: tabela + leitura pública. · Toca: migrations + DATA_MODEL
+- [x] **F4-02** Bucket `stories` + policy. · Pronto: idem dogs. · Toca: Supabase + DATA_MODEL
+- [x] **F4-03** `features/stories/{api,hooks,types}`. · Pronto: listar histórias. · Toca: features/stories
 - [ ] **F4-04** Público: página de listagem. · Pronto: histórias renderizam. · Toca: pages/public/historias
 - [ ] **F4-05** Admin: criar história. · Pronto: nova história aparece. · Toca: pages/admin/stories
 - [ ] **F4-06** Admin: editar história. · Pronto: edição persiste. · Toca: pages/admin/stories

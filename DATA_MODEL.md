@@ -82,20 +82,28 @@ Cães do catálogo de adoção.
 - UPDATE: apenas autenticado.
 - DELETE: ninguém; sem delete físico para dados de domínio.
 
-### `stories` · ⬜ (Fase 4)
+### `stories` · 🟢 (Fase 4)
 
-Histórias de cães adotados.
+Histórias de cães adotados. Podem estar vinculadas a um cão cadastrado, mas o vínculo é opcional para permitir histórias antigas ou sem cadastro completo.
 
 | Coluna | Tipo | Null | Default | Descrição |
 |---|---|---|---|---|
 | id | uuid | não | gen_random_uuid() | PK |
-| dog_id | uuid | sim | — | FK → dogs (opcional) |
-| title | text | — | — | — |
-| body | text | — | — | texto |
-| photos | text[] | sim | — | URLs |
-| published_at | date | — | — | — |
+| dog_id | uuid | sim | — | FK → `dogs(id)`, `on delete set null` |
+| title | text | não | — | título da história |
+| body | text | não | — | texto da história |
+| photos | text[] | sim | — | paths do Supabase Storage (bucket `stories`) |
+| published_at | date | não | current_date | data pública da história |
+| created_at | timestamptz | não | now() | — |
+| updated_at | timestamptz | não | now() | atualizado via trigger `trg_stories_updated_at` |
 
-**RLS:** SELECT público; escrita só autenticado. <!-- detalhar -->
+**Migration:** `supabase/migrations/20260630000001_create_stories.sql`
+**Relações:** `stories.dog_id` → `dogs.id` opcional.
+**RLS:**
+- SELECT: público (`anon`) e autenticado leem todas as histórias.
+- INSERT: apenas autenticado.
+- UPDATE: apenas autenticado.
+- DELETE: ninguém; sem delete físico para dados de domínio.
 
 ### `events` · ⬜ (Fase 5)
 
@@ -159,13 +167,18 @@ Reserva de um produto ou número, aguardando comprovante.
 | Bucket | Conteúdo | Acesso | Status |
 |---|---|---|---|
 | `dogs` | fotos de cães | bucket público; upload autenticado via policy `storage.objects` | 🟢 |
-| `stories` | fotos de histórias | leitura pública; upload autenticado | ⬜ |
+| `stories` | fotos de histórias | bucket público; upload autenticado via policy `storage.objects` | 🟢 |
 | `events` | imagens de produtos | leitura pública; upload autenticado | ⬜ |
 
 **Migration `dogs`:** `supabase/migrations/20260629000003_dogs_storage.sql`
 **Policies `dogs`:**
 - SELECT/download público: via bucket público, usando URL pública; sem policy pública de `SELECT` em `storage.objects` para não liberar listagem.
 - INSERT/upload: apenas autenticado, com `bucket_id = 'dogs'`.
+
+**Migration `stories`:** `supabase/migrations/20260630000002_stories_storage.sql`
+**Policies `stories`:**
+- SELECT/download público: via bucket público, usando URL pública; sem policy pública de `SELECT` em `storage.objects` para não liberar listagem.
+- INSERT/upload: apenas autenticado, com `bucket_id = 'stories'`.
 <!-- confirmar policies dos próximos buckets -->
 
 ---
