@@ -22,6 +22,7 @@ App **único** com duas áreas por rota: público (`/`) e admin (`/admin`, lazy-
 5. **Arquivos pequenos, uma responsabilidade.** Humano e IA leem qualquer arquivo com esforço (e tokens) mínimos. Arquivo grande → quebre.
 6. **Não reimplemente UI.** Genéricos (Button, Card, Modal, Field, Skeleton) vivem em `shared/ui` e são reusados.
 7. **Disponibilidade de reserva é calculada, não confiada a um job.** Item livre se não há reserva `paid` nem `pending com expires_at > now()`. O cron só limpa status.
+9. **Código sem teste = tarefa não concluída (a partir da Fase T).** Toda tarefa nova escreve seus testes e faz `npm test` passar antes de fechar. As Fases 0–3 foram fechadas antes desta política e **não devem ser reabertas** — o backfill é responsabilidade da Fase T. Isenções devem ser declaradas explicitamente no `PROGRESS.md` com justificativa.
 
 ## Protocolo de trabalho
 
@@ -44,7 +45,8 @@ Uma tarefa só está pronta quando **tudo** abaixo foi feito no mesmo passo:
 2. `[x]` marcado no `ROADMAP.md`.
 3. Entrada anexada no `PROGRESS.md` (data, ID, o que foi feito, decisões, arquivos tocados).
 4. Ponteiro **Atual** do `PROGRESS.md` atualizado p/ a próxima tarefa.
-5. Se mudou schema → `DATA_MODEL.md` atualizado. Se mudou token/componente → `DESIGN_SYSTEM.md` atualizado.
+5. Se mudou schema → `DATA_MODEL.md` atualizado. Se mudou token/componente → `DESIGN_SYSTEM.md` atualizado. Se mudou cobertura → `TESTING.md` atualizado.
+6. **Testes da tarefa escritos e `npm test` passa** (a partir da Fase T; isenções declaradas no `PROGRESS.md`).
 
 > **Documentação viva:** tarefa sem docs atualizados = tarefa **não concluída**.
 
@@ -88,6 +90,7 @@ public/
 | `PROGRESS.md` | ponteiro atual + log de decisões | a cada tarefa |
 | `DESIGN_SYSTEM.md` | tokens/componentes (das imagens) | ao mexer em UI |
 | `DATA_MODEL.md` | schema + RLS | ao mexer no banco |
+| `TESTING.md` | estratégia e cobertura de testes | ao escrever/cobrir testes |
 
 ## Stack
 
@@ -123,4 +126,11 @@ npm run dev          # desenvolvimento
 npm run build        # build de produção
 npm run preview      # testar build local
 npm run gen:types    # supabase gen types typescript → shared/types/db.ts
+
+npm test             # rodar testes (one-shot, CI)
+npm run test:watch   # rodar testes em modo watch (desenvolvimento)
+npm run coverage     # rodar testes + relatório de cobertura HTML
+npm run test:rls     # testes RLS pgTAP (requer npx supabase start)
+npm run test:e2e     # build --mode test + Playwright E2E (requer supabase local)
+npm run e2e:ui       # Playwright UI interativa (requer build + supabase local)
 ```

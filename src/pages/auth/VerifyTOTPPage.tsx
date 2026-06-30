@@ -57,7 +57,7 @@ export default function VerifyTOTPPage() {
         />
         <button
           type="submit"
-          disabled={loading || code.length < 6}
+          disabled={loading || code.length < 6 || !factorId}
           className="bg-black text-white rounded px-3 py-2 text-sm disabled:opacity-50"
         >
           {loading ? 'Verificando…' : 'Verificar'}

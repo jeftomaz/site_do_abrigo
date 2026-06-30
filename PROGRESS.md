@@ -5,9 +5,9 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 
 ## Atual
 
-- **Fase:** 4 — Histórias
-- **Próxima tarefa:** F4-04
-- **Fase concluída:** Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
+- **Fase:** T — Testes ✓ (concluída)
+- **Próxima tarefa:** F5-01 (Fase 5 — Eventos)
+- **Fase concluída:** Fase T — Testes ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
 ## Decisões fixadas
@@ -42,6 +42,58 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `T-06` e `T-07` E2E Playwright — Camada 5
+
+- **Feito:** instalado `@playwright/test` + `dotenv`; `playwright.config.ts` com `webServer` subindo `npm run preview` (porta 4173) e `baseURL: 'http://localhost:4173'`; `e2e/global-setup.ts` conecta ao Supabase local com `SERVICE_ROLE_KEY`, faz upsert do cão seed (`Rex E2E`, status `available`), recria o usuário admin de teste (`admin-e2e@abrigo.test`), faz enroll TOTP via `mfa.enroll()` e verifica o fator via `mfa.challenge/verify()`, salva o secret TOTP em `e2e/.e2e-state.json` (gitignored); `e2e/totp.ts` implementa TOTP RFC 6238 com `node:crypto` (sem dep externa); `e2e/public.spec.ts` (T-06): 3 casos — landing carrega, navega para /adocao pelo Header, abre modal do cão seed e exibe CTA de adoção; `e2e/admin-auth.spec.ts` (T-07): login admin → redirecionado para /admin/verify → código TOTP gerado localmente com janela diferente do setup → /admin com "Painel Admin". Scripts `test:e2e` (`vite build --mode test && npx playwright test`) e `e2e:ui` adicionados. `vitest.config.ts` excluí `e2e/**`. 4/4 E2E verdes + 104 unitários verdes + `tsc -b` limpo.
+- **Decisões:** TOTP implementado com `node:crypto` (sem otplib — v13 mudou API incompatível e v12 não seria mantida); geração do código adiada no teste até uma janela TOTP diferente do setup para evitar replay; `supabase/config.toml` criado para habilitar `[auth.mfa.totp]` no local (ausência impedia enroll); migration `20260630000004_service_role_grants.sql` adiciona `SELECT/INSERT/UPDATE/DELETE` para `service_role` nas tabelas de domínio (mesmo grant presente em Supabase Cloud por padrão; faltava no local); `VerifyTOTPPage` corrigida para desabilitar o botão Verificar enquanto `factorId` não carregou (melhoria de UX + torna o E2E determinístico); `.env.test.example` commitado; `.env.test` e `.e2e-state.json` gitignored.
+- **Arquivos:** `playwright.config.ts`, `e2e/global-setup.ts`, `e2e/totp.ts`, `e2e/public.spec.ts`, `e2e/admin-auth.spec.ts`, `.env.test.example`, `.env.test`, `supabase/config.toml`, `supabase/migrations/20260630000004_service_role_grants.sql`, `src/pages/auth/VerifyTOTPPage.tsx`, `package.json`, `vitest.config.ts`, `tsconfig.node.json`, `.gitignore`, `AGENTS.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` T-06 e T-07 marcados; `TESTING.md` cobertura E2E atualizada, comandos revisados, aviso "nunca produção"; `AGENTS.md` comandos test:e2e e e2e:ui; `PROGRESS.md` Fase T concluída; `TESTING.md` localização de arquivos atualizada.
+- **Verificação:** `npm run build` passou; `npm test` verde (104 testes, 13 arquivos); `npx playwright test` 4/4 verde (3 specs T-06 + 1 spec T-07) em Chromium.
+
+### 2026-06-30 — `T-05` Harness RLS pgTAP — Camada 4
+- **Feito:** criado harness pgTAP em `supabase/tests/` com README curto; `dogs_rls.test.sql` cobre SELECT anon/auth, INSERT anon negado, UPDATE anon sem efeito, INSERT/UPDATE autenticado OK e DELETE negado; `stories_rls.test.sql` cobre leitura pública, escrita apenas autenticada, DELETE negado e FK `dog_id on delete set null`; `storage_rls.test.sql` cobre upload anônimo negado e upload autenticado OK nos buckets `dogs`/`stories`. Adicionado `npm run test:rls`.
+- **Decisões:** adicionada migration de grants para roles `anon`/`authenticated` nas tabelas/bucket necessários, para que os testes e a API exercitem RLS em vez de falharem antes por privilégio SQL. Testes de Storage não fazem DELETE direto em `storage.objects`, pois o Supabase local protege a tabela contra remoção direta.
+- **Arquivos:** `.gitignore`, `package.json`, `supabase/migrations/20260630000003_api_role_grants.sql`, `supabase/tests/README.md`, `supabase/tests/dogs_rls.test.sql`, `supabase/tests/stories_rls.test.sql`, `supabase/tests/storage_rls.test.sql`, `src/shared/ui/Button.test.tsx`, `ROADMAP.md`, `PROGRESS.md`, `TESTING.md`, `DATA_MODEL.md`.
+- **Docs:** `ROADMAP.md` T-05 marcado; `TESTING.md` marcou RLS de dogs/stories como 🟢; `DATA_MODEL.md` registrou grants e testes RLS/Storage; `PROGRESS.md` atualizado.
+- **Verificação:** `npm run build` passou; `npm test` passou (104 testes); `npx supabase start` + `npx supabase db reset` OK; `npm run test:rls` passou (3 arquivos, 26 asserts).
+
+### 2026-06-30 — `T-04` Testes de componente — Camada 2
+- **Feito:** 6 arquivos de teste criados, 42 novos casos (total 104 testes verdes). `Button.test.tsx` (5 casos: 4 variantes, isLoading desabilita + exibe spinner, disabled, onClick, disabled não dispara click). `Modal.test.tsx` (9 casos: renderiza/não renderiza, aria-modal, aria-labelledby, backdrop fecha, clique interno não fecha, Escape fecha, botão Fechar, sem Escape quando fechado). `Field.test.tsx` (7 casos: label, erro, hint, hint oculto com erro, textarea, digitação, integração com `register` do react-hook-form). `DogCard.test.tsx` (9 casos: nome, meta porte+idade, fallback 🐾, imagem com foto, sem role=button sem onClick, role=button com onClick, clique dispara callback, Enter, Espaço). `DoacaoSection.test.tsx` (4 casos: exibe chave PIX, clipboard.writeText com a chave certa, mostra "Copiado!", restaura após 2 s via fake timer + act). `AdminGuard.test.tsx` (4 casos: sem sessão → /admin/login; aal1 sem TOTP → /admin/enroll; aal1 com TOTP → /admin/verify; aal2 → libera filhos). `AdminGuard` testado mockando os módulos `features/auth/hooks` e `features/auth/api`, sem tocar a rede.
+- **Decisões:** fake timers para DoacaoSection são aplicados apenas no teste que precisa deles (try/finally); testes de click usam `userEvent` direto (sem fake timers globais) para evitar deadlock de microtask. `vi.useFakeTimers()` global + `userEvent.setup()` causa timeout de 5 s independente de `delay: null` — isolado por test.
+- **Arquivos:** `src/shared/ui/Button.test.tsx`, `src/shared/ui/Modal.test.tsx`, `src/shared/ui/Field.test.tsx`, `src/features/dogs/components/DogCard.test.tsx`, `src/pages/public/landing/sections/DoacaoSection.test.tsx`, `src/app/AdminGuard.test.tsx`.
+- **Docs:** `ROADMAP.md` T-04 marcado; `TESTING.md` cobertura atualizada; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `T-03` Testes unitários puros — Camada 1
+- **Feito:** `sortDogs` extraída de `AdocaoPage.tsx` para `features/dogs/sort.ts` (+ tipo `SortKey`); `AdocaoPage.tsx` ajustado para importar de lá. Criados 5 arquivos de teste: `dogs/format.test.ts` (7 casos: dogAgeLabel null/futuro/ano-atual/1-ano/plural, dogCoverUrl null/empty/multi, dogPhotoUrl URL+bucket), `dogs/form.test.ts` (17 casos: emptyDogFormValues, dogToFormValues ano→idade incluindo null/futuro/ano-atual, dogFormValuesToPayload trim/conversão/nulls, validateAgeYears 9 branches), `dogs/sort.test.ts` (15 casos: todos os critérios name/age_desc/age_asc/size, nulls no fim via variação de posição de entrada para cobrir ambos os branches do if), `stories/format.test.ts` (6 casos), `stories/form.test.ts` (7 casos). Cobertura 100% nos 5 arquivos-alvo (text reporter oculta 100%; confirmado no HTML). 62 testes verdes, build ok.
+- **Decisões:** null ao final do input array (não no início) para forçar insertion sort do V8 a chamar o comparador com o dog nulo como argumento `a` — cobrindo o branch `if (a.birth_year == null) return 1` que ficou descoberto na primeira versão. `dogPhotoUrl`/`storyPhotoUrl` testados via resultado real de `getPublicUrl` (síncrono, sem rede); sem mock do supabase.
+- **Arquivos:** `src/features/dogs/sort.ts`, `src/pages/public/AdocaoPage.tsx`, `src/features/dogs/format.test.ts`, `src/features/dogs/form.test.ts`, `src/features/dogs/sort.test.ts`, `src/features/stories/format.test.ts`, `src/features/stories/form.test.ts`.
+- **Docs:** `ROADMAP.md` T-03 marcado; `TESTING.md` cobertura atualizada; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `T-02` Helpers de teste: renderWithProviders + MSW
+- **Feito:** instalado `msw@2.x`; `src/test/render.tsx` com `renderWithProviders` (QueryClient novo por chamada com retry off, MemoryRouter, ThemeProvider); `src/test/msw/handlers.ts` com fixtures `dogFixture`/`storyFixture` e handlers base para `/rest/v1/dogs` e `/rest/v1/stories`; `src/test/msw/server.ts` com `setupServer`; `src/test/setup.ts` atualizado com mock de `window.matchMedia` e lifecycle do MSW server (listen/resetHandlers/close); `src/test/render.test.tsx` como teste-semente usando renderWithProviders + handler MSW; `npm test` verde (2 testes).
+- **Decisões:** URL do Supabase lida de `import.meta.env.VITE_SUPABASE_URL` nos handlers (disponível via Vite em Vitest); `onUnhandledRequest: 'warn'` para não quebrar com requests extras de supabase-js; mock de `matchMedia` adicionado ao setup global (ThemeProvider exige).
+- **Arquivos:** `package.json`, `src/test/render.tsx`, `src/test/msw/server.ts`, `src/test/msw/handlers.ts`, `src/test/setup.ts`, `src/test/render.test.tsx`.
+- **Docs:** `ROADMAP.md` T-02 marcado; `TESTING.md` cobertura atualizada; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `T-01` Infra de testes Vitest
+- **Feito:** instalados Vitest 4.x, @vitest/coverage-v8, jsdom, @testing-library/react, user-event, jest-dom; `vitest.config.ts` reutiliza a config do Vite via `mergeConfig` (environment jsdom, globals, setupFiles); `src/test/setup.ts` importa jest-dom; `src/test/vitest.d.ts` com triple-slash reference para `vitest/globals` (não toca no tsconfig.app.json); `src/test/smoke.test.ts` como teste-semente; scripts `test`, `test:watch`, `coverage` no `package.json`; `vitest.config.ts` incluído no `tsconfig.node.json`. `npm test` e `npm run build` passam.
+- **Decisões:** MSW e Playwright foram desacoplados desta tarefa — MSW vai em T-02; Playwright em T-06/T-07. Tipos globais do Vitest resolvidos com `src/test/vitest.d.ts` para não restringir os `@types/*` auto-incluídos (evita quebrar os tipos do React). `npm test` executa em modo one-shot (`vitest run`); watch é `test:watch`.
+- **Arquivos:** `package.json`, `vitest.config.ts`, `tsconfig.node.json`, `src/test/setup.ts`, `src/test/smoke.test.ts`, `src/test/vitest.d.ts`, `ROADMAP.md`, `TESTING.md`, `AGENTS.md`.
+- **Docs:** `ROADMAP.md` T-01 marcado; `TESTING.md` e `AGENTS.md` (Comandos) atualizados; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — Fase T (docs) Estratégia de testes
+- **Feito:** criado `TESTING.md` com ferramentas, 5 camadas (unitário/componente/integração MSW/RLS pgTAP/E2E Playwright), convenções de localização, tabela de cobertura por feature e comandos de execução; `AGENTS.md` recebeu `TESTING.md` na tabela de documentos, passo 6 na DoD (testes obrigatórios a partir da Fase T) e invariante 9 (código sem teste = tarefa não concluída); `ROADMAP.md` ganhou a Fase T com tarefas T-01 a T-07.
+- **Isenção DoD:** passo 6 (testes) inaplicável — infra de testes ainda não existe; será criada em T-01.
+- **Decisões:** Fases 0–3 não são reabertas para backfill — esse é o escopo da Fase T; a política de testes entra em vigor após T-01.
+- **Arquivos:** `TESTING.md` (novo), `AGENTS.md`, `ROADMAP.md`, `PROGRESS.md`.
+- **Docs:** `AGENTS.md` com invariante 9 e DoD atualizada; `ROADMAP.md` com Fase T; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `F4-04 a F4-06` Fase 4 — Histórias (público + admin)
+- **Feito:** página pública `/historias` com grid de histórias; admin criar e editar história; Fase 4 concluída. *(entradas individuais não registradas no momento — consolidada aqui)*
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/pages/public/HistoriasPage.tsx`, `src/pages/admin/stories/` e relacionados, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
 
 ### 2026-06-30 — `F4-03` `features/stories/{api,hooks,types}`
 - **Feito:** criado domínio `features/stories` com tipos derivados de `shared/types/db.ts`, API `listStories` e hook `useStories` via TanStack Query.
