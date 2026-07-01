@@ -5,9 +5,9 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 
 ## Atual
 
-- **Fase:** 5 — Eventos / Recãopensa
-- **Próxima tarefa:** F5-11 (Fase 5 — Eventos)
-- **Fase concluída:** Fase T — Testes ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
+- **Fase:** 6 — Acabamento
+- **Próxima tarefa:** F6-01 (Fase 6 — Acabamento)
+- **Fase concluída:** Fase T — Testes ✓ · Fase 5 — Eventos / Recãopensa ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
 ## Decisões fixadas
@@ -43,6 +43,14 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F5-11` Admin: marcar reserva paga / definir prazo
+
+- **Feito:** `/admin/events` ganhou ação `Reservas` por evento, com painel para listar reservas, ver cliente/contato/item/prazo, exibir prazo padrão do evento e alterar status (`pending`, `paid`, `cancelled`).
+- **Decisões:** o prazo padrão continua definido no formulário do evento via `events.rules.reservation_expires_in_hours`; esta tarefa adiciona a operação admin sobre reservas existentes e não cria regra nova de prorrogação individual.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/components/EventReservationsPanel.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/features/events/api.test.ts`, `src/pages/admin/events/AdminEventsPage.test.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F5-11 marcado; `DESIGN_SYSTEM.md` registrou painel admin de reservas; `TESTING.md` registrou cobertura MSW da API/página; Fase 5 concluída e ponteiro movido para F6-01.
+- **Verificação:** `npm test` passou (164 testes); `npm run build` passou.
 
 ### 2026-06-30 — `F5-10` Admin: gerenciar produtos/números
 

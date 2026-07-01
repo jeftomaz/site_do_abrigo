@@ -2,7 +2,12 @@ import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
-import type { Event, Product, RaffleNumber } from '../../../features/events/types'
+import type {
+  Event,
+  Product,
+  RaffleNumber,
+  Reservation,
+} from '../../../features/events/types'
 import { server } from '../../../test/msw/server'
 import { renderWithProviders } from '../../../test/render'
 import AdminEventsPage from './AdminEventsPage'
@@ -51,6 +56,19 @@ const raffleNumber: RaffleNumber = {
   sort_order: 1,
   created_at: '2026-06-30T00:00:00Z',
   updated_at: '2026-06-30T00:00:00Z',
+}
+
+const reservation: Reservation = {
+  id: '00000000-0000-0000-0000-000000000e01',
+  event_id: activeEvent.id,
+  product_id: null,
+  raffle_number_id: raffleNumber.id,
+  customer_name: 'Maria Silva',
+  contact: '@maria',
+  status: 'pending',
+  expires_at: '2026-06-30T18:00:00Z',
+  created_at: '2026-06-30T12:00:00Z',
+  updated_at: '2026-06-30T12:00:00Z',
 }
 
 function mockEventList(events: Event[]) {
@@ -284,6 +302,45 @@ describe('AdminEventsPage', () => {
       event_id: activeEvent.id,
       number: 21,
       label: 'Número da sorte',
+    })
+  })
+
+  it('lista reservas do evento e marca como paga', async () => {
+    const user = userEvent.setup()
+    const updatedBodies: unknown[] = []
+    mockEventList([activeEvent])
+    server.use(
+      http.get(`${REST}/raffle_numbers`, () => {
+        return HttpResponse.json([raffleNumber])
+      }),
+      http.get(`${REST}/reservations`, () => {
+        return HttpResponse.json([reservation])
+      }),
+      http.patch(`${REST}/reservations`, async ({ request }) => {
+        updatedBodies.push(await request.json())
+        return HttpResponse.json({ ...reservation, status: 'paid' })
+      }),
+    )
+
+    renderWithProviders(<AdminEventsPage />)
+
+    const eventRow = await screen.findByRole('row', { name: /Recãopensa Junho 2026/ })
+    await user.click(within(eventRow).getByRole('button', { name: 'Reservas' }))
+
+    expect(
+      await screen.findByRole('heading', { name: 'Reservas' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Maria Silva')).toBeInTheDocument()
+    expect(screen.getByText('@maria')).toBeInTheDocument()
+    expect(screen.getByText('Número 21')).toBeInTheDocument()
+    expect(screen.getAllByText('Pendente').length).toBeGreaterThan(0)
+    expect(screen.getByText('Prazo padrão: 6h')).toBeInTheDocument()
+
+    const reservationRow = screen.getByRole('row', { name: /Maria Silva/ })
+    await user.click(within(reservationRow).getByRole('button', { name: 'Pago' }))
+
+    await waitFor(() => {
+      expect(updatedBodies[0]).toEqual({ status: 'paid' })
     })
   })
 })

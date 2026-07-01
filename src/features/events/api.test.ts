@@ -13,11 +13,13 @@ import {
   listPastEvents,
   listProducts,
   listRaffleNumbers,
+  listReservations,
   updateEvent,
   updateProduct,
   updateRaffleNumber,
+  updateReservation,
 } from './api'
-import type { Event, Product, RaffleNumber } from './types'
+import type { Event, Product, RaffleNumber, Reservation } from './types'
 
 const REST = `${import.meta.env.VITE_SUPABASE_URL as string}/rest/v1`
 const eventId = '00000000-0000-0000-0000-000000000901'
@@ -68,6 +70,19 @@ const raffleNumberFixture: RaffleNumber = {
   sort_order: 1,
   created_at: '2026-06-30T00:00:00Z',
   updated_at: '2026-06-30T00:00:00Z',
+}
+
+const reservationFixture: Reservation = {
+  id: '00000000-0000-0000-0000-000000000931',
+  event_id: eventId,
+  product_id: null,
+  raffle_number_id: raffleNumberFixture.id,
+  customer_name: 'Maria Silva',
+  contact: '@maria',
+  status: 'pending',
+  expires_at: '2026-06-30T18:00:00Z',
+  created_at: '2026-06-30T12:00:00Z',
+  updated_at: '2026-06-30T12:00:00Z',
 }
 
 describe('events api — getActiveEvent', () => {
@@ -341,6 +356,40 @@ describe('events api — admin raffle number CRUD', () => {
       label: 'Sorte',
       sort_order: 2,
     })
+  })
+})
+
+describe('events api — admin reservation status', () => {
+  it('lista reservas de um evento', async () => {
+    server.use(
+      http.get(`${REST}/reservations`, () => {
+        return HttpResponse.json([reservationFixture])
+      }),
+    )
+
+    await expect(listReservations(eventId)).resolves.toEqual([
+      reservationFixture,
+    ])
+  })
+
+  it('edita status da reserva autenticada', async () => {
+    let receivedBody: unknown
+
+    server.use(
+      http.patch(`${REST}/reservations`, async ({ request }) => {
+        receivedBody = await request.json()
+        return HttpResponse.json({ ...reservationFixture, status: 'paid' })
+      }),
+    )
+
+    await expect(
+      updateReservation({
+        id: reservationFixture.id,
+        input: { status: 'paid' },
+      }),
+    ).resolves.toMatchObject({ status: 'paid' })
+
+    expect(receivedBody).toEqual({ status: 'paid' })
   })
 })
 

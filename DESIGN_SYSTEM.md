@@ -188,6 +188,16 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
+### Painel admin de reservas · 🟡 rascunho
+
+**Componente:** EventReservationsPanel / ReservationStatusControl · **Status:** 🟡 rascunho
+- **Anatomia:** ação `Reservas` na tabela de eventos; painel contextual com título do evento, prazo padrão, tabela de reservas, badge de status, select de status e atalho `Pago`.
+- **Variantes:** reserva de produto · reserva de número de rifa; status `pending`, `paid`, `cancelled`.
+- **Estados:** loading com skeleton, erro inline, vazio, status salvando/desabilitado e erro de mutation.
+- **Responsivo:** painel full-width abaixo da tabela; tabela com overflow horizontal e controles compactos por linha.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Componentes previstos (preencher progressivamente)
 
 - [x] Button · 🟡
@@ -203,6 +213,7 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - [x] Painel de reserva de evento · 🟡
 - [x] Formulário admin de evento · 🟡
 - [x] Painel admin de itens de evento · 🟡
+- [x] Painel admin de reservas · 🟡
 - [x] Card de produto / número de rifa · 🟡
 - [x] Badge de status (disponível/adotado/falecido) · 🟡
 <!-- adicionar outros conforme surgirem -->

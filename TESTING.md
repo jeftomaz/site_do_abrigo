@@ -213,7 +213,7 @@ Atualizado a cada tarefa. Marque `🟢` ao cobrir, `🟡` se parcial.
 | `features/auth` — AdminGuard | — | 🟢 | — | — | — | T-04 (módulos mockados) |
 | `features/auth` — E2E admin/TOTP | — | — | — | — | 🟢 | T-07: login+2FA+/admin |
 | `pages/public/landing` — DoacaoSection | — | 🟢 | — | — | — | T-04 |
-| `features/events` / `reservations` | 🟢 | 🟡 | 🟢 | 🟢 | ⬜ | F5-01/F5-05: banco/RLS/disponibilidade/pg_cron; F5-06: api com MSW; F5-07: página pública `/eventos`; F5-08: helpers de prazo/preço, API de reserva, fluxo público reserva→PIX e RPC segura pgTAP; F5-09: helpers/form admin, API create/update/listAll e página admin com MSW; F5-10: helpers/API/painel admin de produtos e números |
+| `features/events` / `reservations` | 🟢 | 🟡 | 🟢 | 🟢 | ⬜ | F5-01/F5-05: banco/RLS/disponibilidade/pg_cron; F5-06: api com MSW; F5-07: página pública `/eventos`; F5-08: helpers de prazo/preço, API de reserva, fluxo público reserva→PIX e RPC segura pgTAP; F5-09: helpers/form admin, API create/update/listAll e página admin com MSW; F5-10: helpers/API/painel admin de produtos e números; F5-11: API/lista admin de reservas e alteração de status com MSW |
 
 ### Infra de teste
 

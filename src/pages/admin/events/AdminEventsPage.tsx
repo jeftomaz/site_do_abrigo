@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { EventCreateForm } from '../../../features/events/components/EventCreateForm'
 import { EventEditModal } from '../../../features/events/components/EventEditModal'
 import { EventItemsPanel } from '../../../features/events/components/EventItemsPanel'
+import { EventReservationsPanel } from '../../../features/events/components/EventReservationsPanel'
 import { reservationExpiresInHours } from '../../../features/events/format'
 import { useAllEvents } from '../../../features/events/hooks'
 import type { Event } from '../../../features/events/types'
@@ -62,6 +63,7 @@ export default function AdminEventsPage() {
   const { data: events, isLoading, isError } = useAllEvents()
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [itemsEvent, setItemsEvent] = useState<Event | null>(null)
+  const [reservationsEvent, setReservationsEvent] = useState<Event | null>(null)
 
   return (
     <main className="mx-auto max-w-6xl p-6">
@@ -149,6 +151,14 @@ export default function AdminEventsPage() {
                         type="button"
                         variant="secondary"
                         size="sm"
+                        onClick={() => setReservationsEvent(event)}
+                      >
+                        Reservas
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
                         onClick={() => setEditingEvent(event)}
                       >
                         Editar
@@ -168,6 +178,7 @@ export default function AdminEventsPage() {
       />
 
       {itemsEvent && <EventItemsPanel event={itemsEvent} />}
+      {reservationsEvent && <EventReservationsPanel event={reservationsEvent} />}
     </main>
   )
 }

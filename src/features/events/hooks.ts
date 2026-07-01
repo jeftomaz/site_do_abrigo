@@ -11,9 +11,11 @@ import {
   listPastEvents,
   listProducts,
   listRaffleNumbers,
+  listReservations,
   updateEvent,
   updateProduct,
   updateRaffleNumber,
+  updateReservation,
 } from './api'
 import type { Event } from './types'
 
@@ -26,6 +28,8 @@ export const eventsQueryKeys = {
     [...eventsQueryKeys.all, 'products', eventId] as const,
   raffleNumbers: (eventId: Event['id']) =>
     [...eventsQueryKeys.all, 'raffleNumbers', eventId] as const,
+  reservations: (eventId: Event['id']) =>
+    [...eventsQueryKeys.all, 'reservations', eventId] as const,
   availableProducts: (eventId: Event['id']) =>
     [...eventsQueryKeys.all, 'availableProducts', eventId] as const,
   availableRaffleNumbers: (eventId: Event['id']) =>
@@ -157,6 +161,35 @@ export function useUpdateRaffleNumber() {
         }),
         queryClient.invalidateQueries({
           queryKey: eventsQueryKeys.availableRaffleNumbers(raffleNumber.event_id),
+        }),
+      ])
+    },
+  })
+}
+
+export function useReservations(eventId: Event['id'], enabled = true) {
+  return useQuery({
+    queryKey: eventsQueryKeys.reservations(eventId),
+    queryFn: () => listReservations(eventId),
+    enabled: Boolean(eventId) && enabled,
+  })
+}
+
+export function useUpdateReservation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: updateReservation,
+    onSuccess: async (reservation) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: eventsQueryKeys.reservations(reservation.event_id),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: eventsQueryKeys.availableProducts(reservation.event_id),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: eventsQueryKeys.availableRaffleNumbers(reservation.event_id),
         }),
       ])
     },

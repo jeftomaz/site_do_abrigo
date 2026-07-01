@@ -9,6 +9,8 @@ import type {
   RaffleNumber,
   RaffleNumberInsert,
   RaffleNumberUpdate,
+  Reservation,
+  ReservationUpdate,
 } from './types'
 
 const eventColumns =
@@ -17,6 +19,8 @@ const productColumns =
   'id,event_id,name,description,price_cents,image_path,sort_order,created_at,updated_at' as const
 const raffleNumberColumns =
   'id,event_id,number,label,sort_order,created_at,updated_at' as const
+const reservationColumns =
+  'id,event_id,product_id,raffle_number_id,customer_name,contact,status,expires_at,created_at,updated_at' as const
 
 export async function getActiveEvent(): Promise<Event | null> {
   const { data, error } = await supabase
@@ -162,6 +166,37 @@ export async function updateRaffleNumber({
     .update(input)
     .eq('id', id)
     .select(raffleNumberColumns)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function listReservations(
+  eventId: Event['id'],
+): Promise<Reservation[]> {
+  const { data, error } = await supabase
+    .from('reservations')
+    .select(reservationColumns)
+    .eq('event_id', eventId)
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data ?? []
+}
+
+export async function updateReservation({
+  id,
+  input,
+}: {
+  id: Reservation['id']
+  input: ReservationUpdate
+}): Promise<Reservation> {
+  const { data, error } = await supabase
+    .from('reservations')
+    .update(input)
+    .eq('id', id)
+    .select(reservationColumns)
     .single()
 
   if (error) throw error
