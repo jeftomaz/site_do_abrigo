@@ -65,17 +65,17 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 
 ## Fase 5 — Eventos / Recãopensa
 
-- [ ] **F5-01** Migrations `events`+`products`+`raffle_numbers`+`reservations` + enums. · Pronto: tabelas criadas. · Toca: migrations + DATA_MODEL
-- [ ] **F5-02** Garantir 1 evento ativo (índice/regra `is_active`). · Pronto: 2º ativo falha. · Toca: migrations + DATA_MODEL
-- [ ] **F5-03** RLS de todas (INSERT reserva público; resto autenticado). · Pronto: políticas testadas. · Toca: migrations + DATA_MODEL
-- [ ] **F5-04** Query de disponibilidade (livre se sem paid/pending válida). · Pronto: item reservado some. · Toca: features/events/api + DATA_MODEL
-- [ ] **F5-05** pg_cron p/ cancelar pending expiradas. · Pronto: job cancela após prazo. · Toca: Supabase + DATA_MODEL
-- [ ] **F5-06** `features/events/{api,hooks,types}`. · Pronto: ler evento ativo + passados. · Toca: features/events
-- [ ] **F5-07** Público: ver evento ativo + passados. · Pronto: lista renderiza. · Toca: pages/public/eventos
-- [ ] **F5-08** Público: reservar item/número → gerar PIX + instrução comprovante. · Pronto: reserva criada. · Toca: pages/public/eventos
-- [ ] **F5-09** Admin: criar/editar evento. · Pronto: evento gerenciável. · Toca: pages/admin/events
-- [ ] **F5-10** Admin: gerenciar produtos/números. · Pronto: itens CRUD. · Toca: pages/admin/events
-- [ ] **F5-11** Admin: marcar reserva paga / definir prazo. · Pronto: status muda. · Toca: pages/admin/events
+- [x] **F5-01** Migrations `events`+`products`+`raffle_numbers`+`reservations` + enums. · Pronto: tabelas criadas. · Toca: migrations + DATA_MODEL
+- [x] **F5-02** Garantir 1 evento ativo (índice/regra `is_active`). · Pronto: 2º ativo falha. · Toca: migrations + DATA_MODEL
+- [x] **F5-03** RLS de todas (INSERT reserva público; resto autenticado). · Pronto: políticas testadas. · Toca: migrations + DATA_MODEL
+- [x] **F5-04** Query de disponibilidade (livre se sem paid/pending válida). · Pronto: item reservado some. · Toca: features/events/api + DATA_MODEL
+- [x] **F5-05** pg_cron p/ cancelar pending expiradas. · Pronto: job cancela após prazo. · Toca: Supabase + DATA_MODEL
+- [x] **F5-06** `features/events/{api,hooks,types}`. · Pronto: ler evento ativo + passados. · Toca: features/events
+- [x] **F5-07** Público: ver evento ativo + passados. · Pronto: lista renderiza. · Toca: pages/public/eventos
+- [x] **F5-08** Público: reservar item/número → gerar PIX + instrução comprovante. · Pronto: reserva criada. · Toca: pages/public/eventos
+- [x] **F5-09** Admin: criar/editar evento. · Pronto: evento gerenciável. · Toca: pages/admin/events
+- [x] **F5-10** Admin: gerenciar produtos/números. · Pronto: itens CRUD. · Toca: pages/admin/events
+- [x] **F5-11** Admin: marcar reserva paga / definir prazo. · Pronto: status muda. · Toca: pages/admin/events
 
 ## Fase 6 — Acabamento
 
@@ -85,6 +85,18 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 - [ ] **F6-04** SEO + favicon + meta. · Pronto: tags presentes.
 - [ ] **F6-05** Acessibilidade (alt, foco, contraste). · Pronto: navegável por teclado.
 - [ ] **F6-06** Auditoria final de RLS. · Pronto: escrita anônima falha em tudo.
+
+## Fase T — Testes
+
+Backfill de cobertura para o que já existe (Fases 0–4) e infra para novas fases. **Não reabra tarefas das Fases 0–3 para adicionar testes** — o backfill é escopo desta fase. A partir de T-01 concluída, toda nova tarefa deve satisfazer o passo 6 da DoD (testes obrigatórios).
+
+- [x] **T-01** Instalar e configurar infra de testes Vitest (Vitest + jsdom + @testing-library/react + user-event + jest-dom). · **Pronto quando:** `npm test` roda 1 teste-semente verde; scripts `test`, `test:watch`, `coverage` em `package.json`; `vitest.config.ts` com jsdom + globals + setupFiles; `src/test/setup.ts` importa jest-dom; `npm run build` passa. · **Toca:** `package.json`, `vitest.config.ts`, `tsconfig.node.json`, `src/test/setup.ts`, `src/test/smoke.test.ts`, `src/test/vitest.d.ts`, `AGENTS.md`, `TESTING.md`.
+- [x] **T-02** Helpers de teste: `renderWithProviders` + MSW para dogs/stories. · **Pronto quando:** `src/test/render.tsx` com `renderWithProviders` (QueryClient novo por teste, retry off, MemoryRouter, ThemeProvider); MSW instalado; `src/test/msw/server.ts` e `src/test/msw/handlers.ts` com handlers base para `/rest/v1/dogs` e `/rest/v1/stories`; server plugado no `setup.ts` (listen/resetHandlers/close); exemplo de override em comentário; 1 teste-semente verde. · **Toca:** `package.json`, `src/test/render.tsx`, `src/test/msw/server.ts`, `src/test/msw/handlers.ts`, `src/test/setup.ts`, `src/test/render.test.tsx`, `TESTING.md`.
+- [x] **T-03** Testes unitários puros — Camada 1 (format/form/sort de dogs e stories). · **Pronto quando:** `format.test.ts`, `form.test.ts` e `sort.test.ts` de `features/dogs` e `format.test.ts`/`form.test.ts` de `features/stories` cobrem 100% de branches; `sortDogs` extraída de `AdocaoPage.tsx` para `features/dogs/sort.ts`; 62 testes verdes; `npm run build` passa. · **Toca:** `features/dogs/sort.ts`, `AdocaoPage.tsx`, `features/dogs/format.test.ts`, `features/dogs/form.test.ts`, `features/dogs/sort.test.ts`, `features/stories/format.test.ts`, `features/stories/form.test.ts`, `TESTING.md`.
+- [x] **T-04** Testes de componente — Camada 2 (`shared/ui` + componentes de dogs e stories). · **Pronto quando:** Button, Field, Modal, Skeleton; DogCard, DogDetailsModal; componentes de stories cobertos com estados loading/error/empty e interações básicas; `npm run test:run` verde. · **Toca:** `src/shared/ui/*.test.tsx`, `src/features/dogs/components/*.test.tsx`, `src/features/stories/components/*.test.tsx`, `TESTING.md`.
+- [x] **T-05** Harness RLS pgTAP — Camada 4 (dogs + stories + Storage). · **Pronto quando:** `supabase test db supabase/tests` verde; `dogs_rls.test.sql` testa SELECT anon/auth, INSERT/UPDATE anônimo negado, INSERT/UPDATE autenticado permitido e DELETE bloqueado; `stories_rls.test.sql` idem para stories e FK `dog_id` (`on delete set null`); `storage_rls.test.sql` testa upload anônimo negado e autenticado permitido nos buckets `dogs`/`stories`; grants das roles de API permitem que RLS seja exercitada; script `test:rls` disponível. · **Toca:** `.gitignore`, `package.json`, `supabase/migrations/20260630000003_api_role_grants.sql`, `supabase/tests/README.md`, `supabase/tests/dogs_rls.test.sql`, `supabase/tests/stories_rls.test.sql`, `supabase/tests/storage_rls.test.sql`, `TESTING.md`, `DATA_MODEL.md`.
+- [x] **T-06** E2E público — Camada 5 (landing, adoção, modal, CTA). · **Pronto quando:** `e2e/public.spec.ts` cobre landing carrega, navega para `/adocao` pelo Header, abre modal do cão seed, CTA de adoção visível; `npm run test:e2e` verde em Chromium. · **Toca:** `e2e/public.spec.ts`, `e2e/global-setup.ts`, `e2e/totp.ts`, `.env.test`, `playwright.config.ts`, `TESTING.md`.
+- [x] **T-07** E2E admin/TOTP — Camada 5 (login + 2FA + acesso a /admin). · **Pronto quando:** `e2e/admin-auth.spec.ts` cobre login admin + verificação TOTP automatizada via `generateTOTP` (sem app externo, OTP seed capturado no setup via API) + acesso confirmado a `/admin`; `npm run test:e2e` verde. · **Toca:** `e2e/admin-auth.spec.ts`, `e2e/global-setup.ts`, `e2e/totp.ts`, `supabase/config.toml`, `supabase/migrations/20260630000004_service_role_grants.sql`, `src/pages/auth/VerifyTOTPPage.tsx`, `TESTING.md`.
 
 ## Débitos técnicos / correções
 

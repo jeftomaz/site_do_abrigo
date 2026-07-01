@@ -1,8 +1,17 @@
 node_modules
 dist
+coverage/
 *.local
+supabase/.branches/
+supabase/.temp/
 
 .DS_Store
 .env
 .env.*
 !.env.example
+!.env.test.example
+
+# Playwright
+playwright-report/
+test-results/
+e2e/.e2e-state.json

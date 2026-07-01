@@ -5,9 +5,9 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 
 ## Atual
 
-- **Fase:** 4 — Histórias
-- **Próxima tarefa:** F4-04
-- **Fase concluída:** Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
+- **Fase:** 6 — Acabamento
+- **Próxima tarefa:** F6-01 (Fase 6 — Acabamento)
+- **Fase concluída:** Fase T — Testes ✓ · Fase 5 — Eventos / Recãopensa ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
 ## Decisões fixadas
@@ -27,6 +27,7 @@ Decisões já tomadas, para não reabrir. Quando uma "dívida" do ROADMAP é res
 | 2026-06-29 | Escopo da Doação | Só informativo — texto + chave PIX copiável. |
 | 2026-06-29 | Campo `size` de cão | `text` livre (sem enum); validação de valores aceitos fica na UI. |
 | 2026-06-29 | Convite admin | Callback `type=invite` é tratado manualmente pelo app: o client não consome o hash automaticamente; `InviteHandler` cria a sessão e manda para `/admin/definir-senha`. |
+| 2026-06-30 | Prazo de reserva | Reserva pública fica `pending` por 6 horas por padrão; admin deve poder configurar via `events.rules.reservation_expires_in_hours`. |
 | — | Sorteio da rifa | _pendente — como escolher/divulgar ganhador?_ |
 
 ## Log
@@ -42,6 +43,152 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `F5-11` Admin: marcar reserva paga / definir prazo
+
+- **Feito:** `/admin/events` ganhou ação `Reservas` por evento, com painel para listar reservas, ver cliente/contato/item/prazo, exibir prazo padrão do evento e alterar status (`pending`, `paid`, `cancelled`).
+- **Decisões:** o prazo padrão continua definido no formulário do evento via `events.rules.reservation_expires_in_hours`; esta tarefa adiciona a operação admin sobre reservas existentes e não cria regra nova de prorrogação individual.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/components/EventReservationsPanel.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/features/events/api.test.ts`, `src/pages/admin/events/AdminEventsPage.test.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F5-11 marcado; `DESIGN_SYSTEM.md` registrou painel admin de reservas; `TESTING.md` registrou cobertura MSW da API/página; Fase 5 concluída e ponteiro movido para F6-01.
+- **Verificação:** `npm test` passou (164 testes); `npm run build` passou.
+
+### 2026-06-30 — `F5-10` Admin: gerenciar produtos/números
+
+- **Feito:** `/admin/events` ganhou ação `Itens` por evento, com painel para listar/criar/editar produtos em eventos de produtos e números em eventos de rifa; API/hooks centralizados passaram a cobrir `products` e `raffle_numbers`.
+- **Decisões:** não foi adicionada exclusão física de itens, seguindo a regra já existente de domínio sem policy de `DELETE`; a gestão cobre leitura, criação e edição.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/itemForms.ts`, `src/features/events/itemForms.test.ts`, `src/features/events/api.test.ts`, `src/features/events/components/EventItemsPanel.tsx`, `src/features/events/components/ProductCreateForm.tsx`, `src/features/events/components/ProductEditModal.tsx`, `src/features/events/components/ProductFormFields.tsx`, `src/features/events/components/RaffleNumberCreateForm.tsx`, `src/features/events/components/RaffleNumberEditModal.tsx`, `src/features/events/components/RaffleNumberFormFields.tsx`, `src/features/events/components/EventCreateForm.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/pages/admin/events/AdminEventsPage.test.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F5-10 marcado; `DESIGN_SYSTEM.md` registrou painel admin de itens; `TESTING.md` registrou cobertura de helpers/API/página admin de itens.
+- **Verificação:** `npm test` passou (161 testes); `npm run build` passou.
+
+### 2026-06-30 — `F5-09` Admin: criar/editar evento
+
+- **Feito:** admin ganhou rota lazy `/admin/events`, card no painel, listagem de eventos e formulário/modal para criar e editar `events` com título, tipo, datas, ativo e prazo de reserva em `events.rules.reservation_expires_in_hours`.
+- **Decisões:** produtos/números e reservas continuam fora desta tarefa e ficam para F5-10/F5-11; o formulário preserva outras chaves de `rules` ao editar, como `raffle_price_cents`.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/form.ts`, `src/features/events/form.test.ts`, `src/features/events/api.test.ts`, `src/features/events/components/EventFormFields.tsx`, `src/features/events/components/EventCreateForm.tsx`, `src/features/events/components/EventEditModal.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/pages/admin/events/AdminEventsPage.test.tsx`, `src/app/router.tsx`, `src/pages/admin/AdminPage.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F5-09 marcado; `DESIGN_SYSTEM.md` registrou formulário admin de evento; `TESTING.md` registrou cobertura unitária/MSW da tarefa.
+- **Verificação:** `npm test` passou (142 testes); `npm run build` passou.
+
+### 2026-06-30 — `F5-08` Público: reserva + PIX
+
+- **Feito:** página pública `/eventos` ganhou painel de reserva para produtos ou números disponíveis, formulário de nome/contato, RPC `create_public_reservation` para criar reserva `pending` com regra no banco e confirmação com chave PIX + instrução de envio de comprovante.
+- **Decisões:** prazo padrão de reserva é 6 horas; o valor pode ser configurado em `events.rules.reservation_expires_in_hours` e é calculado pelo banco. Preço de rifa é lido de `events.rules.raffle_price_cents` quando existir; produtos usam `products.price_cents`. A chave PIX segue estática (`abrigodamarcia@gmail.com`), sem QR dinâmico.
+- **Arquivos:** `AGENTS.md`, `supabase/migrations/20260630000010_public_reservations.sql`, `supabase/tests/events_public_reservations.test.sql`, `supabase/tests/events_rls.test.sql`, `src/shared/types/db.ts`, `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/format.ts`, `src/features/events/format.test.ts`, `src/features/events/api.test.ts`, `src/features/events/components/EventReservationPanel.tsx`, `src/pages/public/EventosPage.tsx`, `src/pages/public/EventosPage.test.tsx`, `DATA_MODEL.md`, `DESIGN_SYSTEM.md`, `TESTING.md`, `ROADMAP.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-08 marcado; `DATA_MODEL.md` documentou chaves de `events.rules`; `DESIGN_SYSTEM.md` registrou `EventReservationPanel`; `TESTING.md` registrou cobertura de reserva pública; `AGENTS.md` reforçou perguntar antes de implementar regra operacional ambígua.
+- **Verificação:** `npm test` passou (126 testes); `npm run build` passou; `npx supabase db reset` passou; `npm run test:rls` passou (9 arquivos, 87 asserts).
+
+### 2026-06-30 — `F5-07` Público: evento ativo + passados
+
+- **Feito:** página pública `/eventos` passou a listar evento ativo e eventos anteriores usando `useActiveEvent`/`usePastEvents`, com loading, erro e empty states. Criado `EventCard` para resumo de evento com status, tipo, período e descrição; adicionados testes MSW para sucesso, vazio e erro da página.
+- **Decisões:** a tela mostra apenas catálogo/resumo de eventos nesta tarefa; reserva, PIX e instrução de comprovante ficam para F5-08.
+- **Arquivos:** `src/pages/public/EventosPage.tsx`, `src/pages/public/EventosPage.test.tsx`, `src/features/events/components/EventCard.tsx`, `ROADMAP.md`, `PROGRESS.md`, `TESTING.md`, `DESIGN_SYSTEM.md`.
+- **Docs:** `ROADMAP.md` F5-07 marcado; `TESTING.md` registrou teste da página de eventos; `DESIGN_SYSTEM.md` registrou `EventCard` como rascunho.
+- **Verificação:** `npm test` passou (116 testes); `npm run build` passou.
+
+### 2026-06-30 — `F5-06` `features/events/{api,hooks,types}`
+
+- **Feito:** adicionadas funções `getActiveEvent()` (`.maybeSingle()`, retorna `Event | null`) e `listPastEvents()` (filtra `is_active=false`, `ends_at <= now()`, ordena por `ends_at desc`) em `api.ts`; criado `hooks.ts` com `eventsQueryKeys`, `useActiveEvent`, `usePastEvents`, `useAvailableProducts` e `useAvailableRaffleNumbers`; `api.test.ts` ampliado com 9 casos MSW cobrindo evento ativo encontrado, PGRST116/null, erro, lista passada, lista vazia, erro de listagem e os 3 casos de disponibilidade preexistentes; `eventFixture` e handler base `GET /events` adicionados a `handlers.ts`.
+- **Decisões:** `listPastEvents` replica o critério de visibilidade pública da RLS (`is_active = false AND ends_at IS NOT NULL AND ends_at <= now()`), garantindo consistência entre o que o banco expõe e o que a UI exibe; hooks de disponibilidade ficam em `hooks.ts` (antes ausentes) para fechar o domínio events antes de F5-07.
+- **Arquivos:** `src/features/events/api.ts`, `src/features/events/hooks.ts`, `src/features/events/api.test.ts`, `src/test/msw/handlers.ts`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-06 marcado; `TESTING.md` cobertura MSW de events atualizada para 🟢; handler base de events adicionado.
+
+### 2026-06-30 — `F5-05` pg_cron para reservas expiradas
+
+- **Feito:** criada migration `20260630000009_cancel_expired_reservations.sql` com função `cancel_expired_reservations()` e job `pg_cron` `cancel-expired-reservations` a cada 5 minutos para marcar reservas `pending` vencidas como `cancelled`.
+- **Decisões:** o cron é só limpeza/consistência; disponibilidade continua calculada pela regra de F5-04. A função não fica executável por `anon`/`authenticated`; apenas `service_role` e o dono do job podem executar.
+- **Arquivos:** `supabase/migrations/20260630000009_cancel_expired_reservations.sql`, `supabase/tests/events_cron.test.sql`, `src/shared/types/db.ts`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-05 marcado; `DATA_MODEL.md` registrou função/job `pg_cron`; `TESTING.md` registrou cobertura pgTAP do cron.
+- **Verificação:** `npx supabase db reset` passou; `npx supabase test db supabase/tests` passou (8 arquivos, 79 asserts).
+
+### 2026-06-30 — `F5-04` Query de disponibilidade
+
+- **Feito:** criada migration `20260630000008_event_availability.sql` com RPCs `list_available_products` e `list_available_raffle_numbers`, calculando disponibilidade no banco sem expor dados de reservas. Criado `features/events` inicial com `api.ts`/`types.ts`, teste MSW para as RPCs e teste pgTAP cobrindo produtos/números livres vs. reservas `paid`/`pending` válidas.
+- **Decisões:** disponibilidade pública usa funções `security definer` estreitas porque `reservations` não tem leitura pública; as funções só retornam itens de eventos públicos (ativos ou encerrados) e não retornam nome/contato de reserva.
+- **Arquivos:** `supabase/migrations/20260630000008_event_availability.sql`, `supabase/tests/events_availability.test.sql`, `src/features/events/api.ts`, `src/features/events/types.ts`, `src/features/events/api.test.ts`, `src/shared/types/db.ts`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-04 marcado; `DATA_MODEL.md` confirmou a consulta de disponibilidade; `TESTING.md` registrou cobertura MSW/RLS de disponibilidade.
+- **Verificação:** `npm test` passou (107 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npx supabase test db supabase/tests` passou (7 arquivos, 71 asserts).
+
+### 2026-06-30 — `F5-03` RLS de eventos/produtos/rifas/reservas
+
+- **Feito:** criada migration `20260630000007_events_rls.sql` com grants e policies para `events`, `products`, `raffle_numbers` e `reservations`: público lê eventos ativos/encerrados e seus itens/números; público cria apenas reserva `pending` em evento ativo; autenticado lê/cria/atualiza; sem DELETE físico. Adicionado teste pgTAP `events_rls.test.sql` cobrindo leitura pública/admin, reserva pública permitida, bloqueios públicos e DELETE negado.
+- **Decisões:** reservas não têm leitura pública nesta fase porque armazenam nome/contato; evento público é `is_active` ou encerrado (`ends_at <= now()`), mantendo drafts/futuros fora do visitante.
+- **Arquivos:** `supabase/migrations/20260630000007_events_rls.sql`, `supabase/tests/events_rls.test.sql`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-03 marcado; `DATA_MODEL.md` confirmou RLS das quatro tabelas; `TESTING.md` registrou o novo teste RLS.
+- **Verificação:** `npm test` passou (104 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npm run test:rls` passou (6 arquivos, 64 asserts).
+
+### 2026-06-30 — `F5-02` Um evento ativo por vez
+
+- **Feito:** criada migration `20260630000006_one_active_event.sql` com índice único parcial `idx_events_one_active` em `events(is_active) where is_active`, permitindo vários eventos inativos e bloqueando o segundo ativo. Adicionado teste pgTAP `events_active.test.sql` cobrindo insert/update que tentam criar dois ativos.
+- **Decisões:** regra implementada como índice único parcial, sem trigger, para deixar a garantia no banco simples e atômica.
+- **Arquivos:** `supabase/migrations/20260630000006_one_active_event.sql`, `supabase/tests/events_active.test.sql`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-02 marcado; `DATA_MODEL.md` registrou o índice; `TESTING.md` registrou o teste de regra de ativo.
+- **Verificação:** `npm test` passou (104 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npm run test:rls` passou (5 arquivos, 43 asserts).
+
+### 2026-06-30 — `F5-01` Migrations de eventos/produtos/rifas/reservas
+
+- **Feito:** criada migration `20260630000005_create_events.sql` com enums `event_type` e `reservation_status`, tabelas `events`, `products`, `raffle_numbers` e `reservations`, triggers de `updated_at`, índices básicos, RLS habilitada e constraints de integridade (datas válidas, preço não negativo, número positivo, número único por evento, reserva apontando exatamente para produto ou número e item pertencente ao mesmo evento). Adicionado teste pgTAP `events_schema.test.sql` para schema/constraints.
+- **Decisões:** `price_cents` usa centavos inteiros; `expires_at` é obrigatório, sem default de prazo para não inventar regra de negócio; `rules jsonb` começa como `{}` para acomodar regras futuras sem fixar comportamento nesta tarefa.
+- **Arquivos:** `supabase/migrations/20260630000005_create_events.sql`, `supabase/tests/events_schema.test.sql`, `DATA_MODEL.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` F5-01 marcado; `DATA_MODEL.md` registrou schema Fase 5 como 🟡 (RLS policies ainda pendentes); `TESTING.md` registrou cobertura parcial de banco para eventos/reservas.
+- **Verificação:** `npm test` passou (104 testes); `npm run build` passou; `npx supabase db reset` aplicou a migration nova; `npm run test:rls` passou (4 arquivos, 39 asserts).
+
+### 2026-06-30 — `CI` GitHub Actions — workflow de testes e deploy guardado
+
+- **Feito:** criado `.github/workflows/test.yml` com dois jobs: `unit` (Vitest + coverage, roda em todo push/PR) e `integration` (RLS pgTAP + Playwright E2E, roda apenas em PR e antes do deploy). O job `integration` usa `supabase/setup-cli`, sobe o Supabase local com `supabase start` + `supabase db reset`, exporta `ANON_KEY`/`SERVICE_ROLE_KEY` via `supabase status -o env` e os mapeia para as variáveis `VITE_*` / `E2E_*` esperadas pelo app. Credenciais do usuário de teste E2E (`E2E_ADMIN_EMAIL`, `E2E_ADMIN_PASSWORD`) vêm de GitHub Secrets. Relatório do Playwright é publicado como artefato em caso de falha. `deploy.yml` atualizado: chama `test.yml` via `workflow_call` (`secrets: inherit`) e o job `deploy` declara `needs: test` — deploy só ocorre se todos os testes passarem.
+- **Decisões:** `test.yml` expõe `workflow_call` para ser reutilizado pelo deploy sem duplicar YAML; `push: branches-ignore: [main]` evita double-run no merge (o deploy.yml já dispara os testes). Job `integration` condicionado a `pull_request` ou `workflow_call` para não rodar Supabase em pushes de branches de feature. Secrets de produção (`VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`) permanecem apenas no `deploy.yml`; chaves locais do Supabase são derivadas dinamicamente de `supabase status -o env` no CI.
+- **Arquivos:** `.github/workflows/test.yml` (novo), `.github/workflows/deploy.yml`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `TESTING.md` ganhou seção "CI" com tabela de triggers, descrição dos jobs e tabela de secrets; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `T-06` e `T-07` E2E Playwright — Camada 5
+
+- **Feito:** instalado `@playwright/test` + `dotenv`; `playwright.config.ts` com `webServer` subindo `npm run preview` (porta 4173) e `baseURL: 'http://localhost:4173'`; `e2e/global-setup.ts` conecta ao Supabase local com `SERVICE_ROLE_KEY`, faz upsert do cão seed (`Rex E2E`, status `available`), recria o usuário admin de teste (`admin-e2e@abrigo.test`), faz enroll TOTP via `mfa.enroll()` e verifica o fator via `mfa.challenge/verify()`, salva o secret TOTP em `e2e/.e2e-state.json` (gitignored); `e2e/totp.ts` implementa TOTP RFC 6238 com `node:crypto` (sem dep externa); `e2e/public.spec.ts` (T-06): 3 casos — landing carrega, navega para /adocao pelo Header, abre modal do cão seed e exibe CTA de adoção; `e2e/admin-auth.spec.ts` (T-07): login admin → redirecionado para /admin/verify → código TOTP gerado localmente com janela diferente do setup → /admin com "Painel Admin". Scripts `test:e2e` (`vite build --mode test && npx playwright test`) e `e2e:ui` adicionados. `vitest.config.ts` excluí `e2e/**`. 4/4 E2E verdes + 104 unitários verdes + `tsc -b` limpo.
+- **Decisões:** TOTP implementado com `node:crypto` (sem otplib — v13 mudou API incompatível e v12 não seria mantida); geração do código adiada no teste até uma janela TOTP diferente do setup para evitar replay; `supabase/config.toml` criado para habilitar `[auth.mfa.totp]` no local (ausência impedia enroll); migration `20260630000004_service_role_grants.sql` adiciona `SELECT/INSERT/UPDATE/DELETE` para `service_role` nas tabelas de domínio (mesmo grant presente em Supabase Cloud por padrão; faltava no local); `VerifyTOTPPage` corrigida para desabilitar o botão Verificar enquanto `factorId` não carregou (melhoria de UX + torna o E2E determinístico); `.env.test.example` commitado; `.env.test` e `.e2e-state.json` gitignored.
+- **Arquivos:** `playwright.config.ts`, `e2e/global-setup.ts`, `e2e/totp.ts`, `e2e/public.spec.ts`, `e2e/admin-auth.spec.ts`, `.env.test.example`, `.env.test`, `supabase/config.toml`, `supabase/migrations/20260630000004_service_role_grants.sql`, `src/pages/auth/VerifyTOTPPage.tsx`, `package.json`, `vitest.config.ts`, `tsconfig.node.json`, `.gitignore`, `AGENTS.md`, `ROADMAP.md`, `TESTING.md`, `PROGRESS.md`.
+- **Docs:** `ROADMAP.md` T-06 e T-07 marcados; `TESTING.md` cobertura E2E atualizada, comandos revisados, aviso "nunca produção"; `AGENTS.md` comandos test:e2e e e2e:ui; `PROGRESS.md` Fase T concluída; `TESTING.md` localização de arquivos atualizada.
+- **Verificação:** `npm run build` passou; `npm test` verde (104 testes, 13 arquivos); `npx playwright test` 4/4 verde (3 specs T-06 + 1 spec T-07) em Chromium.
+
+### 2026-06-30 — `T-05` Harness RLS pgTAP — Camada 4
+- **Feito:** criado harness pgTAP em `supabase/tests/` com README curto; `dogs_rls.test.sql` cobre SELECT anon/auth, INSERT anon negado, UPDATE anon sem efeito, INSERT/UPDATE autenticado OK e DELETE negado; `stories_rls.test.sql` cobre leitura pública, escrita apenas autenticada, DELETE negado e FK `dog_id on delete set null`; `storage_rls.test.sql` cobre upload anônimo negado e upload autenticado OK nos buckets `dogs`/`stories`. Adicionado `npm run test:rls`.
+- **Decisões:** adicionada migration de grants para roles `anon`/`authenticated` nas tabelas/bucket necessários, para que os testes e a API exercitem RLS em vez de falharem antes por privilégio SQL. Testes de Storage não fazem DELETE direto em `storage.objects`, pois o Supabase local protege a tabela contra remoção direta.
+- **Arquivos:** `.gitignore`, `package.json`, `supabase/migrations/20260630000003_api_role_grants.sql`, `supabase/tests/README.md`, `supabase/tests/dogs_rls.test.sql`, `supabase/tests/stories_rls.test.sql`, `supabase/tests/storage_rls.test.sql`, `src/shared/ui/Button.test.tsx`, `ROADMAP.md`, `PROGRESS.md`, `TESTING.md`, `DATA_MODEL.md`.
+- **Docs:** `ROADMAP.md` T-05 marcado; `TESTING.md` marcou RLS de dogs/stories como 🟢; `DATA_MODEL.md` registrou grants e testes RLS/Storage; `PROGRESS.md` atualizado.
+- **Verificação:** `npm run build` passou; `npm test` passou (104 testes); `npx supabase start` + `npx supabase db reset` OK; `npm run test:rls` passou (3 arquivos, 26 asserts).
+
+### 2026-06-30 — `T-04` Testes de componente — Camada 2
+- **Feito:** 6 arquivos de teste criados, 42 novos casos (total 104 testes verdes). `Button.test.tsx` (5 casos: 4 variantes, isLoading desabilita + exibe spinner, disabled, onClick, disabled não dispara click). `Modal.test.tsx` (9 casos: renderiza/não renderiza, aria-modal, aria-labelledby, backdrop fecha, clique interno não fecha, Escape fecha, botão Fechar, sem Escape quando fechado). `Field.test.tsx` (7 casos: label, erro, hint, hint oculto com erro, textarea, digitação, integração com `register` do react-hook-form). `DogCard.test.tsx` (9 casos: nome, meta porte+idade, fallback 🐾, imagem com foto, sem role=button sem onClick, role=button com onClick, clique dispara callback, Enter, Espaço). `DoacaoSection.test.tsx` (4 casos: exibe chave PIX, clipboard.writeText com a chave certa, mostra "Copiado!", restaura após 2 s via fake timer + act). `AdminGuard.test.tsx` (4 casos: sem sessão → /admin/login; aal1 sem TOTP → /admin/enroll; aal1 com TOTP → /admin/verify; aal2 → libera filhos). `AdminGuard` testado mockando os módulos `features/auth/hooks` e `features/auth/api`, sem tocar a rede.
+- **Decisões:** fake timers para DoacaoSection são aplicados apenas no teste que precisa deles (try/finally); testes de click usam `userEvent` direto (sem fake timers globais) para evitar deadlock de microtask. `vi.useFakeTimers()` global + `userEvent.setup()` causa timeout de 5 s independente de `delay: null` — isolado por test.
+- **Arquivos:** `src/shared/ui/Button.test.tsx`, `src/shared/ui/Modal.test.tsx`, `src/shared/ui/Field.test.tsx`, `src/features/dogs/components/DogCard.test.tsx`, `src/pages/public/landing/sections/DoacaoSection.test.tsx`, `src/app/AdminGuard.test.tsx`.
+- **Docs:** `ROADMAP.md` T-04 marcado; `TESTING.md` cobertura atualizada; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `T-03` Testes unitários puros — Camada 1
+- **Feito:** `sortDogs` extraída de `AdocaoPage.tsx` para `features/dogs/sort.ts` (+ tipo `SortKey`); `AdocaoPage.tsx` ajustado para importar de lá. Criados 5 arquivos de teste: `dogs/format.test.ts` (7 casos: dogAgeLabel null/futuro/ano-atual/1-ano/plural, dogCoverUrl null/empty/multi, dogPhotoUrl URL+bucket), `dogs/form.test.ts` (17 casos: emptyDogFormValues, dogToFormValues ano→idade incluindo null/futuro/ano-atual, dogFormValuesToPayload trim/conversão/nulls, validateAgeYears 9 branches), `dogs/sort.test.ts` (15 casos: todos os critérios name/age_desc/age_asc/size, nulls no fim via variação de posição de entrada para cobrir ambos os branches do if), `stories/format.test.ts` (6 casos), `stories/form.test.ts` (7 casos). Cobertura 100% nos 5 arquivos-alvo (text reporter oculta 100%; confirmado no HTML). 62 testes verdes, build ok.
+- **Decisões:** null ao final do input array (não no início) para forçar insertion sort do V8 a chamar o comparador com o dog nulo como argumento `a` — cobrindo o branch `if (a.birth_year == null) return 1` que ficou descoberto na primeira versão. `dogPhotoUrl`/`storyPhotoUrl` testados via resultado real de `getPublicUrl` (síncrono, sem rede); sem mock do supabase.
+- **Arquivos:** `src/features/dogs/sort.ts`, `src/pages/public/AdocaoPage.tsx`, `src/features/dogs/format.test.ts`, `src/features/dogs/form.test.ts`, `src/features/dogs/sort.test.ts`, `src/features/stories/format.test.ts`, `src/features/stories/form.test.ts`.
+- **Docs:** `ROADMAP.md` T-03 marcado; `TESTING.md` cobertura atualizada; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `T-02` Helpers de teste: renderWithProviders + MSW
+- **Feito:** instalado `msw@2.x`; `src/test/render.tsx` com `renderWithProviders` (QueryClient novo por chamada com retry off, MemoryRouter, ThemeProvider); `src/test/msw/handlers.ts` com fixtures `dogFixture`/`storyFixture` e handlers base para `/rest/v1/dogs` e `/rest/v1/stories`; `src/test/msw/server.ts` com `setupServer`; `src/test/setup.ts` atualizado com mock de `window.matchMedia` e lifecycle do MSW server (listen/resetHandlers/close); `src/test/render.test.tsx` como teste-semente usando renderWithProviders + handler MSW; `npm test` verde (2 testes).
+- **Decisões:** URL do Supabase lida de `import.meta.env.VITE_SUPABASE_URL` nos handlers (disponível via Vite em Vitest); `onUnhandledRequest: 'warn'` para não quebrar com requests extras de supabase-js; mock de `matchMedia` adicionado ao setup global (ThemeProvider exige).
+- **Arquivos:** `package.json`, `src/test/render.tsx`, `src/test/msw/server.ts`, `src/test/msw/handlers.ts`, `src/test/setup.ts`, `src/test/render.test.tsx`.
+- **Docs:** `ROADMAP.md` T-02 marcado; `TESTING.md` cobertura atualizada; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `T-01` Infra de testes Vitest
+- **Feito:** instalados Vitest 4.x, @vitest/coverage-v8, jsdom, @testing-library/react, user-event, jest-dom; `vitest.config.ts` reutiliza a config do Vite via `mergeConfig` (environment jsdom, globals, setupFiles); `src/test/setup.ts` importa jest-dom; `src/test/vitest.d.ts` com triple-slash reference para `vitest/globals` (não toca no tsconfig.app.json); `src/test/smoke.test.ts` como teste-semente; scripts `test`, `test:watch`, `coverage` no `package.json`; `vitest.config.ts` incluído no `tsconfig.node.json`. `npm test` e `npm run build` passam.
+- **Decisões:** MSW e Playwright foram desacoplados desta tarefa — MSW vai em T-02; Playwright em T-06/T-07. Tipos globais do Vitest resolvidos com `src/test/vitest.d.ts` para não restringir os `@types/*` auto-incluídos (evita quebrar os tipos do React). `npm test` executa em modo one-shot (`vitest run`); watch é `test:watch`.
+- **Arquivos:** `package.json`, `vitest.config.ts`, `tsconfig.node.json`, `src/test/setup.ts`, `src/test/smoke.test.ts`, `src/test/vitest.d.ts`, `ROADMAP.md`, `TESTING.md`, `AGENTS.md`.
+- **Docs:** `ROADMAP.md` T-01 marcado; `TESTING.md` e `AGENTS.md` (Comandos) atualizados; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — Fase T (docs) Estratégia de testes
+- **Feito:** criado `TESTING.md` com ferramentas, 5 camadas (unitário/componente/integração MSW/RLS pgTAP/E2E Playwright), convenções de localização, tabela de cobertura por feature e comandos de execução; `AGENTS.md` recebeu `TESTING.md` na tabela de documentos, passo 6 na DoD (testes obrigatórios a partir da Fase T) e invariante 9 (código sem teste = tarefa não concluída); `ROADMAP.md` ganhou a Fase T com tarefas T-01 a T-07.
+- **Isenção DoD:** passo 6 (testes) inaplicável — infra de testes ainda não existe; será criada em T-01.
+- **Decisões:** Fases 0–3 não são reabertas para backfill — esse é o escopo da Fase T; a política de testes entra em vigor após T-01.
+- **Arquivos:** `TESTING.md` (novo), `AGENTS.md`, `ROADMAP.md`, `PROGRESS.md`.
+- **Docs:** `AGENTS.md` com invariante 9 e DoD atualizada; `ROADMAP.md` com Fase T; `PROGRESS.md` atualizado.
+
+### 2026-06-30 — `F4-04 a F4-06` Fase 4 — Histórias (público + admin)
+- **Feito:** página pública `/historias` com grid de histórias; admin criar e editar história; Fase 4 concluída. *(entradas individuais não registradas no momento — consolidada aqui)*
+- **Decisões:** nenhuma nova.
+- **Arquivos:** `src/pages/public/HistoriasPage.tsx`, `src/pages/admin/stories/` e relacionados, `ROADMAP.md`.
+- **Docs:** `ROADMAP.md` marcado; `PROGRESS.md` atualizado.
 
 ### 2026-06-30 — `F4-03` `features/stories/{api,hooks,types}`
 - **Feito:** criado domínio `features/stories` com tipos derivados de `shared/types/db.ts`, API `listStories` e hook `useStories` via TanStack Query.
