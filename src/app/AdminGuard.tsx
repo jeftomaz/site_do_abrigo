@@ -36,7 +36,7 @@ export default function AdminGuard({ children }: { children: ReactNode }) {
   if (state === 'loading') return <PageLoadingFallback title="Verificando acesso..." />
   if (state === 'error') {
     return (
-      <main className="mx-auto max-w-4xl p-6">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl p-6">
         <StateMessage variant="error">
           Não foi possível verificar seu acesso ao painel. Tente entrar novamente em alguns instantes.
         </StateMessage>

@@ -58,7 +58,7 @@ export function StoryCreateForm() {
       )}
 
       <div className="mt-5 flex justify-end">
-        <Button type="submit" isLoading={createStory.isPending}>
+        <Button type="submit" isLoading={createStory.isPending} className="w-full sm:w-auto">
           Cadastrar
         </Button>
       </div>

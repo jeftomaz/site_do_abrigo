@@ -60,7 +60,7 @@ export function DogCreateForm() {
       )}
 
       <div className="mt-5 flex justify-end">
-        <Button type="submit" isLoading={createDog.isPending}>
+        <Button type="submit" isLoading={createDog.isPending} className="w-full sm:w-auto">
           Cadastrar
         </Button>
       </div>

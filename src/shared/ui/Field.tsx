@@ -19,7 +19,7 @@ type Props = InputProps | TextareaProps
 
 const inputClass = (error?: string, extra = '') =>
   [
-    'border rounded px-3 py-2 text-sm outline-none w-full',
+    'min-h-10 w-full rounded border px-3 py-2 text-sm outline-none',
     'focus:ring-2 focus:ring-black dark:focus:ring-white',
     'bg-white dark:bg-gray-800',
     'text-gray-900 dark:text-gray-100',
@@ -36,6 +36,9 @@ const Field = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
   function Field(props, ref) {
     const { label, error, hint, id, ...rest } = props
     const inputId = id ?? `field-${label.toLowerCase().replace(/\s+/g, '-')}`
+    const hintId = hint ? `${inputId}-hint` : undefined
+    const errorId = error ? `${inputId}-error` : undefined
+    const describedBy = errorId ?? hintId
 
     return (
       <div className="flex flex-col gap-1">
@@ -51,6 +54,8 @@ const Field = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
             ref={ref as React.Ref<HTMLTextAreaElement>}
             id={inputId}
             rows={props.rows ?? 4}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy}
             {...(rest as TextareaHTMLAttributes<HTMLTextAreaElement>)}
             className={inputClass(error, (rest as TextareaHTMLAttributes<HTMLTextAreaElement>).className)}
           />
@@ -58,16 +63,18 @@ const Field = forwardRef<HTMLInputElement | HTMLTextAreaElement, Props>(
           <input
             ref={ref as React.Ref<HTMLInputElement>}
             id={inputId}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy}
             {...(rest as InputHTMLAttributes<HTMLInputElement>)}
             className={inputClass(error, (rest as InputHTMLAttributes<HTMLInputElement>).className)}
           />
         )}
 
         {hint && !error && (
-          <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
+          <p id={hintId} className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
         )}
         {error && (
-          <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+          <p id={errorId} className="text-xs text-red-600 dark:text-red-400">{error}</p>
         )}
       </div>
     )

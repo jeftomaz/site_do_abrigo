@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Header from '../../shared/ui/Header'
+import PageMeta from '../../shared/ui/PageMeta'
 import { SkeletonCard } from '../../shared/ui/Skeleton'
 import { StateMessage } from '../../shared/ui/StateMessage'
 import { useAvailableDogs } from '../../features/dogs/hooks'
@@ -17,9 +18,14 @@ export default function AdocaoPage() {
 
   return (
     <>
+      <PageMeta
+        title="Adoção"
+        description="Conheça os cães disponíveis para adoção e encontre um novo companheiro."
+        path="/adocao"
+      />
       <Header />
-      <main className="mx-auto max-w-5xl px-4 py-16">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Adoção</h1>
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-5xl px-4 py-10 sm:py-16">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">Adoção</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           Conheça os cães que estão à espera de um novo lar.
         </p>
@@ -47,11 +53,11 @@ export default function AdocaoPage() {
 
           {!isLoading && !isError && dogs && dogs.length > 0 && (
             <>
-              <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+              <div className="mb-6 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   {dogs.length} {dogs.length === 1 ? 'cão disponível' : 'cães disponíveis'}
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <label
                     htmlFor="sort-select"
                     className="text-sm text-gray-600 dark:text-gray-400"
@@ -62,7 +68,7 @@ export default function AdocaoPage() {
                     id="sort-select"
                     value={sortKey}
                     onChange={(e) => setSortKey(e.target.value as SortKey)}
-                    className="rounded border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                    className="min-h-10 w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 sm:w-auto"
                   >
                     <option value="name">Nome (A–Z)</option>
                     <option value="age_desc">Mais novo</option>

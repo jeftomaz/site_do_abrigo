@@ -2,6 +2,16 @@ import { type FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { challengeFactor, enrollTOTP, listFactors, verifyFactor } from '../../features/auth/api'
 import { useSession } from '../../features/auth/hooks'
+import {
+  authCardClass,
+  authErrorClass,
+  authLabelClass,
+  authOtpInputClass,
+  authShellClass,
+  authSubmitClass,
+  authTextClass,
+  authTitleClass,
+} from './authStyles'
 
 export default function EnrollTOTPPage() {
   const navigate = useNavigate()
@@ -50,35 +60,40 @@ export default function EnrollTOTPPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="flex flex-col gap-4 w-full max-w-sm bg-white p-8 rounded-lg shadow-sm">
-        <h1 className="text-xl font-semibold">Configurar autenticador</h1>
-        <p className="text-sm text-gray-600">
+    <div className={authShellClass}>
+      <div className={authCardClass}>
+        <h1 className={authTitleClass}>Configurar autenticador</h1>
+        <p className={authTextClass}>
           Escaneie o QR code com Google Authenticator ou Authy e confirme com o código gerado.
         </p>
         {qrCode && (
-          <img src={qrCode} alt="QR code TOTP" className="w-48 h-48 self-center" />
+          <img src={qrCode} alt="QR code TOTP" className="h-48 w-48 max-w-full self-center" />
         )}
         {secret && (
-          <p className="text-xs text-gray-400 text-center break-all">
+          <p className="break-all text-center text-xs text-gray-400 dark:text-gray-500">
             Chave manual: <span className="font-mono select-all">{secret}</span>
           </p>
         )}
         <form onSubmit={handleVerify} className="flex flex-col gap-3">
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p id="enroll-totp-error" className={authErrorClass}>{error}</p>}
+          <label htmlFor="enroll-totp-code" className={authLabelClass}>
+            Código do autenticador
+          </label>
           <input
+            id="enroll-totp-code"
             type="text"
             inputMode="numeric"
             placeholder="000000"
             value={code}
             onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
             required
-            className="border rounded px-3 py-2 text-center tracking-widest text-lg outline-none focus:ring-2 focus:ring-black"
+            aria-describedby={error ? 'enroll-totp-error' : undefined}
+            className={authOtpInputClass}
           />
           <button
             type="submit"
             disabled={loading || code.length < 6}
-            className="bg-black text-white rounded px-3 py-2 text-sm disabled:opacity-50"
+            className={authSubmitClass}
           >
             {loading ? 'Verificando…' : 'Confirmar e ativar'}
           </button>

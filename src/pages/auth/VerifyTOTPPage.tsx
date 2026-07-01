@@ -2,6 +2,16 @@ import { type FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { challengeFactor, listFactors, verifyFactor } from '../../features/auth/api'
 import { useSession } from '../../features/auth/hooks'
+import {
+  authCardClass,
+  authErrorClass,
+  authLabelClass,
+  authOtpInputClass,
+  authShellClass,
+  authSubmitClass,
+  authTextClass,
+  authTitleClass,
+} from './authStyles'
 
 export default function VerifyTOTPPage() {
   const navigate = useNavigate()
@@ -39,26 +49,31 @@ export default function VerifyTOTPPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleVerify} className="flex flex-col gap-4 w-full max-w-sm bg-white p-8 rounded-lg shadow-sm">
-        <h1 className="text-xl font-semibold">Verificação em duas etapas</h1>
-        <p className="text-sm text-gray-600">
+    <div className={authShellClass}>
+      <form onSubmit={handleVerify} className={authCardClass}>
+        <h1 className={authTitleClass}>Verificação em duas etapas</h1>
+        <p className={authTextClass}>
           Abra seu app autenticador e insira o código de 6 dígitos.
         </p>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p id="verify-totp-error" className={authErrorClass}>{error}</p>}
+        <label htmlFor="verify-totp-code" className={authLabelClass}>
+          Código do autenticador
+        </label>
         <input
+          id="verify-totp-code"
           type="text"
           inputMode="numeric"
           placeholder="000000"
           value={code}
           onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
           required
-          className="border rounded px-3 py-2 text-center tracking-widest text-lg outline-none focus:ring-2 focus:ring-black"
+          aria-describedby={error ? 'verify-totp-error' : undefined}
+          className={authOtpInputClass}
         />
         <button
           type="submit"
           disabled={loading || code.length < 6 || !factorId}
-          className="bg-black text-white rounded px-3 py-2 text-sm disabled:opacity-50"
+          className={authSubmitClass}
         >
           {loading ? 'Verificando…' : 'Verificar'}
         </button>

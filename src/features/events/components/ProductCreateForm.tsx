@@ -65,7 +65,7 @@ export function ProductCreateForm({ event }: ProductCreateFormProps) {
       )}
 
       <div className="mt-5 flex justify-end">
-        <Button type="submit" isLoading={createProduct.isPending}>
+        <Button type="submit" isLoading={createProduct.isPending} className="w-full sm:w-auto">
           Cadastrar produto
         </Button>
       </div>

@@ -1,4 +1,5 @@
 import Header from '../../shared/ui/Header'
+import PageMeta from '../../shared/ui/PageMeta'
 import { SkeletonCard } from '../../shared/ui/Skeleton'
 import { StateMessage } from '../../shared/ui/StateMessage'
 import { useStories } from '../../features/stories/hooks'
@@ -9,9 +10,14 @@ export default function HistoriasPage() {
 
   return (
     <>
+      <PageMeta
+        title="Histórias de adoção"
+        description="Leia histórias de cães que encontraram um novo lar com apoio do abrigo."
+        path="/historias"
+      />
       <Header />
-      <main className="mx-auto max-w-3xl px-4 py-16">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-3xl px-4 py-10 sm:py-16">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">
           Histórias de Adoção
         </h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400">

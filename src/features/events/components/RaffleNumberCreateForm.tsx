@@ -65,7 +65,7 @@ export function RaffleNumberCreateForm({ event }: RaffleNumberCreateFormProps) {
       )}
 
       <div className="mt-5 flex justify-end">
-        <Button type="submit" isLoading={createRaffleNumber.isPending}>
+        <Button type="submit" isLoading={createRaffleNumber.isPending} className="w-full sm:w-auto">
           Cadastrar número
         </Button>
       </div>

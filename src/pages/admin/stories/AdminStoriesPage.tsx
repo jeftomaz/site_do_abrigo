@@ -13,7 +13,7 @@ export default function AdminStoriesPage() {
   const [editingStory, setEditingStory] = useState<Story | null>(null)
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
+    <main id="main-content" tabIndex={-1} className="mx-auto max-w-5xl px-4 py-6 sm:p-6">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <Link
@@ -44,7 +44,7 @@ export default function AdminStoriesPage() {
 
       {!isLoading && !isError && stories && stories.length > 0 && (
         <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-sm">
+          <table className="min-w-[560px] w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50 text-left text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                 <th className="px-4 py-3 font-medium">Título</th>

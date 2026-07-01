@@ -1,6 +1,16 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../shared/lib/supabase'
+import {
+  authCardClass,
+  authErrorClass,
+  authInputClass,
+  authLabelClass,
+  authShellClass,
+  authSubmitClass,
+  authTextClass,
+  authTitleClass,
+} from './authStyles'
 
 export default function SetPasswordPage() {
   const navigate = useNavigate()
@@ -21,37 +31,47 @@ export default function SetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className={authShellClass}>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-4 w-full max-w-sm bg-white p-8 rounded-lg shadow-sm"
+        className={authCardClass}
       >
-        <h1 className="text-xl font-semibold">Defina sua senha</h1>
-        <p className="text-sm text-gray-600">
+        <h1 className={authTitleClass}>Defina sua senha</h1>
+        <p className={authTextClass}>
           Crie uma senha para acessar o painel de administração.
         </p>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p id="set-password-error" className={authErrorClass}>{error}</p>}
+        <label htmlFor="new-password" className={authLabelClass}>
+          Nova senha
+        </label>
         <input
+          id="new-password"
           type="password"
           placeholder="Nova senha"
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
           minLength={8}
-          className="border rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
+          aria-describedby={error ? 'set-password-error' : undefined}
+          className={authInputClass}
         />
+        <label htmlFor="confirm-password" className={authLabelClass}>
+          Confirmar senha
+        </label>
         <input
+          id="confirm-password"
           type="password"
           placeholder="Confirmar senha"
           value={confirm}
           onChange={e => setConfirm(e.target.value)}
           required
-          className="border rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
+          aria-describedby={error ? 'set-password-error' : undefined}
+          className={authInputClass}
         />
         <button
           type="submit"
           disabled={loading}
-          className="bg-black text-white rounded px-3 py-2 text-sm disabled:opacity-50"
+          className={authSubmitClass}
         >
           {loading ? 'Salvando…' : 'Definir senha'}
         </button>

@@ -58,7 +58,7 @@ export function EventReservationsPanel({ event }: EventReservationsPanelProps) {
   )
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+    <section className="mt-8 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 sm:p-5">
       <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -94,7 +94,7 @@ export function EventReservationsPanel({ event }: EventReservationsPanelProps) {
         reservations.data &&
         reservations.data.length > 0 && (
           <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-            <table className="w-full text-sm">
+            <table className="min-w-[760px] w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 bg-gray-50 text-left text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                   <th className="px-4 py-3 font-medium">Reserva</th>
@@ -168,7 +168,7 @@ function ReservationStatusControl({
       >
         {STATUS_LABEL[reservation.status]}
       </span>
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
         <select
           aria-label={`Status da reserva de ${reservation.customer_name}`}
           value={reservation.status}
@@ -176,7 +176,7 @@ function ReservationStatusControl({
             handleStatusChange(event.target.value as ReservationStatus)
           }
           disabled={updateReservation.isPending}
-          className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-black disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-white"
+          className="min-h-10 w-full rounded border border-gray-300 bg-white px-2 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-black disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-white"
         >
           {(Object.keys(STATUS_LABEL) as ReservationStatus[]).map((status) => (
             <option key={status} value={status}>
