@@ -5,14 +5,15 @@ import type { Story } from '../../../features/stories/types'
 import { StoryCreateForm } from '../../../features/stories/components/StoryCreateForm'
 import { StoryEditModal } from '../../../features/stories/components/StoryEditModal'
 import { Button } from '../../../shared/ui/Button'
-import { Skeleton } from '../../../shared/ui/Skeleton'
+import { SkeletonRows } from '../../../shared/ui/Skeleton'
+import { StateMessage } from '../../../shared/ui/StateMessage'
 
 export default function AdminStoriesPage() {
   const { data: stories, isLoading, isError } = useStories()
   const [editingStory, setEditingStory] = useState<Story | null>(null)
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
+    <main id="main-content" tabIndex={-1} className="mx-auto max-w-5xl px-4 py-6 sm:p-6">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <Link
@@ -28,28 +29,22 @@ export default function AdminStoriesPage() {
       <StoryCreateForm />
 
       {isError && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
+        <StateMessage variant="error">
           Não foi possível carregar as histórias. Tente novamente mais tarde.
-        </p>
+        </StateMessage>
       )}
 
-      {isLoading && (
-        <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      )}
+      {isLoading && <SkeletonRows />}
 
       {!isLoading && !isError && stories && stories.length === 0 && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
+        <StateMessage>
           Nenhuma história cadastrada ainda.
-        </p>
+        </StateMessage>
       )}
 
       {!isLoading && !isError && stories && stories.length > 0 && (
         <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-sm">
+          <table className="min-w-[560px] w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50 text-left text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                 <th className="px-4 py-3 font-medium">Título</th>

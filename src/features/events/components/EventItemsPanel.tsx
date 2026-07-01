@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from '../../../shared/ui/Button'
-import { Skeleton } from '../../../shared/ui/Skeleton'
+import { SkeletonRows } from '../../../shared/ui/Skeleton'
+import { StateMessage } from '../../../shared/ui/StateMessage'
 import { formatPriceCents } from '../format'
 import { useProducts, useRaffleNumbers } from '../hooks'
 import type { Event, Product, RaffleNumber } from '../types'
@@ -26,7 +27,7 @@ function ProductItemsPanel({ event }: { event: Event }) {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+    <section className="mt-8 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 sm:p-5">
       <PanelHeader title="Produtos" eventTitle={event.title} />
       <ProductCreateForm event={event} />
 
@@ -39,7 +40,7 @@ function ProductItemsPanel({ event }: { event: Event }) {
 
       {!isLoading && !isError && products && products.length > 0 && (
         <div className="mt-5 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-sm">
+          <table className="min-w-[640px] w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50 text-left text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                 <th className="px-4 py-3 font-medium">Produto</th>
@@ -94,7 +95,7 @@ function RaffleNumberItemsPanel({ event }: { event: Event }) {
     useState<RaffleNumber | null>(null)
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+    <section className="mt-8 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 sm:p-5">
       <PanelHeader title="Números da rifa" eventTitle={event.title} />
       <RaffleNumberCreateForm event={event} />
 
@@ -107,7 +108,7 @@ function RaffleNumberItemsPanel({ event }: { event: Event }) {
 
       {!isLoading && !isError && raffleNumbers && raffleNumbers.length > 0 && (
         <div className="mt-5 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-sm">
+          <table className="min-w-[640px] w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50 text-left text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                 <th className="px-4 py-3 font-medium">Número</th>
@@ -174,26 +175,24 @@ function PanelHeader({
 
 function LoadingRows() {
   return (
-    <div className="mt-5 space-y-3">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <Skeleton key={i} className="h-12 w-full rounded-lg" />
-      ))}
+    <div className="mt-5">
+      <SkeletonRows rows={3} />
     </div>
   )
 }
 
 function ErrorMessage({ message }: { message: string }) {
   return (
-    <p className="mt-5 text-center text-gray-500 dark:text-gray-400">
+    <StateMessage className="mt-5" variant="error">
       {message}
-    </p>
+    </StateMessage>
   )
 }
 
 function EmptyMessage({ message }: { message: string }) {
   return (
-    <p className="mt-5 text-center text-gray-500 dark:text-gray-400">
+    <StateMessage className="mt-5">
       {message}
-    </p>
+    </StateMessage>
   )
 }

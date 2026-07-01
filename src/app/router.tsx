@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, type ReactNode } from 'react'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import LandingPage from '../pages/public/LandingPage'
 import AdocaoPage from '../pages/public/AdocaoPage'
@@ -10,6 +10,7 @@ import VerifyTOTPPage from '../pages/auth/VerifyTOTPPage'
 import SetPasswordPage from '../pages/auth/SetPasswordPage'
 import AdminGuard from './AdminGuard'
 import InviteHandler from './InviteHandler'
+import { PageLoadingFallback } from '../shared/ui/Skeleton'
 
 const AdminPage = lazy(() => import('../pages/admin/AdminPage'))
 const AdminDogsPage = lazy(() => import('../pages/admin/dogs/AdminDogsPage'))
@@ -22,6 +23,16 @@ function RootLayout() {
       <InviteHandler />
       <Outlet />
     </>
+  )
+}
+
+function AdminRoute({ children }: { children: ReactNode }) {
+  return (
+    <AdminGuard>
+      <Suspense fallback={<PageLoadingFallback title="Carregando painel..." />}>
+        {children}
+      </Suspense>
+    </AdminGuard>
   )
 }
 
@@ -41,41 +52,33 @@ const router = createBrowserRouter(
         {
           path: '/admin',
           element: (
-            <AdminGuard>
-              <Suspense fallback={null}>
-                <AdminPage />
-              </Suspense>
-            </AdminGuard>
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
           ),
         },
         {
           path: '/admin/dogs',
           element: (
-            <AdminGuard>
-              <Suspense fallback={null}>
-                <AdminDogsPage />
-              </Suspense>
-            </AdminGuard>
+            <AdminRoute>
+              <AdminDogsPage />
+            </AdminRoute>
           ),
         },
         {
           path: '/admin/stories',
           element: (
-            <AdminGuard>
-              <Suspense fallback={null}>
-                <AdminStoriesPage />
-              </Suspense>
-            </AdminGuard>
+            <AdminRoute>
+              <AdminStoriesPage />
+            </AdminRoute>
           ),
         },
         {
           path: '/admin/events',
           element: (
-            <AdminGuard>
-              <Suspense fallback={null}>
-                <AdminEventsPage />
-              </Suspense>
-            </AdminGuard>
+            <AdminRoute>
+              <AdminEventsPage />
+            </AdminRoute>
           ),
         },
       ],

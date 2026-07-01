@@ -6,7 +6,8 @@ import { DogCreateForm } from '../../../features/dogs/components/DogCreateForm'
 import { DogEditModal } from '../../../features/dogs/components/DogEditModal'
 import type { Dog, DogStatus } from '../../../features/dogs/types'
 import { Button } from '../../../shared/ui/Button'
-import { Skeleton } from '../../../shared/ui/Skeleton'
+import { SkeletonRows } from '../../../shared/ui/Skeleton'
+import { StateMessage } from '../../../shared/ui/StateMessage'
 
 const STATUS_LABEL: Record<DogStatus, string> = {
   available: 'Disponível',
@@ -54,7 +55,7 @@ function StatusSelect({ dog }: { dog: Dog }) {
         value={dog.status}
         onChange={(event) => handleStatusChange(event.target.value as DogStatus)}
         disabled={updateDog.isPending}
-        className="w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-black disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-white"
+        className="min-h-10 w-full rounded border border-gray-300 bg-white px-2 py-2 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-black disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:focus:ring-white"
       >
         {(Object.keys(STATUS_LABEL) as DogStatus[]).map((status) => (
           <option key={status} value={status}>
@@ -74,7 +75,7 @@ export default function AdminDogsPage() {
   const [editingDog, setEditingDog] = useState<Dog | null>(null)
 
   return (
-    <main className="mx-auto max-w-5xl p-6">
+    <main id="main-content" tabIndex={-1} className="mx-auto max-w-5xl px-4 py-6 sm:p-6">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <Link
@@ -90,28 +91,22 @@ export default function AdminDogsPage() {
       <DogCreateForm />
 
       {isError && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
+        <StateMessage variant="error">
           Não foi possível carregar os cães. Tente novamente mais tarde.
-        </p>
+        </StateMessage>
       )}
 
-      {isLoading && (
-        <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      )}
+      {isLoading && <SkeletonRows />}
 
       {!isLoading && !isError && dogs && dogs.length === 0 && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
+        <StateMessage>
           Nenhum cão cadastrado ainda.
-        </p>
+        </StateMessage>
       )}
 
       {!isLoading && !isError && dogs && dogs.length > 0 && (
         <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
-          <table className="w-full text-sm">
+          <table className="min-w-[720px] w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50 text-left text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
                 <th className="px-4 py-3 font-medium">Nome</th>

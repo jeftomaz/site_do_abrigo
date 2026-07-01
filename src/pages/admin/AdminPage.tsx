@@ -3,7 +3,7 @@ import { Card, CardHeader } from '../../shared/ui/Card'
 
 export default function AdminPage() {
   return (
-    <main className="mx-auto max-w-4xl p-6">
+    <main id="main-content" tabIndex={-1} className="mx-auto max-w-4xl px-4 py-6 sm:p-6">
       <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">Painel Admin</h1>
       <div className="grid gap-4 sm:grid-cols-2">
         <Link to="/admin/dogs" className="block">

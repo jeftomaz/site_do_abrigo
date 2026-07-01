@@ -74,7 +74,7 @@ export function EventCreateForm() {
       )}
 
       <div className="mt-5 flex justify-end">
-        <Button type="submit" isLoading={createEvent.isPending}>
+        <Button type="submit" isLoading={createEvent.isPending} className="w-full sm:w-auto">
           Cadastrar
         </Button>
       </div>

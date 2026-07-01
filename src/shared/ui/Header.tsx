@@ -24,41 +24,53 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 h-14">
-        <Link to="/" className="font-semibold text-gray-900 dark:text-gray-100 hover:opacity-80 transition-opacity">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-gray-900 focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:bg-gray-900 dark:focus:text-gray-100"
+      >
+        Pular para o conteúdo
+      </a>
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4">
+        <Link
+          to="/"
+          className="min-w-0 truncate rounded-sm font-semibold text-gray-900 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-gray-100 dark:focus-visible:ring-offset-gray-900"
+        >
           Abrigo
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden sm:flex items-center gap-6">
+        <nav aria-label="Menu principal" className="hidden items-center gap-6 sm:flex">
           {NAV_LINKS.map(link => (
             <NavItem key={link.href} link={link} onClick={handleNavClick} />
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-1">
           <button
             onClick={toggleTheme}
             aria-label={theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'}
-            className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+            className="flex h-10 w-10 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100"
           >
             {theme === 'dark' ? '☀' : '☾'}
           </button>
 
-          {/* Hamburger (mobile only) */}
           <button
             onClick={() => setMenuOpen(o => !o)}
-            aria-label="Abrir menu"
-            className="sm:hidden text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+            aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-controls="mobile-menu"
+            aria-expanded={menuOpen}
+            className="flex h-10 w-10 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100 sm:hidden"
           >
             {menuOpen ? '✕' : '☰'}
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
-        <nav className="sm:hidden border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-3 flex flex-col gap-3">
+        <nav
+          id="mobile-menu"
+          aria-label="Menu mobile"
+          className="flex flex-col gap-1 border-t border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-900 sm:hidden"
+        >
           {NAV_LINKS.map(link => (
             <NavItem key={link.href} link={link} onClick={handleNavClick} mobile />
           ))}
@@ -75,8 +87,10 @@ interface NavItemProps {
 }
 
 function NavItem({ link, onClick, mobile }: NavItemProps) {
-  const base = 'text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors'
-  const mobileClass = mobile ? 'py-1' : ''
+  const base = 'rounded-sm text-sm text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:text-gray-300 dark:hover:text-gray-100 dark:focus-visible:ring-offset-gray-900'
+  const mobileClass = mobile
+    ? 'flex min-h-10 items-center rounded-md px-2 hover:bg-gray-100 dark:hover:bg-gray-800'
+    : ''
 
   if (link.href.startsWith('/') && !link.href.startsWith('/#')) {
     return (

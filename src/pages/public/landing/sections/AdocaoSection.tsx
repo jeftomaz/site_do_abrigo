@@ -3,7 +3,7 @@ import { Button } from '../../../../shared/ui/Button'
 
 export default function AdocaoSection() {
   return (
-    <section className="py-20 bg-white dark:bg-gray-900">
+    <section className="bg-white py-14 dark:bg-gray-900 sm:py-20">
       <div className="mx-auto max-w-5xl px-4">
         <div className="mx-auto max-w-xl text-center">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
@@ -13,8 +13,8 @@ export default function AdocaoSection() {
             Temos cães de todos os portes esperando por um lar. Conheça os animais
             disponíveis para adoção e encontre seu novo companheiro.
           </p>
-          <Link to="/adocao">
-            <Button variant="primary">Ver cães disponíveis</Button>
+          <Link to="/adocao" className="inline-flex w-full sm:w-auto">
+            <Button variant="primary" className="w-full sm:w-auto">Ver cães disponíveis</Button>
           </Link>
         </div>
       </div>

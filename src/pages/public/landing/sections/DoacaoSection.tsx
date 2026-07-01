@@ -12,7 +12,7 @@ export default function DoacaoSection() {
   }
 
   return (
-    <section id="doacao" className="py-20 bg-gray-50 dark:bg-gray-800">
+    <section id="doacao" className="bg-gray-50 py-14 dark:bg-gray-800 sm:py-20">
       <div className="mx-auto max-w-5xl px-4">
         <div className="mx-auto max-w-xl text-center">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
@@ -23,16 +23,16 @@ export default function DoacaoSection() {
             que estão sob nossa proteção. Qualquer valor faz diferença.
           </p>
 
-          <div className="inline-flex flex-col items-center gap-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-8 py-6">
+          <div className="inline-flex w-full max-w-md flex-col items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-6 dark:border-gray-700 dark:bg-gray-900 sm:px-8">
             <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-widest">
               PIX
             </p>
-            <p className="select-all font-mono text-lg font-medium text-gray-900 dark:text-gray-100">
+            <p className="select-all break-all text-center font-mono text-base font-medium text-gray-900 dark:text-gray-100 sm:text-lg">
               {PIX_KEY}
             </p>
             <button
               onClick={handleCopy}
-              className="mt-1 rounded-lg bg-gray-100 dark:bg-gray-800 px-4 py-1.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="mt-1 min-h-10 rounded-lg bg-gray-100 px-4 py-2 text-sm text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {copied ? 'Copiado!' : 'Copiar chave'}
             </button>

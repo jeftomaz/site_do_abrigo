@@ -1,6 +1,15 @@
 import { type FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signIn } from '../../features/auth/api'
+import {
+  authCardClass,
+  authErrorClass,
+  authInputClass,
+  authLabelClass,
+  authShellClass,
+  authSubmitClass,
+  authTitleClass,
+} from './authStyles'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -20,30 +29,40 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm bg-white p-8 rounded-lg shadow-sm">
-        <h1 className="text-xl font-semibold">Entrar</h1>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+    <div className={authShellClass}>
+      <form onSubmit={handleSubmit} className={authCardClass}>
+        <h1 className={authTitleClass}>Entrar</h1>
+        {error && <p id="login-error" className={authErrorClass}>{error}</p>}
+        <label htmlFor="login-email" className={authLabelClass}>
+          E-mail
+        </label>
         <input
+          id="login-email"
           type="email"
           placeholder="E-mail"
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          className="border rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
+          aria-describedby={error ? 'login-error' : undefined}
+          className={authInputClass}
         />
+        <label htmlFor="login-password" className={authLabelClass}>
+          Senha
+        </label>
         <input
+          id="login-password"
           type="password"
           placeholder="Senha"
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
-          className="border rounded px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-black"
+          aria-describedby={error ? 'login-error' : undefined}
+          className={authInputClass}
         />
         <button
           type="submit"
           disabled={loading}
-          className="bg-black text-white rounded px-3 py-2 text-sm disabled:opacity-50"
+          className={authSubmitClass}
         >
           {loading ? 'Entrando…' : 'Entrar'}
         </button>

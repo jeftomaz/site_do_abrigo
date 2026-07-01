@@ -2,14 +2,17 @@ name: CI
 
 on:
   workflow_call:
-  push:
-    branches-ignore: [main]
   pull_request:
+    branches: [main]
 
 jobs:
   unit:
     name: Unit & Component
     runs-on: ubuntu-latest
+    env:
+      VITE_SUPABASE_URL: http://127.0.0.1:54321
+      VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_test_key
+      VITE_ADOPTION_FORM_URL: https://forms.gle/unit-test-placeholder
     steps:
       - uses: actions/checkout@v4
 
@@ -68,8 +71,8 @@ jobs:
       - name: Run E2E tests
         run: npx playwright test
         env:
-          E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL }}
-          E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+          E2E_ADMIN_EMAIL: ${{ secrets.E2E_ADMIN_EMAIL || 'admin-e2e@abrigo.test' }}
+          E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD || 'AbrigoE2ETest123!' }}
 
       - name: Upload Playwright report on failure
         if: failure()

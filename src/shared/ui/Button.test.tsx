@@ -23,6 +23,11 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'OK' })).toBeDisabled()
   })
 
+  it('mantém altura mínima tocável no tamanho padrão', () => {
+    render(<Button>OK</Button>)
+    expect(screen.getByRole('button', { name: 'OK' })).toHaveClass('min-h-10')
+  })
+
   it('chama onClick ao clicar', async () => {
     const handler = vi.fn()
     render(<Button onClick={handler}>Click</Button>)

@@ -79,12 +79,12 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 
 ## Fase 6 — Acabamento
 
-- [ ] **F6-01** Loading/empty/error states (Skeleton). · Pronto: sem telas vazias cruas.
-- [ ] **F6-02** Responsivo (mobile-first) revisado. · Pronto: ok em mobile/desktop.
-- [ ] **F6-03** Dark mode revisado em todas as telas. · Pronto: contraste ok.
-- [ ] **F6-04** SEO + favicon + meta. · Pronto: tags presentes.
-- [ ] **F6-05** Acessibilidade (alt, foco, contraste). · Pronto: navegável por teclado.
-- [ ] **F6-06** Auditoria final de RLS. · Pronto: escrita anônima falha em tudo.
+- [x] **F6-01** Loading/empty/error states (Skeleton). · Pronto: sem telas vazias cruas.
+- [x] **F6-02** Responsivo (mobile-first) revisado. · Pronto: ok em mobile/desktop.
+- [x] **F6-03** Dark mode revisado em todas as telas. · Pronto: contraste ok.
+- [x] **F6-04** SEO + favicon + meta. · Pronto: tags presentes.
+- [x] **F6-05** Acessibilidade (alt, foco, contraste). · Pronto: navegável por teclado.
+- [x] **F6-06** Auditoria final de RLS. · Pronto: escrita anônima falha em tudo.
 
 ## Fase T — Testes
 
@@ -98,9 +98,67 @@ Backfill de cobertura para o que já existe (Fases 0–4) e infra para novas fas
 - [x] **T-06** E2E público — Camada 5 (landing, adoção, modal, CTA). · **Pronto quando:** `e2e/public.spec.ts` cobre landing carrega, navega para `/adocao` pelo Header, abre modal do cão seed, CTA de adoção visível; `npm run test:e2e` verde em Chromium. · **Toca:** `e2e/public.spec.ts`, `e2e/global-setup.ts`, `e2e/totp.ts`, `.env.test`, `playwright.config.ts`, `TESTING.md`.
 - [x] **T-07** E2E admin/TOTP — Camada 5 (login + 2FA + acesso a /admin). · **Pronto quando:** `e2e/admin-auth.spec.ts` cobre login admin + verificação TOTP automatizada via `generateTOTP` (sem app externo, OTP seed capturado no setup via API) + acesso confirmado a `/admin`; `npm run test:e2e` verde. · **Toca:** `e2e/admin-auth.spec.ts`, `e2e/global-setup.ts`, `e2e/totp.ts`, `supabase/config.toml`, `supabase/migrations/20260630000004_service_role_grants.sql`, `src/pages/auth/VerifyTOTPPage.tsx`, `TESTING.md`.
 
+# Fase D — Design System
+
+Aplicar o `DESIGN_SYSTEM.md` (finalizado) sobre a estrutura já implementada. **Todo valor vem do DS — não inventar.** Ordem bottom-up: tokens → `shared/ui` → componentes de domínio → páginas → passada transversal.
+
+Cada tarefa cita o bloco/IMG do DS que consome e satisfaz a Definition of Done do `AGENTS.md` (incl. passo 6 — testes). Reforço do invariante 5 do DS: **zero valor mágico no JSX** — cor/espaço/raio sempre via token.
+
+> **Aviso sobre testes da Fase T:** várias tarefas desta fase reescrevem componentes que já têm teste (Button, DogCard, DogDetailsModal, StoryCard…). Testes que afirmam `className`/markup/estado vão precisar de ajuste. Isso **não é regressão de escopo alheio** — atualizar o teste junto e mantê-lo verde faz parte da DoD da própria tarefa D (passo 6).
+
+Formato: `**ID** descrição · **Pronto quando:** critério · **Toca:** arquivos`.
+
+## D.1 — Fundação de tokens
+
+- [ ] **D-01** Cores semânticas (light+dark) → `tailwind.config` + CSS vars na raiz (DS §1.1). · **Pronto quando:** todos os tokens semânticos resolvem via classe Tailwind; `html.dark` troca os valores. · **Toca:** tailwind.config, src/index.css, DESIGN_SYSTEM.md
+- [ ] **D-02** Contexto `on-brand` (3º fundo) via classe/data-attr (DS §2 "Três contextos de fundo"). · **Pronto quando:** container marcado on-brand adapta os tokens (`brand-tint` fill / `text-on-brand`) sem cor hardcoded. · **Toca:** tailwind.config, src/index.css
+- [ ] **D-03** Tipografia: carregar Futura/Jost + família display/texto + escala + pesos + leading (DS §1.2). · **Pronto quando:** fontes carregam com fallback; escala aplicável por classe. · **Toca:** tailwind.config, src/index.css, index.html
+- [ ] **D-04** Escala de espaçamento (DS §1.3). · **Pronto quando:** valores medidos viram `space-*` no config. · **Toca:** tailwind.config
+- [ ] **D-05** Raios de borda `radius-sm/md/full` (DS §1.4). · **Pronto quando:** três raios aplicáveis por classe. · **Toca:** tailwind.config
+- [ ] **D-06** Sombras = `none` (DS §1.5) + breakpoints mobile/desktop (§1.6). · **Pronto quando:** utilitários de sombra neutralizados; breakpoint desktop definido. · **Toca:** tailwind.config
+- [ ] **D-07** Componente `Icon` (SVG `currentColor`) + importar set de ícones (DS §5). · **Pronto quando:** ícone renderiza herdando cor do contexto; set disponível por nome. · **Toca:** shared/ui/Icon, shared/assets/icons
+
+## D.2 — shared/ui
+
+- [ ] **D-08** `Button`: 4 variantes (`primary`/`secondary`/`dark`/`tint`) + estados (default/hover/active/focus/disabled) + tamanhos `md`/`sm` + 3 fundos (DS §3 Button). · **Pronto quando:** matriz de variantes/estados renderiza; on-brand inverte `primary` p/ tint. · **Toca:** shared/ui/Button
+- [ ] **D-09** `Card` genérico (surface, raio, sem sombra). · **Pronto quando:** casca base reutilizável pelos cards de domínio. · **Toca:** shared/ui/Card
+- [ ] **D-10** `Modal` + sistema de overlay em camadas (scrim `gray-900`/80% no fundo, painel ativo sem scrim — DS §2). · **Pronto quando:** abre/fecha com scrim correto. · **Toca:** shared/ui/Modal
+- [ ] **D-11** `Field` (text/textarea) com tokens. · **Pronto quando:** integra react-hook-form + estilo do DS. · **Toca:** shared/ui/Field
+- [ ] **D-12** `Skeleton` com tokens. · **Pronto quando:** placeholder usa `bg-surface`/`bg-base`. · **Toca:** shared/ui/Skeleton
+
+## D.3 — Componentes de domínio
+
+- [ ] **D-13** `TAG` (4 variantes, `radius-sm`, 3 fundos — DS §3 TAG). · **Pronto quando:** 4 variantes renderizam nos 3 fundos. · **Toca:** shared/ui/Tag
+- [ ] **D-14** Lista de Seleção / `Select` (label externo + chevron `arrow-separate-vertical` + `radius-md`, 3 variantes). · **Pronto quando:** trigger renderiza; variante brand confirmada. · **Toca:** shared/ui/Select
+- [ ] **D-15** Campo de Busca (`SearchInput`, lupa + 3 fundos). · **Pronto quando:** input renderiza nos 3 fundos. · **Toca:** shared/ui/SearchInput
+- [ ] **D-16** Badge de Status (`adotado`/`falecido` — DS §3 Badge). · **Pronto quando:** ambas variantes + composição lado a lado. · **Toca:** features/dogs/components/StatusBadge
+- [ ] **D-17** `Header` + `NavTab` + botão de tema. · **Pronto quando:** mobile = 2 linhas c/ scroll horizontal das abas; desktop = 1 linha, 6 abas sem overflow; aba ativa `gray-700`; ícone tema `sun-light`/`half-moon`. · **Toca:** shared/ui/Header, shared/ui/NavTab
+- [ ] **D-18** Painel de Filtros (DS §3 FilterPanel). · **Pronto quando:** mobile empilhado + "Limpar" centralizado; desktop 3 colunas + "Limpar" à direita. · **Toca:** features/dogs/components/FilterPanel
+- [ ] **D-19** Card (cão): capa 1:1, linha de TAGs `brand-dark`, nome `brand`, descrição `text-muted`, CTA full-width; grid 2 col mobile / 3 col desktop; dark ok. · **Pronto quando:** grid + anatomia batem com IMG-006/008/009. · **Toca:** features/dogs/components/DogCard
+- [ ] **D-20** Card (história): capa ~4:3, sem TAGs, CTA "Conheça essa história"; **fundo por viewport** (mobile `bg-base` / desktop `bg-surface`); grid 2/3 col. · **Pronto quando:** anatomia bate com IMG-010/012. · **Toca:** features/stories/components/StoryCard
+- [ ] **D-21** Modal detalhe do cão: mobile = carrossel horizontal (≤5 fotos 1:1) + rodapé `tint`+`primary`; desktop = split (galeria vertical à esquerda + conteúdo à direita); foto → lightbox AR original. · **Pronto quando:** ambos layouts batem com IMG-006/007/008. · **Toca:** features/dogs/components/DogDetailsModal
+- [ ] **D-22** Modal de história: mesma anatomia, rodapé com botão único "Fechar essa história" (`primary`, largura compacta). · **Pronto quando:** bate com IMG-011/013. · **Toca:** features/stories/components/StoryModal
+- [ ] **D-23** Card de produto / número de rifa. · **Pronto quando:** card renderiza no catálogo do evento com tokens. · **Toca:** features/events/components
+
+## D.4 — Páginas
+
+- [ ] **D-24** Landing: container de seções horizontais + seções (ícones informativos §5.5 + CTAs). · **Pronto quando:** seções renderizam com tokens/ícones. · **Toca:** pages/public/landing
+- [ ] **D-25** Adoção: aplicar grid + Painel de Filtros + Card + Modal. · **Pronto quando:** página usa componentes do DS. · **Toca:** pages/public/adocao
+- [ ] **D-26** Histórias: aplicar grid + Card + Modal. · **Pronto quando:** página usa componentes do DS. · **Toca:** pages/public/historias
+- [ ] **D-27** Eventos/Recãopensa: evento ativo + passados com tokens/componentes. · **Pronto quando:** página usa componentes do DS. · **Toca:** pages/public/eventos
+- [ ] **D-28** Admin: aplicar tokens + Button Menor (mapa ação→ícone §5.2) + componentes nos CRUDs. · **Pronto quando:** telas admin usam tokens e ícones corretos. · **Toca:** pages/admin/*
+
+## D.5 — Passada transversal
+
+- [ ] **D-29** Garantir os 3 contextos de fundo (light/dark/on-brand) em cada componente. · **Pronto quando:** nenhum componente quebra contraste em nenhum dos 3. · **Toca:** shared/ui, features/*/components
+- [ ] **D-30** Responsivo mobile-first revisado em todas as telas. · **Pronto quando:** ok em mobile/desktop nos breakpoints do DS. · **Toca:** todas as páginas
+- [ ] **D-31** Auditoria "zero valor mágico": varredura por hex/px soltos no JSX. · **Pronto quando:** nenhum valor de cor/espaço/raio fora de token. · **Toca:** — (revisão global)
+
 ## Débitos técnicos / correções
 
 - [x] **CT-01** Corrigir callback de convite admin. · Pronto: link de convite cria sessão e redireciona para `/admin/definir-senha`. · Toca: app/auth
+- [x] **CT-02** Corrigir env dos workflows de CI. · Pronto: jobs `Unit & Component` e `RLS & E2E` recebem vars locais necessárias sem depender de `.env` ou secrets manuais. · Toca: .github/workflows/test.yml + TESTING/PROGRESS
+- [x] **CT-03** Reduzir gatilhos do CI. · Pronto: `test.yml` roda só em PR para `main` e via `workflow_call` do deploy; push em branch comum não dispara testes. · Toca: .github/workflows/test.yml + TESTING/PROGRESS
 
 ---
 

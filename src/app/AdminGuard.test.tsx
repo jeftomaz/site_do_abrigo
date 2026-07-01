@@ -52,6 +52,27 @@ describe('AdminGuard', () => {
     })
   })
 
+  it('exibe carregamento enquanto a sessão inicial é resolvida', () => {
+    vi.mocked(useSession).mockReturnValue(undefined)
+
+    renderGuard()
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Verificando acesso...',
+    )
+  })
+
+  it('exibe erro quando a verificação de acesso falha', async () => {
+    vi.mocked(useSession).mockReturnValue(mockSession)
+    vi.mocked(getAssuranceLevel).mockRejectedValue(new Error('falha'))
+
+    renderGuard()
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Não foi possível verificar seu acesso ao painel.',
+    )
+  })
+
   it('aal1 sem TOTP enrollado redireciona para /admin/enroll', async () => {
     vi.mocked(useSession).mockReturnValue(mockSession)
     vi.mocked(getAssuranceLevel).mockResolvedValue({

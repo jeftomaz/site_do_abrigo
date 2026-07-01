@@ -24,9 +24,9 @@ const variantClasses: Record<Variant, string> = {
 }
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-base',
+  sm: 'min-h-9 px-3 py-2 text-sm',
+  md: 'min-h-10 px-4 py-2 text-sm',
+  lg: 'min-h-12 px-6 py-3 text-base',
 }
 
 export function Button({
@@ -44,9 +44,10 @@ export function Button({
     <button
       disabled={isDisabled}
       className={[
-        'inline-flex items-center justify-center gap-2 rounded-md font-medium',
+        'inline-flex items-center justify-center gap-2 rounded-md text-center font-medium',
         'transition-colors duration-150',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2',
+        'dark:focus-visible:ring-offset-gray-900',
         'disabled:pointer-events-none disabled:opacity-50',
         variantClasses[variant],
         sizeClasses[size],

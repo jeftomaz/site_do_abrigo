@@ -17,12 +17,15 @@ describe('Field', () => {
   it('exibe hint quando sem erro', () => {
     render(<Field label="Email" hint="Use seu e-mail principal" />)
     expect(screen.getByText('Use seu e-mail principal')).toBeInTheDocument()
+    expect(screen.getByLabelText('Email')).toHaveAccessibleDescription('Use seu e-mail principal')
   })
 
   it('oculta hint quando há erro', () => {
     render(<Field label="Email" hint="Dica" error="Inválido" />)
     expect(screen.queryByText('Dica')).not.toBeInTheDocument()
     expect(screen.getByText('Inválido')).toBeInTheDocument()
+    expect(screen.getByLabelText('Email')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByLabelText('Email')).toHaveAccessibleDescription('Inválido')
   })
 
   it('renderiza como textarea quando as="textarea"', () => {

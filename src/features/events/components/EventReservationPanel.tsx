@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '../../../shared/ui/Button'
 import Field from '../../../shared/ui/Field'
 import { SkeletonCard } from '../../../shared/ui/Skeleton'
+import { StateMessage } from '../../../shared/ui/StateMessage'
 import {
   formatPriceCents,
   formatReservationDeadline,
@@ -116,7 +117,7 @@ export function EventReservationPanel({ event }: EventReservationPanelProps) {
 
   return (
     <section
-      className="mt-5 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900"
+      className="mt-5 rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 sm:p-5"
       aria-labelledby="reservation-panel-title"
     >
       <div>
@@ -138,17 +139,17 @@ export function EventReservationPanel({ event }: EventReservationPanelProps) {
       )}
 
       {isError && (
-        <p className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-200">
+        <StateMessage className="mt-4" variant="error">
           Não foi possível carregar os itens disponíveis.
-        </p>
+        </StateMessage>
       )}
 
       {!isLoading && !isError && event.type === 'product' && (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {availableProducts.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <StateMessage className="sm:col-span-2">
               Nenhum produto disponível para reserva.
-            </p>
+            </StateMessage>
           )}
 
           {availableProducts.map((product) => (
@@ -192,13 +193,13 @@ export function EventReservationPanel({ event }: EventReservationPanelProps) {
       {!isLoading && !isError && event.type === 'raffle' && (
         <div className="mt-4">
           {availableRaffleNumbers.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <StateMessage>
               Nenhum número disponível para reserva.
-            </p>
+            </StateMessage>
           )}
 
           {availableRaffleNumbers.length > 0 && (
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 md:grid-cols-8">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(3rem,1fr))] gap-2">
               {availableRaffleNumbers.map((raffleNumber) => (
                 <button
                   key={raffleNumber.id}
@@ -275,6 +276,7 @@ export function EventReservationPanel({ event }: EventReservationPanelProps) {
             type="submit"
             isLoading={createReservation.isPending}
             disabled={!selectedTarget}
+            className="w-full sm:w-auto"
           >
             Reservar
           </Button>
@@ -285,7 +287,7 @@ export function EventReservationPanel({ event }: EventReservationPanelProps) {
         <div className="mt-5 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-200">
           <p className="font-semibold">Reserva criada: {success.label}</p>
           <p className="mt-2">
-            Faça o PIX para a chave {PIX_KEY}
+            Faça o PIX para a chave <span className="break-all font-mono">{PIX_KEY}</span>
             {success.priceCents !== null
               ? ` no valor de ${formatPriceCents(success.priceCents)}`
               : ''}

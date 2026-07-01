@@ -80,6 +80,9 @@ Durações, easings, e onde se aplicam (hover de card, abrir modal, etc.). <!-- 
 - **Implementação CSS:** Tailwind CSS. Tokens confirmados devem ser espelhados em `tailwind.config`.
 - **Dark mode** via classe na raiz (`html.dark`) + tokens semânticos. Nunca cor hardcoded em componente.
 - **Sem estilo solto.** Cor/espaço/raio sempre via token. Valor "mágico" no JSX é bug.
+- **Responsivo F6-02:** botões/campos têm altura mínima tocável; páginas reduzem padding vertical no mobile; CTAs ocupam largura total no mobile e largura natural a partir de `sm`; tabelas admin usam `overflow-x-auto` com `min-width`; modais encostam no rodapé em mobile, centralizam em `sm+` e limitam altura com scroll interno.
+- **Dark mode F6-03:** `html`, `body` e `#root` definem fundo/texto base light/dark; superfícies usam `bg-white`/`dark:bg-gray-900`, campos usam `dark:bg-gray-800` e textos secundários usam `dark:text-gray-400` até tokens finais existirem.
+- **SEO/brand asset F6-04:** favicon SVG usa azul placeholder `#2563eb` e coração com rosto simples; substituir quando houver marca final.
 
 ---
 
@@ -97,6 +100,16 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 > - **Tema:** diferenças light × dark.
 > - **Imagens de referência:** IDs do Registro abaixo.
 
+### Favicon / app icon · 🟡 rascunho
+
+**Componente:** `public/favicon.svg` · **Status:** 🟡 rascunho
+- **Anatomia:** quadrado azul com cantos arredondados, coração branco e rosto simples.
+- **Variantes:** favicon SVG único, reaproveitado pelo manifest.
+- **Estados:** não aplicável.
+- **Responsivo:** renderiza como ícone pequeno de navegador/app.
+- **Tema:** não varia por tema; usa cor de marca placeholder.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Button · 🟡 rascunho
 
 **Componente:** Button · **Status:** 🟡 rascunho
@@ -104,7 +117,7 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Variantes:** `primary` · `secondary` · `ghost` · `danger`
 - **Tamanhos:** `sm` · `md` (default) · `lg`
 - **Estados:** default · hover · active · `disabled` (opacidade 50%) · `isLoading` (spinner + desabilitado)
-- **Responsivo:** sem diferença mobile × desktop por enquanto.
+- **Responsivo:** altura mínima tocável (`sm` 36px, `md` 40px, `lg` 48px); CTAs podem receber `w-full sm:w-auto` quando usados em formulários/landing.
 - **Tema:** variantes com classes `dark:` para cada estado — cores placeholder até tokens serem definidos.
 - **Imagens de referência:** nenhuma ainda — cores são placeholders Tailwind.
 
@@ -138,6 +151,39 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
+### Modal compartilhado · 🟡 rascunho
+
+**Componente:** Modal · **Status:** 🟡 rascunho
+- **Anatomia:** backdrop fixo, dialog, cabeçalho opcional com título/botão fechar, conteúdo rolável e rodapé opcional.
+- **Variantes:** com título/rodapé · sem título/rodapé.
+- **Estados:** aberto · fechado; fechamento por Esc, backdrop e botão `Fechar`.
+- **Acessibilidade:** `role="dialog"`, `aria-modal`, `aria-labelledby` quando há título; ao abrir, move foco para o primeiro controle ou para o dialog, mantém Tab/Shift+Tab dentro do modal e restaura o foco anterior ao fechar.
+- **Responsivo:** mobile usa folha inferior (`items-end`, `rounded-t-xl`, sem padding externo); `sm+` centraliza com padding externo. Altura limitada a `100dvh` no mobile e `calc(100dvh - 2rem)` em `sm+`, com scroll apenas no conteúdo.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Field / input · 🟡 rascunho
+
+**Componente:** Field · **Status:** 🟡 rascunho
+- **Anatomia:** label, input ou textarea, hint opcional e erro opcional.
+- **Variantes:** `input` · `textarea`.
+- **Estados:** default · focus · erro.
+- **Acessibilidade:** label sempre associado; hint e erro são ligados ao campo via `aria-describedby`, e erro marca `aria-invalid`.
+- **Responsivo:** largura fluida e altura mínima de 40px nos inputs; grids de formulário permanecem 1 coluna no mobile e passam a 2 colunas em `sm/md+` conforme o formulário.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Telas de autenticação · 🟡 rascunho
+
+**Componente:** LoginPage / EnrollTOTPPage / VerifyTOTPPage / SetPasswordPage · **Status:** 🟡 rascunho
+- **Anatomia:** shell centralizado, card de formulário, título, texto auxiliar, campos, erro e botão submit.
+- **Variantes:** login, enrolar TOTP, verificar TOTP e definir senha; TOTP usa campo centralizado com tracking largo.
+- **Estados:** default, erro, loading e disabled no botão.
+- **Acessibilidade:** inputs têm labels visíveis; mensagens de erro são associadas aos campos do formulário por `aria-describedby`.
+- **Responsivo:** card fluido até `max-w-sm`, padding compacto no mobile e `sm:p-8` em telas maiores.
+- **Tema:** classes compartilhadas em `authStyles.ts`; shell usa `dark:bg-gray-950`, card `dark:bg-gray-900`, campos `dark:bg-gray-800`, textos `dark:text-gray-100/400`, erro `dark:text-red-400` e submit `dark:bg-blue-500`.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Badge / controle de status · 🟡 rascunho
 
 **Componente:** StatusBadge / StatusSelect · **Status:** 🟡 rascunho
@@ -146,6 +192,26 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Estados:** default · loading/disabled ao salvar · erro inline quando a mudança falha.
 - **Responsivo:** usado dentro da tabela admin; largura mínima para evitar quebra do select.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Skeleton / loading · 🟡 rascunho
+
+**Componente:** Skeleton / SkeletonCard / SkeletonRows / PageLoadingFallback · **Status:** 🟡 rascunho
+- **Anatomia:** bloco base com `animate-pulse`; `SkeletonCard` para cards públicos; `SkeletonRows` para tabelas/listas admin; `PageLoadingFallback` para rotas lazy/guard com texto `role="status"` e linhas skeleton.
+- **Variantes:** card · linhas · fallback de página.
+- **Estados:** loading; skeletons decorativos ficam com `aria-hidden`, enquanto o fallback de página expõe texto de status.
+- **Responsivo:** usa largura fluida do container; o layout de grid/lista é definido pela página que o contém.
+- **Tema:** light/dark via classes placeholder (`gray-200`/`gray-700`) até tokens serem definidos.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### StateMessage · 🟡 rascunho
+
+**Componente:** StateMessage · **Status:** 🟡 rascunho
+- **Anatomia:** caixa com borda, texto e título opcional.
+- **Variantes:** `empty` · `error` · `info`.
+- **Estados:** mensagens de erro usam `role="alert"`; mensagens vazias/informativas não anunciam alerta.
+- **Responsivo:** largura fluida do container, padding fixo compacto.
+- **Tema:** light/dark via classes placeholder; `error` usa tons vermelhos, `info` tons azuis, `empty` superfície neutra.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
 ### Card de evento · 🟡 rascunho
@@ -198,16 +264,40 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
+### Header · 🟡 rascunho
+
+**Componente:** Header · **Status:** 🟡 rascunho
+- **Anatomia:** marca, navegação desktop, alternância de tema e menu mobile.
+- **Variantes:** desktop com links inline · mobile com menu colapsável.
+- **Estados:** menu fechado/aberto; botão de tema alterna label claro/escuro.
+- **Acessibilidade:** inclui link "Pular para o conteúdo" apontando para `#main-content`; botão mobile usa `aria-expanded`/`aria-controls`; links e botões têm foco visível.
+- **Responsivo:** links inline aparecem em `sm+`; mobile usa botão de 40px com `aria-expanded` e links de 40px de altura mínima.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### Seções da landing · 🟡 rascunho
+
+**Componente:** DoacaoSection / AdocaoSection / HistoriasSection / EventosSection · **Status:** 🟡 rascunho
+- **Anatomia:** seção vertical, container central e CTA; doação inclui caixa PIX.
+- **Variantes:** seção informativa com CTA · seção PIX copiável.
+- **Estados:** botão de copiar mostra `Copiado!`.
+- **Responsivo:** padding vertical menor no mobile; CTAs ocupam largura total no mobile e largura natural em `sm+`; chave PIX quebra linha sem overflow.
+- **Tema:** dark via classes `dark:`; cores placeholder até tokens.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Componentes previstos (preencher progressivamente)
 
 - [x] Button · 🟡
+- [x] Favicon / app icon · 🟡
 - [x] Card (cão) · 🟡
 - [x] Modal / detalhe do cão · 🟡
 - [x] Formulário admin de cão · 🟡
-- [ ] Field / input · ⬜
-- [ ] Skeleton / loading · ⬜
-- [ ] Header (âncoras + links) · ⬜
-- [ ] Seção da landing · ⬜
+- [x] Field / input · 🟡
+- [x] Telas de autenticação · 🟡
+- [x] Skeleton / loading · 🟡
+- [x] StateMessage · 🟡
+- [x] Header (âncoras + links) · 🟡
+- [x] Seção da landing · 🟡
 - [ ] Card de história · ⬜
 - [x] Card de evento · 🟡
 - [x] Painel de reserva de evento · 🟡

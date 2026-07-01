@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 6 — Acabamento
-- **Próxima tarefa:** F6-01 (Fase 6 — Acabamento)
+- **Próxima tarefa:** F6-06 (Fase 6 — Acabamento)
 - **Fase concluída:** Fase T — Testes ✓ · Fase 5 — Eventos / Recãopensa ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -43,6 +43,62 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-07-01 — `F6-05` Acessibilidade
+
+- **Feito:** navegação por teclado reforçada com skip link no `Header`, destino `main-content` nas páginas, foco visível em navegação, `aria-controls` no menu mobile, modal com foco inicial/trap/restauração e campos auth/`Field` rotulados/descritivos.
+- **Decisões:** a tarefa ficou restrita a acessibilidade de UI existente, sem alterar fluxos de auth, Supabase, schema ou regras de negócio.
+- **Arquivos:** `src/shared/ui/Header.tsx`, `src/shared/ui/Modal.tsx`, `src/shared/ui/Field.tsx`, páginas públicas/admin/auth, testes compartilhados/auth, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F6-05 marcado; `DESIGN_SYSTEM.md` registrou contratos de acessibilidade; `TESTING.md` registrou cobertura de teclado/foco/labels.
+- **Verificação:** `npm test` passou (180 testes); `npm run build` passou.
+
+### 2026-07-01 — `CT-03` Reduzir gatilhos do CI
+
+- **Feito:** análise dos screenshots confirmou que o erro `supabaseUrl is required` era o mesmo já corrigido em `CT-02`; `test.yml` foi ajustado para rodar apenas em PR para `main` e via `workflow_call` do deploy, removendo execução em push de branch comum.
+- **Decisões:** o aviso de Node.js 20 nos Actions é não bloqueante; não foi alterado nesta correção porque a falha real era env antigo e o objetivo novo era reduzir consumo de Actions.
+- **Arquivos:** `.github/workflows/test.yml`, `ROADMAP.md`, `PROGRESS.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` CT-03 marcado; `TESTING.md` atualizou a matriz de triggers do CI.
+- **Verificação:** `npm test` passou (176 testes); `npm run build` passou.
+
+### 2026-07-01 — `F6-04` SEO + favicon + meta
+
+- **Feito:** `index.html` recebeu title, description, canonical, Open Graph/Twitter, robots, theme-color, favicon e manifest; páginas públicas passaram a atualizar meta por rota com `PageMeta`; adicionados `favicon.svg`, `robots.txt`, `sitemap.xml` e `site.webmanifest`.
+- **Decisões:** SEO ficou restrito às rotas públicas (`/`, `/adocao`, `/historias`, `/eventos`); rotas admin/auth não entram no sitemap.
+- **Arquivos:** `index.html`, `public/404.html`, `public/favicon.svg`, `public/robots.txt`, `public/sitemap.xml`, `public/site.webmanifest`, `src/shared/ui/PageMeta.tsx`, `src/shared/ui/PageMeta.test.tsx`, páginas públicas, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F6-04 marcado; `DESIGN_SYSTEM.md` registrou favicon/asset de marca; `TESTING.md` registrou cobertura de `PageMeta`.
+- **Verificação:** `npm test` passou (176 testes); `npm run build` passou; `dist/` contém favicon, manifest, robots e sitemap.
+
+### 2026-07-01 — `F6-03` Dark mode revisado
+
+- **Feito:** base global `html/body/#root` recebeu fundo/texto light/dark; telas de autenticação passaram a usar classes compartilhadas com superfícies, campos, mensagens e botões compatíveis com dark mode; foco de `Button` ganhou offset escuro.
+- **Decisões:** a revisão ficou restrita a contraste/tema, sem alterar fluxos de auth, dados ou regras de negócio.
+- **Arquivos:** `src/styles.css`, `src/shared/ui/Button.tsx`, `src/app/theme.test.tsx`, `src/pages/auth/authStyles.ts`, telas auth e teste de login, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F6-03 marcado; `DESIGN_SYSTEM.md` registrou contrato de tema escuro; `TESTING.md` registrou cobertura do ThemeProvider e tela auth.
+- **Verificação:** `npm test` passou (175 testes); `npm run build` passou; Playwright headless confirmou `html.dark=true`, `body` escuro e texto claro em rotas públicas e auth.
+
+### 2026-06-30 — `F6-02` Responsivo mobile-first revisado
+
+- **Feito:** revisão responsiva aplicada em header, modal, botões, campos, landing, páginas públicas, telas auth e admin; tabelas/painéis ganharam largura mínima com overflow horizontal, CTAs empilham no mobile e textos longos quebram sem estourar o viewport.
+- **Decisões:** responsividade foi tratada como refinamento de UI sem alterar regras de negócio, API ou schema; dark mode/contraste continuam para F6-03.
+- **Arquivos:** `src/shared/ui/Button.tsx`, `src/shared/ui/Field.tsx`, `src/shared/ui/Header.tsx`, `src/shared/ui/Header.test.tsx`, `src/shared/ui/Modal.tsx`, `src/shared/ui/Button.test.tsx`, `src/shared/ui/Modal.test.tsx`, páginas públicas/admin/auth e formulários/painéis de dogs/stories/events, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F6-02 marcado; `DESIGN_SYSTEM.md` registrou contratos responsivos; `TESTING.md` registrou cobertura de Header/Button/Modal e verificação Playwright de overflow.
+- **Verificação:** `npm test` passou (173 testes); `npm run build` passou; Playwright local confirmou `overflow=0` em mobile (375px) e desktop (1280px) para rotas públicas e auth.
+
+### 2026-06-30 — `CT-02` Corrigir env dos workflows de CI
+
+- **Feito:** `test.yml` passou a definir `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` e `VITE_ADOPTION_FORM_URL` no job unitário; E2E ganhou fallback local para `E2E_ADMIN_EMAIL` e `E2E_ADMIN_PASSWORD` quando GitHub Secrets não existirem.
+- **Decisões:** credenciais E2E padrão são só para Supabase local; secrets continuam opcionais para sobrescrever esses valores no CI.
+- **Arquivos:** `.github/workflows/test.yml`, `ROADMAP.md`, `PROGRESS.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` CT-02 marcado; `TESTING.md` registrou fallback seguro das credenciais E2E.
+- **Verificação:** `npm test` passou (170 testes); `npm run build` passou.
+
+### 2026-06-30 — `F6-01` Loading/empty/error states
+
+- **Feito:** estados de loading/empty/error foram padronizados com `StateMessage`, `SkeletonRows` e `PageLoadingFallback`; rotas admin lazy e `AdminGuard` deixam de renderizar tela vazia durante carregamento/verificação e exibem erro quando a validação de acesso falha.
+- **Decisões:** estados compartilhados ficam em `shared/ui`; esta tarefa não altera regras de negócio nem responsividade/dark mode, que seguem para F6-02/F6-03.
+- **Arquivos:** `src/shared/ui/StateMessage.tsx`, `src/shared/ui/StateMessage.test.tsx`, `src/shared/ui/Skeleton.tsx`, `src/shared/ui/Skeleton.test.tsx`, `src/app/AdminGuard.tsx`, `src/app/AdminGuard.test.tsx`, `src/app/router.tsx`, `src/pages/public/AdocaoPage.tsx`, `src/pages/public/HistoriasPage.tsx`, `src/pages/public/EventosPage.tsx`, `src/pages/admin/dogs/AdminDogsPage.tsx`, `src/pages/admin/stories/AdminStoriesPage.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/features/events/components/EventReservationPanel.tsx`, `src/features/events/components/EventItemsPanel.tsx`, `src/features/events/components/EventReservationsPanel.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F6-01 marcado; `DESIGN_SYSTEM.md` registrou `StateMessage`, `SkeletonRows` e `PageLoadingFallback`; `TESTING.md` registrou cobertura dos estados compartilhados e do `AdminGuard`.
+- **Verificação:** `npm test` passou (170 testes); `npm run build` passou.
 
 ### 2026-06-30 — `F5-11` Admin: marcar reserva paga / definir prazo
 

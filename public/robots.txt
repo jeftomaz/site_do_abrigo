@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jeftomaz.github.io/site_do_abrigo/sitemap.xml
