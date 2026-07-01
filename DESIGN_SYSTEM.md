@@ -148,6 +148,26 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - **Tema:** dark via classes `dark:`; cores placeholder até tokens.
 - **Imagens de referência:** nenhuma ainda — estilo é placeholder.
 
+### Skeleton / loading · 🟡 rascunho
+
+**Componente:** Skeleton / SkeletonCard / SkeletonRows / PageLoadingFallback · **Status:** 🟡 rascunho
+- **Anatomia:** bloco base com `animate-pulse`; `SkeletonCard` para cards públicos; `SkeletonRows` para tabelas/listas admin; `PageLoadingFallback` para rotas lazy/guard com texto `role="status"` e linhas skeleton.
+- **Variantes:** card · linhas · fallback de página.
+- **Estados:** loading; skeletons decorativos ficam com `aria-hidden`, enquanto o fallback de página expõe texto de status.
+- **Responsivo:** usa largura fluida do container; o layout de grid/lista é definido pela página que o contém.
+- **Tema:** light/dark via classes placeholder (`gray-200`/`gray-700`) até tokens serem definidos.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
+### StateMessage · 🟡 rascunho
+
+**Componente:** StateMessage · **Status:** 🟡 rascunho
+- **Anatomia:** caixa com borda, texto e título opcional.
+- **Variantes:** `empty` · `error` · `info`.
+- **Estados:** mensagens de erro usam `role="alert"`; mensagens vazias/informativas não anunciam alerta.
+- **Responsivo:** largura fluida do container, padding fixo compacto.
+- **Tema:** light/dark via classes placeholder; `error` usa tons vermelhos, `info` tons azuis, `empty` superfície neutra.
+- **Imagens de referência:** nenhuma ainda — estilo é placeholder.
+
 ### Card de evento · 🟡 rascunho
 
 **Componente:** EventCard · **Status:** 🟡 rascunho
@@ -205,7 +225,8 @@ Um bloco por componente. Modelo a seguir; duplicar conforme as imagens chegam.
 - [x] Modal / detalhe do cão · 🟡
 - [x] Formulário admin de cão · 🟡
 - [ ] Field / input · ⬜
-- [ ] Skeleton / loading · ⬜
+- [x] Skeleton / loading · 🟡
+- [x] StateMessage · 🟡
 - [ ] Header (âncoras + links) · ⬜
 - [ ] Seção da landing · ⬜
 - [ ] Card de história · ⬜

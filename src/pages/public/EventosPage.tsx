@@ -1,5 +1,6 @@
 import Header from '../../shared/ui/Header'
 import { SkeletonCard } from '../../shared/ui/Skeleton'
+import { StateMessage } from '../../shared/ui/StateMessage'
 import { EventCard } from '../../features/events/components/EventCard'
 import { EventReservationPanel } from '../../features/events/components/EventReservationPanel'
 import { useActiveEvent, usePastEvents } from '../../features/events/hooks'
@@ -39,15 +40,15 @@ export default function EventosPage() {
             {isActiveLoading && <SkeletonCard />}
 
             {isActiveError && (
-              <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-200">
+              <StateMessage variant="error">
                 Não foi possível carregar o evento ativo. Tente novamente mais tarde.
-              </p>
+              </StateMessage>
             )}
 
             {!isActiveLoading && !isActiveError && !activeEvent && (
-              <p className="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400">
+              <StateMessage>
                 Nenhum evento ativo no momento.
-              </p>
+              </StateMessage>
             )}
 
             {!isActiveLoading && !isActiveError && activeEvent && (
@@ -77,15 +78,15 @@ export default function EventosPage() {
             )}
 
             {isPastError && (
-              <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-200">
+              <StateMessage variant="error">
                 Não foi possível carregar os eventos anteriores. Tente novamente mais tarde.
-              </p>
+              </StateMessage>
             )}
 
             {!isPastLoading && !isPastError && pastEvents?.length === 0 && (
-              <p className="rounded-lg border border-gray-200 bg-white p-4 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400">
+              <StateMessage>
                 Nenhum evento anterior publicado ainda.
-              </p>
+              </StateMessage>
             )}
 
             {!isPastLoading && !isPastError && pastEvents && pastEvents.length > 0 && (

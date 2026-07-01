@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Button } from '../../../shared/ui/Button'
-import { Skeleton } from '../../../shared/ui/Skeleton'
+import { SkeletonRows } from '../../../shared/ui/Skeleton'
+import { StateMessage } from '../../../shared/ui/StateMessage'
 import {
   formatReservationDeadline,
   productLabel,
@@ -72,26 +73,20 @@ export function EventReservationsPanel({ event }: EventReservationsPanelProps) {
         </p>
       </div>
 
-      {reservations.isLoading && (
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      )}
+      {reservations.isLoading && <SkeletonRows rows={4} />}
 
       {reservations.isError && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
+        <StateMessage variant="error">
           Não foi possível carregar as reservas.
-        </p>
+        </StateMessage>
       )}
 
       {!reservations.isLoading &&
         !reservations.isError &&
         reservations.data?.length === 0 && (
-          <p className="text-center text-gray-500 dark:text-gray-400">
+          <StateMessage>
             Nenhuma reserva cadastrada neste evento.
-          </p>
+          </StateMessage>
         )}
 
       {!reservations.isLoading &&

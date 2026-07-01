@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Header from '../../shared/ui/Header'
 import { SkeletonCard } from '../../shared/ui/Skeleton'
+import { StateMessage } from '../../shared/ui/StateMessage'
 import { useAvailableDogs } from '../../features/dogs/hooks'
 import { DogCard } from '../../features/dogs/components/DogCard'
 import { DogDetailsModal } from '../../features/dogs/components/DogDetailsModal'
@@ -33,15 +34,15 @@ export default function AdocaoPage() {
           )}
 
           {isError && (
-            <p className="text-center text-gray-500 dark:text-gray-400">
+            <StateMessage variant="error">
               Não foi possível carregar os cães. Tente novamente mais tarde.
-            </p>
+            </StateMessage>
           )}
 
           {!isLoading && !isError && dogs && dogs.length === 0 && (
-            <p className="text-center text-gray-500 dark:text-gray-400">
+            <StateMessage>
               Nenhum cão disponível para adoção no momento.
-            </p>
+            </StateMessage>
           )}
 
           {!isLoading && !isError && dogs && dogs.length > 0 && (

@@ -6,7 +6,7 @@ Quem retoma o projeto lê primeiro o bloco **Atual**, depois **Decisões fixadas
 ## Atual
 
 - **Fase:** 6 — Acabamento
-- **Próxima tarefa:** F6-01 (Fase 6 — Acabamento)
+- **Próxima tarefa:** F6-02 (Fase 6 — Acabamento)
 - **Fase concluída:** Fase T — Testes ✓ · Fase 5 — Eventos / Recãopensa ✓ · Fase 4 — Histórias ✓ · Fase 3 — Adoção (cães) ✓ · Fase 2 — Landing page ✓ · Fase 1 — Esqueleto compartilhado ✓
 - **Bloqueios:** nenhum.
 
@@ -43,6 +43,22 @@ Mais recente no topo. Uma entrada por tarefa concluída. Mantenha curto.
 > - **Docs:** quais docs foram atualizados (ROADMAP marcado; DATA_MODEL/DESIGN_SYSTEM se aplicável).
 
 <!-- entradas reais abaixo -->
+
+### 2026-06-30 — `CT-02` Corrigir env dos workflows de CI
+
+- **Feito:** `test.yml` passou a definir `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` e `VITE_ADOPTION_FORM_URL` no job unitário; E2E ganhou fallback local para `E2E_ADMIN_EMAIL` e `E2E_ADMIN_PASSWORD` quando GitHub Secrets não existirem.
+- **Decisões:** credenciais E2E padrão são só para Supabase local; secrets continuam opcionais para sobrescrever esses valores no CI.
+- **Arquivos:** `.github/workflows/test.yml`, `ROADMAP.md`, `PROGRESS.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` CT-02 marcado; `TESTING.md` registrou fallback seguro das credenciais E2E.
+- **Verificação:** `npm test` passou (170 testes); `npm run build` passou.
+
+### 2026-06-30 — `F6-01` Loading/empty/error states
+
+- **Feito:** estados de loading/empty/error foram padronizados com `StateMessage`, `SkeletonRows` e `PageLoadingFallback`; rotas admin lazy e `AdminGuard` deixam de renderizar tela vazia durante carregamento/verificação e exibem erro quando a validação de acesso falha.
+- **Decisões:** estados compartilhados ficam em `shared/ui`; esta tarefa não altera regras de negócio nem responsividade/dark mode, que seguem para F6-02/F6-03.
+- **Arquivos:** `src/shared/ui/StateMessage.tsx`, `src/shared/ui/StateMessage.test.tsx`, `src/shared/ui/Skeleton.tsx`, `src/shared/ui/Skeleton.test.tsx`, `src/app/AdminGuard.tsx`, `src/app/AdminGuard.test.tsx`, `src/app/router.tsx`, `src/pages/public/AdocaoPage.tsx`, `src/pages/public/HistoriasPage.tsx`, `src/pages/public/EventosPage.tsx`, `src/pages/admin/dogs/AdminDogsPage.tsx`, `src/pages/admin/stories/AdminStoriesPage.tsx`, `src/pages/admin/events/AdminEventsPage.tsx`, `src/features/events/components/EventReservationPanel.tsx`, `src/features/events/components/EventItemsPanel.tsx`, `src/features/events/components/EventReservationsPanel.tsx`, `ROADMAP.md`, `PROGRESS.md`, `DESIGN_SYSTEM.md`, `TESTING.md`.
+- **Docs:** `ROADMAP.md` F6-01 marcado; `DESIGN_SYSTEM.md` registrou `StateMessage`, `SkeletonRows` e `PageLoadingFallback`; `TESTING.md` registrou cobertura dos estados compartilhados e do `AdminGuard`.
+- **Verificação:** `npm test` passou (170 testes); `npm run build` passou.
 
 ### 2026-06-30 — `F5-11` Admin: marcar reserva paga / definir prazo
 

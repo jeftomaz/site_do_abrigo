@@ -79,7 +79,7 @@ Tarefa ampla demais? Quebre em `ID a/b/c` antes de codar.
 
 ## Fase 6 — Acabamento
 
-- [ ] **F6-01** Loading/empty/error states (Skeleton). · Pronto: sem telas vazias cruas.
+- [x] **F6-01** Loading/empty/error states (Skeleton). · Pronto: sem telas vazias cruas.
 - [ ] **F6-02** Responsivo (mobile-first) revisado. · Pronto: ok em mobile/desktop.
 - [ ] **F6-03** Dark mode revisado em todas as telas. · Pronto: contraste ok.
 - [ ] **F6-04** SEO + favicon + meta. · Pronto: tags presentes.
@@ -101,6 +101,7 @@ Backfill de cobertura para o que já existe (Fases 0–4) e infra para novas fas
 ## Débitos técnicos / correções
 
 - [x] **CT-01** Corrigir callback de convite admin. · Pronto: link de convite cria sessão e redireciona para `/admin/definir-senha`. · Toca: app/auth
+- [x] **CT-02** Corrigir env dos workflows de CI. · Pronto: jobs `Unit & Component` e `RLS & E2E` recebem vars locais necessárias sem depender de `.env` ou secrets manuais. · Toca: .github/workflows/test.yml + TESTING/PROGRESS
 
 ---
 

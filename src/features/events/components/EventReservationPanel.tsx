@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Button } from '../../../shared/ui/Button'
 import Field from '../../../shared/ui/Field'
 import { SkeletonCard } from '../../../shared/ui/Skeleton'
+import { StateMessage } from '../../../shared/ui/StateMessage'
 import {
   formatPriceCents,
   formatReservationDeadline,
@@ -138,17 +139,17 @@ export function EventReservationPanel({ event }: EventReservationPanelProps) {
       )}
 
       {isError && (
-        <p className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-200">
+        <StateMessage className="mt-4" variant="error">
           Não foi possível carregar os itens disponíveis.
-        </p>
+        </StateMessage>
       )}
 
       {!isLoading && !isError && event.type === 'product' && (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {availableProducts.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <StateMessage className="sm:col-span-2">
               Nenhum produto disponível para reserva.
-            </p>
+            </StateMessage>
           )}
 
           {availableProducts.map((product) => (
@@ -192,9 +193,9 @@ export function EventReservationPanel({ event }: EventReservationPanelProps) {
       {!isLoading && !isError && event.type === 'raffle' && (
         <div className="mt-4">
           {availableRaffleNumbers.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <StateMessage>
               Nenhum número disponível para reserva.
-            </p>
+            </StateMessage>
           )}
 
           {availableRaffleNumbers.length > 0 && (

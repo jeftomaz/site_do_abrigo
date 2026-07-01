@@ -105,6 +105,8 @@ src/
       Button.test.tsx                # Camada 2
       Field.test.tsx                 # Camada 2
       Modal.test.tsx                 # Camada 2
+      Skeleton.test.tsx              # Camada 2
+      StateMessage.test.tsx          # Camada 2
 supabase/
   tests/
     README.md                        # como rodar testes RLS locais
@@ -178,7 +180,7 @@ Roda apenas em PR e antes do deploy:
 3. Exporta `ANON_KEY` e `SERVICE_ROLE_KEY` do `supabase status -o env`, mapeando para `VITE_SUPABASE_PUBLISHABLE_KEY` e `E2E_SUPABASE_SERVICE_ROLE_KEY` via `$GITHUB_ENV`.
 4. `npm run test:rls` — pgTAP, Camada 4.
 5. `npx vite build --mode test` — bake das `VITE_*` no bundle.
-6. `npx playwright test` — `global-setup.ts` cria o usuário admin, faz enroll TOTP e persiste o secret em `.e2e-state.json`; credenciais `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` vêm dos **GitHub Secrets** do repositório.
+6. `npx playwright test` — `global-setup.ts` cria o usuário admin, faz enroll TOTP e persiste o secret em `.e2e-state.json`; credenciais `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` vêm dos **GitHub Secrets** quando configurados, com fallback seguro para o Supabase local.
 7. Em caso de falha, o relatório do Playwright é publicado como artefato (`playwright-report`, 7 dias).
 
 ### Deploy
@@ -189,8 +191,8 @@ Roda apenas em PR e antes do deploy:
 |---|---|
 | `VITE_SUPABASE_URL` | Build de produção (`deploy.yml`) |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Build de produção (`deploy.yml`) |
-| `E2E_ADMIN_EMAIL` | Global setup do Playwright no CI |
-| `E2E_ADMIN_PASSWORD` | Global setup do Playwright no CI |
+| `E2E_ADMIN_EMAIL` | Opcional; sobrescreve o usuário local padrão do Playwright no CI |
+| `E2E_ADMIN_PASSWORD` | Opcional; sobrescreve a senha local padrão do Playwright no CI |
 
 ---
 
@@ -200,7 +202,7 @@ Atualizado a cada tarefa. Marque `🟢` ao cobrir, `🟡` se parcial.
 
 | Feature | Unitário | Componente | Integração/MSW | RLS/banco | E2E | Observação |
 |---|---|---|---|---|---|---|
-| `shared/ui` (Button, Card, Modal, Field, Skeleton) | — | 🟢 | — | — | — | T-04 |
+| `shared/ui` (Button, Card, Modal, Field, Skeleton, StateMessage) | — | 🟢 | — | — | — | T-04 + F6-01 |
 | `features/dogs` — format/utils/sort | 🟢 | — | — | — | — | 100% — T-03 |
 | `features/dogs` — componentes | — | 🟢 | ⬜ | — | — | T-04 |
 | `features/dogs` — RLS | — | — | — | 🟢 | — | dogs + bucket `dogs` — T-05 |
@@ -210,7 +212,7 @@ Atualizado a cada tarefa. Marque `🟢` ao cobrir, `🟡` se parcial.
 | `features/stories` — componentes | — | ⬜ | ⬜ | — | — | backfill T-04 |
 | `features/stories` — RLS | — | — | — | 🟢 | — | stories + bucket `stories` — T-05 |
 | `features/stories` — E2E público | — | — | — | — | 🟡 | coberto indiretamente (landing) |
-| `features/auth` — AdminGuard | — | 🟢 | — | — | — | T-04 (módulos mockados) |
+| `features/auth` — AdminGuard | — | 🟢 | — | — | — | T-04 + F6-01: redirecionamentos, loading e erro (módulos mockados) |
 | `features/auth` — E2E admin/TOTP | — | — | — | — | 🟢 | T-07: login+2FA+/admin |
 | `pages/public/landing` — DoacaoSection | — | 🟢 | — | — | — | T-04 |
 | `features/events` / `reservations` | 🟢 | 🟡 | 🟢 | 🟢 | ⬜ | F5-01/F5-05: banco/RLS/disponibilidade/pg_cron; F5-06: api com MSW; F5-07: página pública `/eventos`; F5-08: helpers de prazo/preço, API de reserva, fluxo público reserva→PIX e RPC segura pgTAP; F5-09: helpers/form admin, API create/update/listAll e página admin com MSW; F5-10: helpers/API/painel admin de produtos e números; F5-11: API/lista admin de reservas e alteração de status com MSW |

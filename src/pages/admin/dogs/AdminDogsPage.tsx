@@ -6,7 +6,8 @@ import { DogCreateForm } from '../../../features/dogs/components/DogCreateForm'
 import { DogEditModal } from '../../../features/dogs/components/DogEditModal'
 import type { Dog, DogStatus } from '../../../features/dogs/types'
 import { Button } from '../../../shared/ui/Button'
-import { Skeleton } from '../../../shared/ui/Skeleton'
+import { SkeletonRows } from '../../../shared/ui/Skeleton'
+import { StateMessage } from '../../../shared/ui/StateMessage'
 
 const STATUS_LABEL: Record<DogStatus, string> = {
   available: 'Disponível',
@@ -90,23 +91,17 @@ export default function AdminDogsPage() {
       <DogCreateForm />
 
       {isError && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
+        <StateMessage variant="error">
           Não foi possível carregar os cães. Tente novamente mais tarde.
-        </p>
+        </StateMessage>
       )}
 
-      {isLoading && (
-        <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full rounded-lg" />
-          ))}
-        </div>
-      )}
+      {isLoading && <SkeletonRows />}
 
       {!isLoading && !isError && dogs && dogs.length === 0 && (
-        <p className="text-center text-gray-500 dark:text-gray-400">
+        <StateMessage>
           Nenhum cão cadastrado ainda.
-        </p>
+        </StateMessage>
       )}
 
       {!isLoading && !isError && dogs && dogs.length > 0 && (

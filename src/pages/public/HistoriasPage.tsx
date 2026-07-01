@@ -1,5 +1,6 @@
 import Header from '../../shared/ui/Header'
 import { SkeletonCard } from '../../shared/ui/Skeleton'
+import { StateMessage } from '../../shared/ui/StateMessage'
 import { useStories } from '../../features/stories/hooks'
 import { StoryCard } from '../../features/stories/components/StoryCard'
 
@@ -27,15 +28,15 @@ export default function HistoriasPage() {
           )}
 
           {isError && (
-            <p className="text-center text-gray-500 dark:text-gray-400">
+            <StateMessage variant="error">
               Não foi possível carregar as histórias. Tente novamente mais tarde.
-            </p>
+            </StateMessage>
           )}
 
           {!isLoading && !isError && stories && stories.length === 0 && (
-            <p className="text-center text-gray-500 dark:text-gray-400">
+            <StateMessage>
               Nenhuma história publicada ainda. Em breve!
-            </p>
+            </StateMessage>
           )}
 
           {!isLoading && !isError && stories && stories.length > 0 && (
